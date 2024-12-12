@@ -64,9 +64,10 @@
 
 ### Примерный дизайн проекта:
 
+<p align="center">Пример главного экрана, точки будут отмечены программой</p>
 ![Главный экран](https://github.com/maxxximgb/Mo3aukaOsetuu/blob/main/Media/MainScreen.png?raw=true)
-<p align="center">Пример главного экрана</p>
 
-![Переход между городами](https://github.com/maxxximgb/Mo3aukaOsetuu/blob/main/Media/Road.png?raw=true)
 <p align="center">Пример мини-игры при переходе между городами</p>
+![Переход между городами](https://github.com/maxxximgb/Mo3aukaOsetuu/blob/main/Media/Road.png?raw=true)
+
   
