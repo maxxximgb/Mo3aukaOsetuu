@@ -57,5 +57,6 @@
 
 ### Примерный дизайн проекта:
 
- 
+![Главный экран](https://github.com/maxxximgb/Mo3aukaOsetuu/blob/main/Media/MainScreen.png?raw=true)
+![Переход между городами](https://github.com/maxxximgb/Mo3aukaOsetuu/blob/main/Media/Road.png?raw=true)
   
