@@ -20,3 +20,6 @@ class MainMenu:
 
     def LoadLevels(self):
         pass
+
+    def Unload(self):
+        rules.remove(self.RenderMap)
