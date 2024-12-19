@@ -13,4 +13,4 @@ class MainMenu:
         pass
 
     def Unload(self):
-        rules.remove(self.RenderMap)
+        pass # убрать тут функции в rules
