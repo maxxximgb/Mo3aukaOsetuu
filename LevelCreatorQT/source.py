@@ -66,7 +66,8 @@ class StackedWidget(QWidget):
         self.lout = QHBoxLayout()
         self.indexes = QListWidget()
         self.indexes.setSpacing(15)
-        self.indexes.setMaximumWidth(200)
+        self.indexes.setMaximumSize(200, 500)
+        self.indexes.setMinimumSize(190, 250)
         self.nextbtn = QPushButton(self)
         self.nextbtn.clicked.connect(self.nextwidget)
         self.nextbtn.setText("Далее")
@@ -77,7 +78,7 @@ class StackedWidget(QWidget):
                        QLabel(" Сохранение")]
         [self.addItemToList(l) for l in self.labels]
         self.indexes.itemClicked.connect(self.OIC)
-        self.lout.addWidget(self.indexes)
+        self.lout.addWidget(self.indexes, alignment=Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         self.mlout.addLayout(self.lout)
         self.mlout.addWidget(self.nextbtn, alignment=Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignBottom)
         self.setLayout(self.mlout)
@@ -144,6 +145,12 @@ class LoadingMap(StackedWidget):
         self.imagelout.addWidget(self.selectMapBtn, alignment=Qt.AlignmentFlag.AlignCenter)
         self.imagelout.addWidget(QLabel(text="                              Загрузите карту для уровня.\n"
                                              "Нажмите на кнопку Загрузить и укажите путь к вашей карте."), alignment=Qt.AlignmentFlag.AlignCenter)
+        self.imagelout.itemAt(2).widget().setStyleSheet("""
+        QLabel {
+            border-radius: 5px;      /* Закругленные углы */
+            font-size: 15px;         /* Размер шрифта */
+        }
+        """)
         self.lout.addLayout(self.imagelout)
         self.initialize()
 
