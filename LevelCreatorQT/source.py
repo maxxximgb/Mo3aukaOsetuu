@@ -32,6 +32,7 @@ defaultqss = """
 AvInd = [1]
 dotpos = []
 
+
 def getabspath(path):
     if getattr(sys, 'frozen', False):
         base_path = sys._MEIPASS
@@ -39,6 +40,7 @@ def getabspath(path):
         base_path = os.path.dirname(os.path.abspath(__file__))
 
     return os.path.join(base_path, path)
+
 
 class CentralWidget(QStackedWidget):
     def __init__(self):
@@ -143,7 +145,8 @@ class LoadingMap(StackedWidget):
         self.imagelout.addWidget(self.imagelabel, alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignCenter)
         self.imagelout.addWidget(self.selectMapBtn, alignment=Qt.AlignmentFlag.AlignCenter)
         self.imagelout.addWidget(QLabel(text="Загрузите карту для уровня.\n"
-                                             "Нажмите на кнопку Загрузить и укажите путь к вашей карте."), alignment=Qt.AlignmentFlag.AlignCenter)
+                                             "Нажмите на кнопку Загрузить и укажите путь к вашей карте."),
+                                 alignment=Qt.AlignmentFlag.AlignCenter)
         self.imagelout.itemAt(2).widget().setStyleSheet("""
         QLabel {
             font-size: 15px;
@@ -162,8 +165,8 @@ class LoadingMap(StackedWidget):
         dotpos.clear()
 
     def selectImage(self):
-        file_filter = "Images (*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm)"
-        path, _ = QFileDialog.getOpenFileName(self, "Выберите изображение", "", file_filter)
+        path, _ = QFileDialog.getOpenFileName(self, "Выберите изображение", "",
+                                              "Images (*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm)")
 
         if path:
             self.loadImage(path)
@@ -221,6 +224,7 @@ class CreatingLevels(StackedWidget):
         self.imagelabel.setPixmap(pixmap)
         self.imagelabel.ispixmap = True
 
+
 class ImageLabel(QLabel):
     def __init__(self):
         super().__init__()
@@ -253,6 +257,7 @@ class ImageLabel(QLabel):
                 return
 
         self.setCursor(Qt.CursorShape.ArrowCursor)
+
 
 class ConfiguringLevels(StackedWidget):
     def __init__(self):
