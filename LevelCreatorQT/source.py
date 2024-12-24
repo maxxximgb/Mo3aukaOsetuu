@@ -31,7 +31,7 @@ defaultqss = """
 
 AvInd = [1]
 dotpos = []
-
+levelconfs = []
 
 def getabspath(path):
     if getattr(sys, 'frozen', False):
@@ -52,7 +52,6 @@ class CentralWidget(QStackedWidget):
             Beginning(),
             LoadingMap(),
             CreatingLevels(),
-            ConfiguringLevels(),
             Finishing()
         ]
         for widget in self.widgets:
@@ -76,7 +75,6 @@ class StackedWidget(QWidget):
         self.labels = [QLabel(" Начало"),
                        QLabel(" Загрузка карты"),
                        QLabel(" Создание уровней"),
-                       QLabel(" Настройка уровней"),
                        QLabel(" Сохранение")]
         [self.addItemToList(l) for l in self.labels]
         self.indexes.itemClicked.connect(self.OIC)
@@ -167,7 +165,6 @@ class LoadingMap(StackedWidget):
     def selectImage(self):
         path, _ = QFileDialog.getOpenFileName(self, "Выберите изображение", "",
                                               "Images (*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm)")
-
         if path:
             self.loadImage(path)
             global AvInd
@@ -207,7 +204,8 @@ class CreatingLevels(StackedWidget):
                     return
 
             dotpos.append(local_pos)
-            print(local_pos)
+            if len(dotpos) > 1: AvInd.append(2)
+            elif 2 in AvInd: AvInd.remove(2)
             self.imagelabel.update()
 
     def keyPressEvent(self, event):
@@ -218,7 +216,7 @@ class CreatingLevels(StackedWidget):
                 if abs(pos.x() - mouse_pos.x()) < 10 and abs(pos.y() - mouse_pos.y()) < 10:
                     dotpos.remove(pos)
                     self.imagelabel.update()
-                    break
+                    return
 
     def setImage(self, pixmap):
         self.imagelabel.setPixmap(pixmap)
@@ -252,24 +250,21 @@ class ImageLabel(QLabel):
         mouse_pos = self.mapFromGlobal(self.cursor().pos())
         for pos in dotpos:
             if abs(pos.x() - mouse_pos.x()) < 10 and abs(pos.y() - mouse_pos.y()) < 10:
-                # Устанавливаем указательный курсор
                 self.setCursor(Qt.CursorShape.PointingHandCursor)
                 return
 
         self.setCursor(Qt.CursorShape.ArrowCursor)
 
 
-class ConfiguringLevels(StackedWidget):
+class ConfiguringLevels(QWidget):
     def __init__(self):
         super().__init__()
-        self.index = 3
-        self.indexes.itemWidget(self.indexes.item(self.index)).setStyleSheet(currentindexqss)
 
 
 class Finishing(StackedWidget):
     def __init__(self):
         super().__init__()
-        self.index = 4
+        self.index = 3
         self.indexes.itemWidget(self.indexes.item(self.index)).setStyleSheet(currentindexqss)
         self.nextbtn.hide()
 
@@ -286,7 +281,6 @@ class MainWindow(QMainWindow):
         self.resize(1280, 720)
         self.setCentralWidget(self.cw)
         self.show()
-
 
 app = QApplication([])
 window = MainWindow()
