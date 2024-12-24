@@ -3,7 +3,7 @@ import sys
 
 from PIL import Image, ImageDraw
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QPixmap
+from PyQt6.QtGui import QPixmap, QPainter, QPen, QColor, QKeyEvent
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QStackedWidget, QWidget, QHBoxLayout, QListWidget, \
     QLabel, QListWidgetItem, QVBoxLayout, QMessageBox, QFileDialog
 
@@ -30,7 +30,7 @@ defaultqss = """
         """
 
 AvInd = [1]
-
+dotpos = []
 
 def getabspath(path):
     if getattr(sys, 'frozen', False):
@@ -143,12 +143,11 @@ class LoadingMap(StackedWidget):
         self.selectMapBtn.clicked.connect(self.selectImage)
         self.imagelout.addWidget(self.imagelabel, alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignCenter)
         self.imagelout.addWidget(self.selectMapBtn, alignment=Qt.AlignmentFlag.AlignCenter)
-        self.imagelout.addWidget(QLabel(text="                              Загрузите карту для уровня.\n"
+        self.imagelout.addWidget(QLabel(text="Загрузите карту для уровня.\n"
                                              "Нажмите на кнопку Загрузить и укажите путь к вашей карте."), alignment=Qt.AlignmentFlag.AlignCenter)
         self.imagelout.itemAt(2).widget().setStyleSheet("""
         QLabel {
-            border-radius: 5px;      /* Закругленные углы */
-            font-size: 15px;         /* Размер шрифта */
+            font-size: 15px;
         }
         """)
         self.lout.addLayout(self.imagelout)
@@ -160,6 +159,8 @@ class LoadingMap(StackedWidget):
     def loadImage(self, path):
         self.pixmap.load(getabspath(path))
         self.imagelabel.setPixmap(self.pixmap)
+        global dotpos
+        dotpos.clear()
 
     def selectImage(self):
         file_filter = "Images (*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm)"
@@ -169,7 +170,7 @@ class LoadingMap(StackedWidget):
             self.loadImage(path)
             global AvInd
             if self.index + 1 not in AvInd: AvInd.append(self.index + 1)
-            self.parent().widgets[2].getimage()
+            self.parent().widgets[2].setImage(self.pixmap)
 
 
 class CreatingLevels(StackedWidget):
@@ -177,10 +178,70 @@ class CreatingLevels(StackedWidget):
         super().__init__()
         self.index = 2
         self.indexes.itemWidget(self.indexes.item(self.index)).setStyleSheet(currentindexqss)
-        self.imagelabel = QLabel
+        self.imagelout = QVBoxLayout()
+        self.setMouseTracking(True)
+        self.imagelabel = ImageLabel()
+        self.imagetext = QLabel(text="Выберите точки на карте, где будут находиться города.\n"
+                                     "Для этого щелкните мышкой по нужным вам точкам на карте.\n"
+                                     "Первая отмеченая точка будет не игровой и будет являться точкой старта пользователя.\n"
+                                     "Типа въезд в город.\n"
+                                     "Для удаления точки наведите на нее курсор и нажмите delete.")
+        self.imagetext.setStyleSheet("""
+        QLabel {
+            font-size: 15px;
+        }
+        """)
+        self.imagelout.addWidget(self.imagelabel, alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignCenter)
+        self.imagelout.addWidget(self.imagetext, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.lout.addLayout(self.imagelout)
 
-    def getimage(self):
-        self.imagelabel = self.parent().widgets[1].imagelabel
+    def mousePressEvent(self, a0):
+        if self.imagelabel.geometry().contains(a0.position().toPoint()):
+            local_pos = self.imagelabel.mapFromGlobal(a0.globalPosition().toPoint())
+            global dotpos
+            for pos in dotpos:
+                if abs(pos.x() - local_pos.x()) < 10 and abs(pos.y() - local_pos.y()) < 10:
+                    return
+
+            dotpos.append(local_pos)
+            print(local_pos)
+            self.imagelabel.update()
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key.Key_Delete:
+            global dotpos
+            mouse_pos = self.imagelabel.mapFromGlobal(self.cursor().pos())
+            for pos in dotpos:
+                if abs(pos.x() - mouse_pos.x()) < 10 and abs(pos.y() - mouse_pos.y()) < 10:
+                    dotpos.remove(pos)
+                    self.imagelabel.update()
+                    break
+
+    def setImage(self, pixmap):
+        self.imagelabel.setPixmap(pixmap)
+        self.imagelabel.ispixmap = True
+
+class ImageLabel(QLabel):
+    def __init__(self):
+        super().__init__()
+        self.ispixmap = False
+        self.setMouseTracking(True)
+
+    def paintEvent(self, event):
+        super().paintEvent(event)
+        global dotpos
+        if not self.ispixmap: return
+        if not dotpos: return
+
+        painter = QPainter(self)
+        painter.setPen(QColor(0, 0, 255))
+        painter.setBrush(QColor(0, 0, 255))
+        painter.drawEllipse(dotpos[0], 10, 10)
+        painter.setPen(QColor(255, 0, 0))
+        painter.setBrush(QColor(255, 0, 0))
+
+        for pos in dotpos[1::]:
+            painter.drawEllipse(pos, 10, 10)
 
 
 class ConfiguringLevels(StackedWidget):
