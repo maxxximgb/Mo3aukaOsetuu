@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap, QPainter, QPen, QColor, QKeyEvent
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QStackedWidget, QWidget, QHBoxLayout, QListWidget, \
-    QLabel, QListWidgetItem, QVBoxLayout, QMessageBox, QFileDialog
+    QLabel, QListWidgetItem, QVBoxLayout, QMessageBox, QFileDialog, QDialog
 
 currentindexqss = """
         QLabel {
@@ -30,8 +30,7 @@ defaultqss = """
         """
 
 AvInd = [1]
-dotpos = []
-levelconfs = []
+levels = []
 
 def getabspath(path):
     if getattr(sys, 'frozen', False):
@@ -159,8 +158,8 @@ class LoadingMap(StackedWidget):
     def loadImage(self, path):
         self.pixmap.load(getabspath(path))
         self.imagelabel.setPixmap(self.pixmap)
-        global dotpos
-        dotpos.clear()
+        global levels
+        levels.clear()
 
     def selectImage(self):
         path, _ = QFileDialog.getOpenFileName(self, "Выберите изображение", "",
@@ -198,23 +197,26 @@ class CreatingLevels(StackedWidget):
     def mousePressEvent(self, a0):
         if self.imagelabel.geometry().contains(a0.position().toPoint()):
             local_pos = self.imagelabel.mapFromGlobal(a0.globalPosition().toPoint())
-            global dotpos
-            for pos in dotpos:
+            global levels
+            for pos in levels:
+                pos = pos[0]
                 if abs(pos.x() - local_pos.x()) < 10 and abs(pos.y() - local_pos.y()) < 10:
+                    LevelRedactor(LevelData).exec()
                     return
 
-            dotpos.append(local_pos)
-            if len(dotpos) > 1: AvInd.append(2)
+            levels.append(tuple([local_pos, LevelData()]))
+            if len(levels) > 1: AvInd.append(2)
             elif 2 in AvInd: AvInd.remove(2)
             self.imagelabel.update()
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key.Key_Delete:
-            global dotpos
+            global levels
             mouse_pos = self.imagelabel.mapFromGlobal(self.cursor().pos())
-            for pos in dotpos:
+            for posi in levels:
+                pos = posi[0]
                 if abs(pos.x() - mouse_pos.x()) < 10 and abs(pos.y() - mouse_pos.y()) < 10:
-                    dotpos.remove(pos)
+                    levels.remove(posi)
                     self.imagelabel.update()
                     return
 
@@ -231,24 +233,26 @@ class ImageLabel(QLabel):
 
     def paintEvent(self, event):
         super().paintEvent(event)
-        global dotpos
+        global levels
         if not self.ispixmap: return
-        if not dotpos: return
+        if not levels: return
 
         painter = QPainter(self)
         painter.setPen(QColor(0, 0, 255))
         painter.setBrush(QColor(0, 0, 255))
-        painter.drawEllipse(dotpos[0], 10, 10)
+        painter.drawEllipse(levels[0][0], 10, 10)
         painter.setPen(QColor(255, 0, 0))
         painter.setBrush(QColor(255, 0, 0))
 
-        for pos in dotpos[1::]:
+        for pos in levels[1::]:
+            pos = pos[0]
             painter.drawEllipse(pos, 10, 10)
 
     def mouseMoveEvent(self, event):
-        global dotpos
+        global levels
         mouse_pos = self.mapFromGlobal(self.cursor().pos())
-        for pos in dotpos:
+        for pos in levels:
+            pos = pos[0]
             if abs(pos.x() - mouse_pos.x()) < 10 and abs(pos.y() - mouse_pos.y()) < 10:
                 self.setCursor(Qt.CursorShape.PointingHandCursor)
                 return
@@ -256,9 +260,30 @@ class ImageLabel(QLabel):
         self.setCursor(Qt.CursorShape.ArrowCursor)
 
 
-class ConfiguringLevels(QWidget):
+class LevelData:
     def __init__(self):
+        self.images = []
+        self.name = ''
+        self.desc = ''
+        self.memorials = []
+
+class Memorial:
+    def __init__(self):
+        self.preview = None
+        self.images = []
+        self.name = ''
+        self.desc = ''
+        self.puzzle_parts = None
+        
+class LevelRedactor(QDialog):
+    def __init__(self, LevelData):
         super().__init__()
+        self.levelData = LevelData
+        self.mimageslout = QVBoxLayout()
+        self.imagelout1 = QHBoxLayout()
+        self.imagelout2 = QHBoxLayout()
+        self.mimageslout.addLayout(self.imagelout1)
+        self.mimageslout.addLayout(self.imagelout2)
 
 
 class Finishing(StackedWidget):
