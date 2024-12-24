@@ -168,7 +168,8 @@ class LoadingMap(StackedWidget):
         if path:
             self.loadImage(path)
             global AvInd
-            AvInd.append(self.index + 1)
+            if self.index + 1 not in AvInd: AvInd.append(self.index + 1)
+            self.parent().widgets[2].getimage()
 
 
 class CreatingLevels(StackedWidget):
@@ -176,6 +177,10 @@ class CreatingLevels(StackedWidget):
         super().__init__()
         self.index = 2
         self.indexes.itemWidget(self.indexes.item(self.index)).setStyleSheet(currentindexqss)
+        self.imagelabel = QLabel
+
+    def getimage(self):
+        self.imagelabel = self.parent().widgets[1].imagelabel
 
 
 class ConfiguringLevels(StackedWidget):
