@@ -124,7 +124,6 @@ class Beginning(StackedWidget):
             "Для того, чтобы приступить, нажмите на кнопку Далее, или выберите слева второй пункт.")
         self.label.setStyleSheet("""
         QLabel {
-            border-radius: 5px;      /* Закругленные углы */
             font-size: 25px;         /* Размер шрифта */
         }
         """)
@@ -185,7 +184,8 @@ class CreatingLevels(StackedWidget):
                                      "Для этого щелкните мышкой по нужным вам точкам на карте.\n"
                                      "Первая отмеченая точка будет не игровой и будет являться точкой старта пользователя.\n"
                                      "Типа въезд в город.\n"
-                                     "Для удаления точки наведите на нее курсор и нажмите delete.")
+                                     "Для удаления точки наведите на нее курсор и нажмите delete.\n"
+                                     "Нажмите еще раз на созданную точку чтобы открыть меню её редактирования.")
         self.imagetext.setStyleSheet("""
         QLabel {
             font-size: 15px;
@@ -243,6 +243,16 @@ class ImageLabel(QLabel):
         for pos in dotpos[1::]:
             painter.drawEllipse(pos, 10, 10)
 
+    def mouseMoveEvent(self, event):
+        global dotpos
+        mouse_pos = self.mapFromGlobal(self.cursor().pos())
+        for pos in dotpos:
+            if abs(pos.x() - mouse_pos.x()) < 10 and abs(pos.y() - mouse_pos.y()) < 10:
+                # Устанавливаем указательный курсор
+                self.setCursor(Qt.CursorShape.PointingHandCursor)
+                return
+
+        self.setCursor(Qt.CursorShape.ArrowCursor)
 
 class ConfiguringLevels(StackedWidget):
     def __init__(self):
