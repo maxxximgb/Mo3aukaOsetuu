@@ -11,7 +11,7 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.display.quit()
-            sys.exit(0)
+            running = False
 
     for rule in rules:  # Вызов правил окон (отображение картинки итд.) Чтобы добавить правило, нужно в список rules добавить необходимую функцию НЕ ВЫЗВАННУЮ.
         if callable(rule):
