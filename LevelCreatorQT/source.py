@@ -175,7 +175,6 @@ class Beginning(StackedWidget):
         self.label = QLabel(
             "Здравствуйте! Cейчас мы поможем Вам создать уровни для игры 'Мозаика Осетии'.\n"
             "Для того, чтобы приступить, нажмите на кнопку Далее, или выберите слева второй пункт.")
-
         self.label.setStyleSheet("""
         QLabel {
             font-size: 25px;
