@@ -262,6 +262,7 @@ class CreatingLevels(StackedWidget):
                     data = LevelRedactor(level[1]).execute()
                     if data is not None:
                         level[1] = data
+                    self.imagelabel.update()
                     return
 
             levels.append([local_pos, LevelData()])
@@ -359,8 +360,6 @@ class LevelRedactor(QDialog):
         self.nextbtn.setFixedSize(100,50)
         self.nextbtn.clicked.connect(self.saveData)
         self.images = [[DClickImgLabel(), QPixmap(), False] for _ in range(4)]
-        self.addImage(getabspath("add.png"))
-        self.images[0][2] = False
         self.lout = QHBoxLayout()
         self.objlout = QVBoxLayout()
         self.mimageslout = QVBoxLayout()
@@ -396,11 +395,15 @@ class LevelRedactor(QDialog):
         self.lout.addLayout(self.mimageslout)
         self.lout.addLayout(self.objlout)
         self.setLayout(self.lout)
+        self.loadData()
 
-    def addImage(self, image):
+    def addImage(self, image, type="file"):
         for img in self.images:
             if not img[2]:
-                img[1].load(image)
+                if type == "file":
+                    img[1].load(image)
+                elif type == "buffer":
+                    img[1].loadFromData(image)
                 img[1] = img[1].scaled(300, 150, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
                 img[0].setPixmap(img[1])
                 img[0].setFixedSize(img[1].size())
@@ -425,21 +428,18 @@ class LevelRedactor(QDialog):
             self.addImage(path)
 
     def loadData(self):
-        #TODO когда то будет, проект еще MVP.
-        pass
+        if not self.levelData.isFilled:
+            self.addImage(getabspath("add.png"))
+            self.images[0][2] = False
+        else:
+            for img in self.levelData.images:
+                self.addImage(img, type="buffer")
+            self.nameinput.setText(self.levelData.name)
+            self.descinput.setText(self.levelData.desc)
 
     def saveData(self):
-        isPixmap = False
-        for pixmap in self.images:
-            if pixmap[2]:
-                pixmap = pixmap[1]
-                buffer = QtCore.QBuffer()
-                buffer.open(QtCore.QIODevice.OpenModeFlag.ReadWrite)
-                pixmap.save(buffer, "PNG")
-                self.levelData.images.append(buffer.data())
-                buffer.close()
-                isPixmap = True
 
+        isPixmap = any([pixmap[2] for pixmap in self.images])
         isDesc = self.descinput.toPlainText()
         isName = self.nameinput.text()
 
@@ -463,8 +463,22 @@ class LevelRedactor(QDialog):
             """)
             self.descinput.textChanged.connect(lambda: self.descinput.setStyleSheet(""))
 
+
         if all([isPixmap, isName, isDesc]):
+            self.levelData.images.clear()
+            for image in self.images:
+                if image[2]:
+                    pixmap = image[1]
+                    buffer = QtCore.QBuffer()
+                    buffer.open(QtCore.QIODevice.OpenModeFlag.ReadWrite)
+                    pixmap.save(buffer, "PNG")
+                    self.levelData.images.append(buffer.data())
+                    buffer.close()
+
+            self.levelData.name = isName
+            self.levelData.desc = isDesc
             self.levelData.isFilled = True
+            self.close()
 
     def execute(self):
         self.exec()
