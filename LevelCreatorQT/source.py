@@ -2,10 +2,10 @@ import os
 import sys
 
 from PIL import Image, ImageDraw
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QPixmap, QPainter, QPen, QColor, QKeyEvent
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QStackedWidget, QWidget, QHBoxLayout, QListWidget, \
-    QLabel, QListWidgetItem, QVBoxLayout, QMessageBox, QFileDialog, QDialog
+    QLabel, QListWidgetItem, QVBoxLayout, QMessageBox, QFileDialog, QDialog, QLineEdit, QTextEdit
 
 currentindexqss = """
         QLabel {
@@ -31,6 +31,7 @@ defaultqss = """
 
 AvInd = [1]
 levels = []
+
 
 def getabspath(path):
     if getattr(sys, 'frozen', False):
@@ -67,7 +68,7 @@ class StackedWidget(QWidget):
         self.indexes = QListWidget()
         self.indexes.setSpacing(15)
         self.indexes.setMaximumSize(200, 500)
-        self.indexes.setMinimumSize(190, 250)
+        self.indexes.setMinimumSize(190, 170)
         self.nextbtn = QPushButton(self)
         self.nextbtn.clicked.connect(self.nextwidget)
         self.nextbtn.setText("Далее")
@@ -153,7 +154,7 @@ class LoadingMap(StackedWidget):
         self.initialize()
 
     def initialize(self):
-        self.loadImage("Preview.jpg")
+        self.loadImage(getabspath("Preview.jpg"))
 
     def loadImage(self, path):
         self.pixmap.load(getabspath(path))
@@ -205,8 +206,10 @@ class CreatingLevels(StackedWidget):
                     return
 
             levels.append(tuple([local_pos, LevelData()]))
-            if len(levels) > 1: AvInd.append(2)
-            elif 2 in AvInd: AvInd.remove(2)
+            if len(levels) > 1:
+                AvInd.append(2)
+            elif 2 in AvInd:
+                AvInd.remove(2)
             self.imagelabel.update()
 
     def keyPressEvent(self, event):
@@ -267,6 +270,7 @@ class LevelData:
         self.desc = ''
         self.memorials = []
 
+
 class Memorial:
     def __init__(self):
         self.preview = None
@@ -274,16 +278,79 @@ class Memorial:
         self.name = ''
         self.desc = ''
         self.puzzle_parts = None
-        
+
+
 class LevelRedactor(QDialog):
     def __init__(self, LevelData):
         super().__init__()
         self.levelData = LevelData
+        self.setWindowTitle("Редактирование данных уровня")
+        self.resize(900, 400)
+
+        self.images = [[DClickImgLabel(), QPixmap(), False] for _ in range(4)]
+        self.addImage(getabspath("add.png"))
+        self.images[0][2] = False
+        self.lout = QHBoxLayout()
+        self.objlout = QVBoxLayout()
         self.mimageslout = QVBoxLayout()
         self.imagelout1 = QHBoxLayout()
         self.imagelout2 = QHBoxLayout()
+        self.nameinput = QLineEdit()
+        self.descinput = QTextEdit()
+        self.nameinput.setPlaceholderText("Введите название обьекта")
+        self.descinput.setPlaceholderText("Введите описание обьекта")
+        self.objlout.addWidget(self.nameinput)
+        self.objlout.addWidget(self.descinput)
+        for i in range(2):
+            self.imagelout1.addWidget(self.images[i][0], alignment=Qt.AlignmentFlag.AlignLeft)
+            self.imagelout2.addWidget(self.images[i + 2][0], alignment=Qt.AlignmentFlag.AlignLeft)
+            self.images[i][0].hide()
+            self.images[i + 2][0].hide()
+
+        self.images[0][0].show()
         self.mimageslout.addLayout(self.imagelout1)
         self.mimageslout.addLayout(self.imagelout2)
+        self.textlabel = QLabel(text="Загрузите фотографии обьекта 16:9, нажав на последнее добавленное изображение сверху.\n"
+                                     "Максимум изображений: 4")
+        self.textlabel.setStyleSheet("""
+            QLabel {
+                font-size: 15px;
+            }
+        """)
+        self.textlabel.setMinimumWidth(500)
+        self.textlabel.setWordWrap(True)
+
+        self.mimageslout.addWidget(self.textlabel, alignment=Qt.AlignmentFlag.AlignLeft)
+        self.lout.addLayout(self.mimageslout)
+        self.lout.addLayout(self.objlout)
+        self.setLayout(self.lout)
+
+    def addImage(self, image):
+        for img in self.images:
+            if not img[2]:
+                img[1].load(image)
+                img[1] = img[1].scaled(300, 150, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+                img[0].setPixmap(img[1])
+                img[0].setFixedSize(img[1].size())
+                img[2] = True
+                img[0].setAlignment(Qt.AlignmentFlag.AlignLeft)
+                img[0].show()
+                if self.images.index(img) == 3:
+                    img[0].setStyleSheet("")
+                else:
+                    img[0].clicked.connect(self.selectImage)
+                break
+            else:
+                if img[0].styleSheet():
+                    img[0].clicked.disconnect()
+                    img[0].setStyleSheet("")
+
+
+    def selectImage(self):
+        path, _ = QFileDialog.getOpenFileName(self, "Выберите изображение", "",
+                                              "Images (*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm)")
+        if path:
+            self.addImage(path)
 
 
 class Finishing(StackedWidget):
@@ -293,6 +360,27 @@ class Finishing(StackedWidget):
         self.indexes.itemWidget(self.indexes.item(self.index)).setStyleSheet(currentindexqss)
         self.nextbtn.hide()
 
+class DClickImgLabel(QLabel):
+    clicked = pyqtSignal()
+    def __init__(self):
+        super().__init__()
+        self.setMouseTracking(True)
+        self.setStyleSheet("""
+            QLabel {
+                border-radius: 10px;
+                border: 2px solid transparent;
+                padding: 5px;
+            }
+            QLabel:hover {
+                border-radius: 10px;
+                border: 2px solid black;
+                background-color: gray;
+            }
+        """)
+
+
+    def mousePressEvent(self, a0):
+        self.clicked.emit()
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -306,6 +394,7 @@ class MainWindow(QMainWindow):
         self.resize(1280, 720)
         self.setCentralWidget(self.cw)
         self.show()
+
 
 app = QApplication([])
 window = MainWindow()
