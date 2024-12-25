@@ -29,6 +29,46 @@ defaultqss = """
         }
         """
 
+buttonqss = """
+        QPushButton {
+            background-color: purple;
+            border: none;
+            color: white; 
+            padding: 15px 32px;
+            text-align: center;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 12px;
+            transition: background-color 0.3s ease;
+        }
+        
+        QPushButton:hover {
+            background-color: blue;
+        }
+        
+        QPushButton:pressed {
+            background-color: black;
+        }
+        """
+loadbtnqss = """
+        QPushButton {
+            background-color: #e0e0e0; /* Light gray background */
+            color: black;            /* White text color */
+            border: 1px solid #808080; /* Dark gray border */
+            border-radius: 5px;        /* Rounded corners */
+            padding: 10px 20px;        /* Padding inside the button */
+            font-weight: bold;         /* Bold font for prominence */
+        }
+        
+        QPushButton:hover {
+            background-color: #c0c0c0; /* Slightly darker on hover */
+        }
+        
+        QPushButton:pressed {
+            background-color: #a0a0a0; /* Even darker on press */
+        }
+        """
+
 AvInd = [1]
 levels = []
 
@@ -70,6 +110,7 @@ class StackedWidget(QWidget):
         self.indexes.setMaximumSize(200, 500)
         self.indexes.setMinimumSize(190, 170)
         self.nextbtn = QPushButton(self)
+        self.nextbtn.setStyleSheet(buttonqss)
         self.nextbtn.clicked.connect(self.nextwidget)
         self.nextbtn.setText("Далее")
         self.labels = [QLabel(" Начало"),
@@ -139,6 +180,7 @@ class LoadingMap(StackedWidget):
         self.indexes.itemWidget(self.indexes.item(self.index)).setStyleSheet(currentindexqss)
         self.imagelout = QVBoxLayout()
         self.selectMapBtn = QPushButton(text="Загрузить")
+        self.selectMapBtn.setStyleSheet(loadbtnqss)
         self.selectMapBtn.clicked.connect(self.selectImage)
         self.imagelout.addWidget(self.imagelabel, alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignCenter)
         self.imagelout.addWidget(self.selectMapBtn, alignment=Qt.AlignmentFlag.AlignCenter)
@@ -286,7 +328,9 @@ class LevelRedactor(QDialog):
         self.levelData = LevelData
         self.setWindowTitle("Редактирование данных уровня")
         self.resize(900, 400)
-
+        self.nextbtn = QPushButton(text="Далее")
+        self.nextbtn.setStyleSheet(buttonqss)
+        self.nextbtn.setFixedSize(100,50)
         self.images = [[DClickImgLabel(), QPixmap(), False] for _ in range(4)]
         self.addImage(getabspath("add.png"))
         self.images[0][2] = False
@@ -301,6 +345,7 @@ class LevelRedactor(QDialog):
         self.descinput.setPlaceholderText("Введите описание обьекта")
         self.objlout.addWidget(self.nameinput)
         self.objlout.addWidget(self.descinput)
+        self.objlout.addWidget(self.nextbtn, alignment=Qt.AlignmentFlag.AlignRight)
         for i in range(2):
             self.imagelout1.addWidget(self.images[i][0], alignment=Qt.AlignmentFlag.AlignLeft)
             self.imagelout2.addWidget(self.images[i + 2][0], alignment=Qt.AlignmentFlag.AlignLeft)
@@ -352,6 +397,8 @@ class LevelRedactor(QDialog):
         if path:
             self.addImage(path)
 
+    def loadData(self):
+        pass
 
 class Finishing(StackedWidget):
     def __init__(self):
