@@ -2,10 +2,11 @@ import os
 import sys
 
 from PIL import Image, ImageDraw
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QPixmap
+from PyQt6 import QtCore
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtGui import QPixmap, QPainter, QPen, QColor, QKeyEvent
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QStackedWidget, QWidget, QHBoxLayout, QListWidget, \
-    QLabel, QListWidgetItem, QVBoxLayout, QMessageBox, QFileDialog
+    QLabel, QListWidgetItem, QVBoxLayout, QMessageBox, QFileDialog, QDialog, QLineEdit, QTextEdit, QStackedLayout
 
 currentindexqss = """
         QLabel {
@@ -29,7 +30,59 @@ defaultqss = """
         }
         """
 
+buttonqss = """
+        QPushButton {
+            background-color: purple;
+            border: none;
+            color: white; 
+            padding: 15px 32px;
+            text-align: center;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 12px;
+            transition: background-color 0.3s ease;
+        }
+        
+        QPushButton:hover {
+            background-color: blue;
+        }
+        
+        QPushButton:pressed {
+            background-color: black;
+        }
+        """
+loadbtnqss = """
+        QPushButton {
+            background-color: #e0e0e0;
+            color: black;
+            border: 1px solid #808080;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-weight: bold;
+        }
+        
+        QPushButton:hover {
+            background-color: #c0c0c0;
+        }
+        
+        QPushButton:pressed {
+            background-color: #a0a0a0;
+        }
+        """
+imgqss = """
+            QLabel {
+                border-radius: 10px;
+                border: 2px solid black;
+                padding: 5px;
+            }
+            QLabel:hover {
+                border-radius: 10px;
+                background-color: gray;
+            }
+        """
+
 AvInd = [1]
+levels = []
 
 
 def getabspath(path):
@@ -39,6 +92,7 @@ def getabspath(path):
         base_path = os.path.dirname(os.path.abspath(__file__))
 
     return os.path.join(base_path, path)
+
 
 class CentralWidget(QStackedWidget):
     def __init__(self):
@@ -50,7 +104,6 @@ class CentralWidget(QStackedWidget):
             Beginning(),
             LoadingMap(),
             CreatingLevels(),
-            ConfiguringLevels(),
             Finishing()
         ]
         for widget in self.widgets:
@@ -67,14 +120,14 @@ class StackedWidget(QWidget):
         self.indexes = QListWidget()
         self.indexes.setSpacing(15)
         self.indexes.setMaximumSize(200, 500)
-        self.indexes.setMinimumSize(190, 250)
+        self.indexes.setMinimumSize(190, 170)
         self.nextbtn = QPushButton(self)
+        self.nextbtn.setStyleSheet(buttonqss)
         self.nextbtn.clicked.connect(self.nextwidget)
         self.nextbtn.setText("Далее")
         self.labels = [QLabel(" Начало"),
                        QLabel(" Загрузка карты"),
                        QLabel(" Создание уровней"),
-                       QLabel(" Настройка уровней"),
                        QLabel(" Сохранение")]
         [self.addItemToList(l) for l in self.labels]
         self.indexes.itemClicked.connect(self.OIC)
@@ -124,8 +177,7 @@ class Beginning(StackedWidget):
             "Для того, чтобы приступить, нажмите на кнопку Далее, или выберите слева второй пункт.")
         self.label.setStyleSheet("""
         QLabel {
-            border-radius: 5px;      /* Закругленные углы */
-            font-size: 25px;         /* Размер шрифта */
+            font-size: 25px;
         }
         """)
         self.lout.addWidget(self.label, alignment=Qt.AlignmentFlag.AlignTop)
@@ -140,35 +192,38 @@ class LoadingMap(StackedWidget):
         self.indexes.itemWidget(self.indexes.item(self.index)).setStyleSheet(currentindexqss)
         self.imagelout = QVBoxLayout()
         self.selectMapBtn = QPushButton(text="Загрузить")
+        self.selectMapBtn.setStyleSheet(loadbtnqss)
         self.selectMapBtn.clicked.connect(self.selectImage)
         self.imagelout.addWidget(self.imagelabel, alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignCenter)
         self.imagelout.addWidget(self.selectMapBtn, alignment=Qt.AlignmentFlag.AlignCenter)
-        self.imagelout.addWidget(QLabel(text="                              Загрузите карту для уровня.\n"
-                                             "Нажмите на кнопку Загрузить и укажите путь к вашей карте."), alignment=Qt.AlignmentFlag.AlignCenter)
+        self.imagelout.addWidget(QLabel(text="Загрузите карту для уровня.\n"
+                                             "Нажмите на кнопку Загрузить и укажите путь к вашей карте."),
+                                 alignment=Qt.AlignmentFlag.AlignCenter)
         self.imagelout.itemAt(2).widget().setStyleSheet("""
         QLabel {
-            border-radius: 5px;      /* Закругленные углы */
-            font-size: 15px;         /* Размер шрифта */
+            font-size: 15px;
         }
         """)
         self.lout.addLayout(self.imagelout)
         self.initialize()
 
     def initialize(self):
-        self.loadImage("Preview.jpg")
+        self.loadImage(getabspath("Preview.jpg"))
 
     def loadImage(self, path):
         self.pixmap.load(getabspath(path))
         self.imagelabel.setPixmap(self.pixmap)
+        global levels
+        levels.clear()
 
     def selectImage(self):
-        file_filter = "Images (*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm)"
-        path, _ = QFileDialog.getOpenFileName(self, "Выберите изображение", "", file_filter)
-
+        path, _ = QFileDialog.getOpenFileName(self, "Выберите изображение", "",
+                                              "Images (*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm)")
         if path:
             self.loadImage(path)
             global AvInd
-            AvInd.append(self.index + 1)
+            if self.index + 1 not in AvInd: AvInd.append(self.index + 1)
+            self.parent().widgets[2].setImage(self.pixmap)
 
 
 class CreatingLevels(StackedWidget):
@@ -176,22 +231,298 @@ class CreatingLevels(StackedWidget):
         super().__init__()
         self.index = 2
         self.indexes.itemWidget(self.indexes.item(self.index)).setStyleSheet(currentindexqss)
+        self.imagelout = QVBoxLayout()
+        self.setMouseTracking(True)
+        self.imagelabel = ImageLabel()
+        self.imagetext = QLabel(text="Выберите точки на карте, где будут находиться города.\n"
+                                     "Для этого щелкните мышкой по нужным вам точкам на карте.\n"
+                                     "Первая отмеченая точка будет не игровой и будет являться точкой старта пользователя.\n"
+                                     "Типа въезд в город.\n"
+                                     "Для удаления точки наведите на нее курсор и нажмите delete.\n"
+                                     "Нажмите еще раз на созданную точку чтобы открыть меню её редактирования.")
+        self.imagetext.setStyleSheet("""
+        QLabel {
+            font-size: 15px;
+        }
+        """)
+        self.imagelout.addWidget(self.imagelabel, alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignCenter)
+        self.imagelout.addWidget(self.imagetext, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.lout.addLayout(self.imagelout)
+
+    def mousePressEvent(self, a0):
+        if self.imagelabel.geometry().contains(a0.position().toPoint()):
+            local_pos = self.imagelabel.mapFromGlobal(a0.globalPosition().toPoint())
+            global levels
+            for level in levels:
+                posi = level[0]
+                if abs(posi.x() - local_pos.x()) < 10 and abs(posi.y() - local_pos.y()) < 10:
+                    print(levels.index(level))
+                    if levels.index(level) == 0:
+                        return
+                    data = LevelRedactor(level[1]).execute()
+                    if data is not None:
+                        level[1] = data
+                    self.imagelabel.update()
+                    return
+
+            levels.append([local_pos, LevelData()])
+            if len(levels) > 1 and 3 not in AvInd:
+                AvInd.append(3)
+            elif len(levels) < 2 and 3 in AvInd:
+                AvInd.remove(3)
+            self.imagelabel.update()
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key.Key_Delete:
+            global levels
+            mouse_pos = self.imagelabel.mapFromGlobal(self.cursor().pos())
+            for posi in levels:
+                pos = posi[0]
+                if abs(pos.x() - mouse_pos.x()) < 10 and abs(pos.y() - mouse_pos.y()) < 10:
+                    levels.remove(posi)
+                    self.imagelabel.update()
+                    return
+
+    def setImage(self, pixmap):
+        self.imagelabel.setPixmap(pixmap)
+        self.imagelabel.ispixmap = True
 
 
-class ConfiguringLevels(StackedWidget):
+class ImageLabel(QLabel):
     def __init__(self):
         super().__init__()
-        self.index = 3
-        self.indexes.itemWidget(self.indexes.item(self.index)).setStyleSheet(currentindexqss)
+        self.ispixmap = False
+        self.setMouseTracking(True)
+
+    def paintEvent(self, event):
+        super().paintEvent(event)
+        global levels
+        if not self.ispixmap: return
+        if not levels: return
+        redPen = QColor(255, 0, 0)
+        bluePen = QColor(0, 0, 255)
+        greenPen = QColor(0, 255, 0)
+        yellowPen = QColor(255, 255, 0)
+        painter = QPainter(self)
+        painter.setPen(bluePen)
+        painter.setBrush(bluePen)
+        painter.drawEllipse(levels[0][0], 10, 10)
+
+        for level in levels[1::]:
+            pos = level[0]
+            if level[1].isFilled == 1:
+                painter.setPen(greenPen)
+                painter.setBrush(greenPen)
+            elif level[1].isFilled == 2:
+                painter.setPen(yellowPen)
+                painter.setBrush(yellowPen)
+            else:
+                painter.setPen(redPen)
+                painter.setBrush(redPen)
+            painter.drawEllipse(pos, 10, 10)
+
+    def mouseMoveEvent(self, event):
+        global levels
+        mouse_pos = self.mapFromGlobal(self.cursor().pos())
+        for pos in levels:
+            pos = pos[0]
+            if abs(pos.x() - mouse_pos.x()) < 10 and abs(pos.y() - mouse_pos.y()) < 10:
+                self.setCursor(Qt.CursorShape.PointingHandCursor)
+                return
+
+        self.setCursor(Qt.CursorShape.ArrowCursor)
+
+
+
+class LevelData:
+    def __init__(self):
+        self.isFilled = 0
+        self.images = []
+        self.name = ''
+        self.desc = ''
+        self.memorials = []
+
+
+class Memorial:
+    def __init__(self):
+        self.isFilled = False
+        self.preview = None
+        self.images = []
+        self.name = ''
+        self.desc = ''
+        self.puzzle_parts = None
+
+
+class LevelEditorWidget(QWidget):
+    def __init__(self, LevelData):
+        super().__init__()
+        self.levelData = LevelData
+        self.nextbtn = QPushButton(text="Далее")
+        self.nextbtn.setStyleSheet(buttonqss)
+        self.nextbtn.setFixedSize(100, 50)
+        self.nextbtn.clicked.connect(self.saveData)
+        self.images = [[DClickImgLabel(), QPixmap(), False] for _ in range(4)]
+        self.lout = QHBoxLayout()
+        self.objlout = QVBoxLayout()
+        self.mimageslout = QVBoxLayout()
+        self.imagelout1 = QHBoxLayout()
+        self.imagelout2 = QHBoxLayout()
+        self.nameinput = QLineEdit()
+        self.descinput = QTextEdit()
+        self.nameinput.setPlaceholderText("Введите название обьекта")
+        self.descinput.setPlaceholderText("Введите описание обьекта")
+        self.objlout.addWidget(self.nameinput)
+        self.objlout.addWidget(self.descinput)
+        self.objlout.addWidget(self.nextbtn, alignment=Qt.AlignmentFlag.AlignRight)
+        for i in range(2):
+            self.imagelout1.addWidget(self.images[i][0], alignment=Qt.AlignmentFlag.AlignLeft)
+            self.imagelout2.addWidget(self.images[i + 2][0], alignment=Qt.AlignmentFlag.AlignLeft)
+            self.images[i][0].hide()
+            self.images[i + 2][0].hide()
+
+        self.images[0][0].show()
+        self.mimageslout.addLayout(self.imagelout1)
+        self.mimageslout.addLayout(self.imagelout2)
+        self.textlabel = QLabel(text="Загрузите фотографии обьекта 16:9, нажав на выделенное изображение сверху.\n"
+                                     "Максимум изображений: 4")
+        self.textlabel.setStyleSheet("""
+            QLabel {
+                font-size: 15px;
+            }
+        """)
+        self.textlabel.setMinimumWidth(500)
+        self.textlabel.setWordWrap(True)
+
+        self.mimageslout.addWidget(self.textlabel, alignment=Qt.AlignmentFlag.AlignLeft)
+        self.lout.addLayout(self.mimageslout)
+        self.lout.addLayout(self.objlout)
+        self.setLayout(self.lout)
+        self.loadData()
+
+
+    def addImage(self, image, type="file"):
+        for img in self.images:
+            if not img[2]:
+                if type == "file":
+                    img[1].load(image)
+                elif type == "buffer":
+                    img[1].loadFromData(image)
+                img[1] = img[1].scaled(300, 150, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+                img[0].setPixmap(img[1])
+                img[0].setFixedSize(img[1].size())
+                img[2] = True
+                img[0].setAlignment(Qt.AlignmentFlag.AlignLeft)
+                img[0].show()
+                if self.images.index(img) == 3:
+                    img[0].setStyleSheet("")
+                else:
+                    img[0].clicked.connect(self.selectImage)
+                break
+            else:
+                if img[0].styleSheet():
+                    img[0].clicked.disconnect()
+                    img[0].setStyleSheet("")
+
+    def selectImage(self):
+        path, _ = QFileDialog.getOpenFileName(self, "Выберите изображение", "",
+                                              "Images (*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm)")
+        if path:
+            self.addImage(path)
+
+    def loadData(self):
+        if not self.levelData.isFilled:
+            self.addImage(getabspath("add.png"))
+            self.images[0][2] = False
+        else:
+            for img in self.levelData.images:
+                self.addImage(img, type="buffer")
+            self.nameinput.setText(self.levelData.name)
+            self.descinput.setText(self.levelData.desc)
+
+    def saveData(self):
+        isPixmap = any([pixmap[2] for pixmap in self.images])
+        isDesc = self.descinput.toPlainText()
+        isName = self.nameinput.text()
+
+        if not isPixmap:
+            self.images[0][0].setStyleSheet(imgqss.replace("black", "red"))
+        if not isName:
+            self.nameinput.setStyleSheet("""
+            QLineEdit {
+                border: 2px solid red;
+                border-radius: 4px;
+            }
+            """)
+            self.nameinput.textChanged.connect(lambda: self.nameinput.setStyleSheet(""))
+        if not isDesc:
+            self.descinput.setStyleSheet("""
+            QTextEdit {
+                border: 2px solid red;
+                padding: 2px;
+                border-radius: 4px;
+            }
+            """)
+            self.descinput.textChanged.connect(lambda: self.descinput.setStyleSheet(""))
+
+        if all([isPixmap, isName, isDesc]):
+            self.levelData.images.clear()
+            for image in self.images:
+                if image[2]:
+                    pixmap = image[1]
+                    buffer = QtCore.QBuffer()
+                    buffer.open(QtCore.QIODevice.OpenModeFlag.ReadWrite)
+                    pixmap.save(buffer, "PNG")
+                    self.levelData.images.append(buffer.data())
+                    buffer.close()
+
+            self.levelData.name = isName
+            self.levelData.desc = isDesc
+            self.levelData.isFilled = 2
+
+class MemorialSelectorWidget(QWidget):
+    def __init__(self, LevelData):
+        super().__init__()
+
+    def loadData(self):
+        pass
+
+class LevelRedactor(QDialog):
+    def __init__(self, LevelData):
+        super().__init__()
+        self.levelData = LevelData
+        self.setWindowTitle("Редактирование данных уровня")
+        self.resize(900, 400)
+
+        self.stackedLayout = QStackedLayout()
+        self.setLayout(self.stackedLayout)
+
+        self.levelEditorWidget = LevelEditorWidget(self.levelData)
+        self.stackedLayout.addWidget(self.levelEditorWidget)
+
+    def execute(self):
+        self.exec()
+        return self.levelData if self.levelData.isFilled else None
 
 
 class Finishing(StackedWidget):
     def __init__(self):
         super().__init__()
-        self.index = 4
+        self.index = 3
         self.indexes.itemWidget(self.indexes.item(self.index)).setStyleSheet(currentindexqss)
         self.nextbtn.hide()
 
+class DClickImgLabel(QLabel):
+    clicked = pyqtSignal()
+    def __init__(self):
+        super().__init__()
+        self.setMouseTracking(True)
+        self.setStyleSheet(imgqss)
+
+
+    def mousePressEvent(self, a0):
+        if self.styleSheet() == imgqss.replace("black", "red"):
+            self.setStyleSheet(imgqss)
+        self.clicked.emit()
 
 class MainWindow(QMainWindow):
     def __init__(self):
