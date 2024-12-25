@@ -52,20 +52,20 @@ buttonqss = """
         """
 loadbtnqss = """
         QPushButton {
-            background-color: #e0e0e0; /* Light gray background */
-            color: black;            /* White text color */
-            border: 1px solid #808080; /* Dark gray border */
-            border-radius: 5px;        /* Rounded corners */
-            padding: 10px 20px;        /* Padding inside the button */
-            font-weight: bold;         /* Bold font for prominence */
+            background-color: #e0e0e0;
+            color: black;
+            border: 1px solid #808080;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-weight: bold;
         }
         
         QPushButton:hover {
-            background-color: #c0c0c0; /* Slightly darker on hover */
+            background-color: #c0c0c0;
         }
         
         QPushButton:pressed {
-            background-color: #a0a0a0; /* Even darker on press */
+            background-color: #a0a0a0;
         }
         """
 
