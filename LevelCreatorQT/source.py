@@ -6,7 +6,7 @@ from PyQt6 import QtCore
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QPixmap, QPainter, QPen, QColor, QKeyEvent
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QStackedWidget, QWidget, QHBoxLayout, QListWidget, \
-    QLabel, QListWidgetItem, QVBoxLayout, QMessageBox, QFileDialog, QDialog, QLineEdit, QTextEdit
+    QLabel, QListWidgetItem, QVBoxLayout, QMessageBox, QFileDialog, QDialog, QLineEdit, QTextEdit, QStackedLayout
 
 currentindexqss = """
         QLabel {
@@ -175,9 +175,10 @@ class Beginning(StackedWidget):
         self.label = QLabel(
             "Здравствуйте! Cейчас мы поможем Вам создать уровни для игры 'Мозаика Осетии'.\n"
             "Для того, чтобы приступить, нажмите на кнопку Далее, или выберите слева второй пункт.")
+
         self.label.setStyleSheet("""
         QLabel {
-            font-size: 25px;         /* Размер шрифта */
+            font-size: 25px;
         }
         """)
         self.lout.addWidget(self.label, alignment=Qt.AlignmentFlag.AlignTop)
@@ -302,6 +303,7 @@ class ImageLabel(QLabel):
         redPen = QColor(255, 0, 0)
         bluePen = QColor(0, 0, 255)
         greenPen = QColor(0, 255, 0)
+        yellowPen = QColor(255, 255, 0)
         painter = QPainter(self)
         painter.setPen(bluePen)
         painter.setBrush(bluePen)
@@ -309,9 +311,12 @@ class ImageLabel(QLabel):
 
         for level in levels[1::]:
             pos = level[0]
-            if level[1].isFilled:
+            if level[1].isFilled == 1:
                 painter.setPen(greenPen)
                 painter.setBrush(greenPen)
+            elif level[1].isFilled == 2:
+                painter.setPen(yellowPen)
+                painter.setBrush(yellowPen)
             else:
                 painter.setPen(redPen)
                 painter.setBrush(redPen)
@@ -332,7 +337,7 @@ class ImageLabel(QLabel):
 
 class LevelData:
     def __init__(self):
-        self.isFilled = False
+        self.isFilled = 0
         self.images = []
         self.name = ''
         self.desc = ''
@@ -349,15 +354,13 @@ class Memorial:
         self.puzzle_parts = None
 
 
-class LevelRedactor(QDialog):
+class LevelEditorWidget(QWidget):
     def __init__(self, LevelData):
         super().__init__()
         self.levelData = LevelData
-        self.setWindowTitle("Редактирование данных уровня")
-        self.resize(900, 400)
         self.nextbtn = QPushButton(text="Далее")
         self.nextbtn.setStyleSheet(buttonqss)
-        self.nextbtn.setFixedSize(100,50)
+        self.nextbtn.setFixedSize(100, 50)
         self.nextbtn.clicked.connect(self.saveData)
         self.images = [[DClickImgLabel(), QPixmap(), False] for _ in range(4)]
         self.lout = QHBoxLayout()
@@ -397,6 +400,7 @@ class LevelRedactor(QDialog):
         self.setLayout(self.lout)
         self.loadData()
 
+
     def addImage(self, image, type="file"):
         for img in self.images:
             if not img[2]:
@@ -420,7 +424,6 @@ class LevelRedactor(QDialog):
                     img[0].clicked.disconnect()
                     img[0].setStyleSheet("")
 
-
     def selectImage(self):
         path, _ = QFileDialog.getOpenFileName(self, "Выберите изображение", "",
                                               "Images (*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm)")
@@ -438,7 +441,6 @@ class LevelRedactor(QDialog):
             self.descinput.setText(self.levelData.desc)
 
     def saveData(self):
-
         isPixmap = any([pixmap[2] for pixmap in self.images])
         isDesc = self.descinput.toPlainText()
         isName = self.nameinput.text()
@@ -463,7 +465,6 @@ class LevelRedactor(QDialog):
             """)
             self.descinput.textChanged.connect(lambda: self.descinput.setStyleSheet(""))
 
-
         if all([isPixmap, isName, isDesc]):
             self.levelData.images.clear()
             for image in self.images:
@@ -477,8 +478,27 @@ class LevelRedactor(QDialog):
 
             self.levelData.name = isName
             self.levelData.desc = isDesc
-            self.levelData.isFilled = True
-            self.close()
+            self.levelData.isFilled = 2
+
+class MemorialSelectorWidget(QWidget):
+    def __init__(self, LevelData):
+        super().__init__()
+
+    def loadData(self):
+        pass
+
+class LevelRedactor(QDialog):
+    def __init__(self, LevelData):
+        super().__init__()
+        self.levelData = LevelData
+        self.setWindowTitle("Редактирование данных уровня")
+        self.resize(900, 400)
+
+        self.stackedLayout = QStackedLayout()
+        self.setLayout(self.stackedLayout)
+
+        self.levelEditorWidget = LevelEditorWidget(self.levelData)
+        self.stackedLayout.addWidget(self.levelEditorWidget)
 
     def execute(self):
         self.exec()
