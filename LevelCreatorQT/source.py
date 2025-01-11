@@ -6,7 +6,8 @@ from PyQt6 import QtCore
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QPixmap, QPainter, QPen, QColor, QKeyEvent
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QStackedWidget, QWidget, QHBoxLayout, QListWidget, \
-    QLabel, QListWidgetItem, QVBoxLayout, QMessageBox, QFileDialog, QDialog, QLineEdit, QTextEdit, QStackedLayout
+    QLabel, QListWidgetItem, QVBoxLayout, QMessageBox, QFileDialog, QDialog, QLineEdit, QTextEdit, QStackedLayout, \
+    QGridLayout
 
 currentindexqss = """
         QLabel {
@@ -333,7 +334,6 @@ class ImageLabel(QLabel):
         self.setCursor(Qt.CursorShape.ArrowCursor)
 
 
-
 class LevelData:
     def __init__(self):
         self.isFilled = 0
@@ -344,9 +344,9 @@ class LevelData:
 
 
 class Memorial:
-    def __init__(self):
+    def __init__(self, preview):
         self.isFilled = False
-        self.preview = None
+        self.preview = preview
         self.images = []
         self.name = ''
         self.desc = ''
@@ -399,7 +399,6 @@ class LevelEditorWidget(QWidget):
         self.setLayout(self.lout)
         self.loadData()
 
-
     def addImage(self, image, type="file"):
         for img in self.images:
             if not img[2]:
@@ -407,7 +406,8 @@ class LevelEditorWidget(QWidget):
                     img[1].load(image)
                 elif type == "buffer":
                     img[1].loadFromData(image)
-                img[1] = img[1].scaled(300, 150, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+                img[1] = img[1].scaled(300, 150, Qt.AspectRatioMode.KeepAspectRatio,
+                                       Qt.TransformationMode.SmoothTransformation)
                 img[0].setPixmap(img[1])
                 img[0].setFixedSize(img[1].size())
                 img[2] = True
@@ -477,14 +477,92 @@ class LevelEditorWidget(QWidget):
 
             self.levelData.name = isName
             self.levelData.desc = isDesc
-            self.levelData.isFilled = 2
+            if self.levelData.isFilled != 1:
+                self.levelData.isFilled = 2
+            self.parent().stackedLayout.setCurrentIndex(1)
+
 
 class MemorialSelectorWidget(QWidget):
     def __init__(self, LevelData):
         super().__init__()
+        self.grid_layout = QGridLayout()
+        self.levelData = LevelData
+        self.images = []
+        self.setLayout(self.grid_layout)
+        self.loadData()
+
+    def addImage(self, image, type="file", selected=False):
+        if selected:
+            for i, (img_label, pixmap, is_temp) in enumerate(self.images):
+                if is_temp:
+                    img_label.clicked.disconnect()
+                    if type == "file":
+                        pixmap.load(image)
+                    elif type == "buffer":
+                        pixmap.loadFromData(image)
+                    pixmap = pixmap.scaled(300, 150, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+                    img_label.setPixmap(pixmap)
+                    img_label.setFixedSize(pixmap.size())
+                    self.images[i][1] = pixmap
+                    self.images[i][2] = False
+                    memorial = Memorial(pixmap)
+                    self.levelData.memorials.append(memorial)
+                    img_label.clicked.connect(lambda m=memorial: self.editMemorial(m))
+                    self.addTempImage()
+                    return
+
+        img_label = DClickImgLabel()
+        pixmap = QPixmap()
+        if type == "file":
+            pixmap.load(image)
+        elif type == "buffer":
+            pixmap.loadFromData(image)
+        pixmap = pixmap.scaled(300, 150, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+        img_label.setPixmap(pixmap)
+        img_label.setFixedSize(pixmap.size())
+        img_label.show()
+        self.images.append([img_label, pixmap, False])
+        row = (len(self.images) - 1) // 2
+        col = (len(self.images) - 1) % 2
+        self.grid_layout.addWidget(img_label, row, col, alignment=Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+
+        if selected:
+            memorial = Memorial(pixmap)
+            self.levelData.memorials.append(memorial)
+            img_label.clicked.connect(lambda m=memorial: self.editMemorial(m))
+        else:
+            img_label.clicked.connect(self.selectImage)
+
+    def addTempImage(self):
+        img_label = DClickImgLabel()
+        pixmap = QPixmap(getabspath("addmem.png"))
+        pixmap = pixmap.scaled(300, 150, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+        img_label.setPixmap(pixmap)
+        img_label.setFixedSize(pixmap.size())
+        img_label.show()
+        self.images.append([img_label, pixmap, True])
+        row = (len(self.images) - 1) // 2
+        col = (len(self.images) - 1) % 2
+        self.grid_layout.addWidget(img_label, row, col, alignment=Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+        img_label.clicked.connect(self.selectImage)
+
+    def editMemorial(self, memorial):
+        print(f"Editing memorial: {memorial.name}")
 
     def loadData(self):
-        pass
+        if not self.levelData.memorials:
+            self.addTempImage()
+        else:
+            for memorial in self.levelData.memorials:
+                self.addImage(memorial.preview, type="buffer", selected=True)
+            self.addTempImage()
+
+    def selectImage(self):
+        path, _ = QFileDialog.getOpenFileName(self, "Выберите изображение", "", "Images (*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm)")
+        if path:
+            self.addImage(path, selected=True)
+        self.levelData.isFilled = 1
+
 
 class LevelRedactor(QDialog):
     def __init__(self, LevelData):
@@ -497,7 +575,9 @@ class LevelRedactor(QDialog):
         self.setLayout(self.stackedLayout)
 
         self.levelEditorWidget = LevelEditorWidget(self.levelData)
+        self.memorialSelectorWidget = MemorialSelectorWidget(self.levelData)
         self.stackedLayout.addWidget(self.levelEditorWidget)
+        self.stackedLayout.addWidget(self.memorialSelectorWidget)
 
     def execute(self):
         self.exec()
@@ -511,18 +591,20 @@ class Finishing(StackedWidget):
         self.indexes.itemWidget(self.indexes.item(self.index)).setStyleSheet(currentindexqss)
         self.nextbtn.hide()
 
+
 class DClickImgLabel(QLabel):
     clicked = pyqtSignal()
+
     def __init__(self):
         super().__init__()
         self.setMouseTracking(True)
         self.setStyleSheet(imgqss)
 
-
     def mousePressEvent(self, a0):
         if self.styleSheet() == imgqss.replace("black", "red"):
             self.setStyleSheet(imgqss)
         self.clicked.emit()
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
