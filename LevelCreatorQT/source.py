@@ -234,7 +234,7 @@ class CreatingLevels(StackedWidget):
         self.indexes.itemWidget(self.indexes.item(self.index)).setStyleSheet(currentindexqss)
         self.imagelout = QVBoxLayout()
         self.setMouseTracking(True)
-        self.imagelabel = ImageLabel()
+        self.imagelabel = MapLabel()
         self.imagetext = QLabel(text="Выберите точки на карте, где будут находиться города.\n"
                                      "Для этого щелкните мышкой по нужным вам точкам на карте.\n"
                                      "Первая отмеченая точка будет не игровой и будет являться точкой старта пользователя.\n"
@@ -289,7 +289,7 @@ class CreatingLevels(StackedWidget):
         self.imagelabel.ispixmap = True
 
 
-class ImageLabel(QLabel):
+class MapLabel(QLabel):
     def __init__(self):
         super().__init__()
         self.ispixmap = False
@@ -350,7 +350,7 @@ class Memorial:
         self.images = []
         self.name = ''
         self.desc = ''
-        self.puzzle_parts = None
+        self.puzzleparts = []
 
 
 class LevelEditorWidget(QWidget):
@@ -485,83 +485,216 @@ class LevelEditorWidget(QWidget):
 class MemorialSelectorWidget(QWidget):
     def __init__(self, LevelData):
         super().__init__()
+        self.lout = QVBoxLayout()
         self.grid_layout = QGridLayout()
+        self.saveBtn = QPushButton(text="Сохранить")
+        self.saveBtn.clicked.connect(self.saveData)
+        self.saveBtn.setStyleSheet(buttonqss)
         self.levelData = LevelData
-        self.images = []
-        self.setLayout(self.grid_layout)
+        self.memorials = []
+        self.label = QLabel('Добавьте мемориалы выбранного города')
+        self.label.setStyleSheet(defaultqss)
+        self.lout.addWidget(self.label, alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignCenter)
+        self.lout.addLayout(self.grid_layout)
+        self.lout.addWidget(self.saveBtn, alignment=Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignRight)
+        self.setLayout(self.lout)
         self.loadData()
 
-    def addImage(self, image, type="file", selected=False):
-        if selected:
-            for i, (img_label, pixmap, is_temp) in enumerate(self.images):
-                if is_temp:
-                    img_label.clicked.disconnect()
-                    if type == "file":
-                        pixmap.load(image)
-                    elif type == "buffer":
-                        pixmap.loadFromData(image)
-                    pixmap = pixmap.scaled(300, 150, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
-                    img_label.setPixmap(pixmap)
-                    img_label.setFixedSize(pixmap.size())
-                    self.images[i][1] = pixmap
-                    self.images[i][2] = False
-                    memorial = Memorial(pixmap)
-                    self.levelData.memorials.append(memorial)
-                    img_label.clicked.connect(lambda m=memorial: self.editMemorial(m))
-                    self.addTempImage()
-                    return
-
-        img_label = DClickImgLabel()
+    def addImage(self, image, type="file"):
         pixmap = QPixmap()
-        if type == "file":
-            pixmap.load(image)
-        elif type == "buffer":
-            pixmap.loadFromData(image)
-        pixmap = pixmap.scaled(300, 150, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
-        img_label.setPixmap(pixmap)
-        img_label.setFixedSize(pixmap.size())
-        img_label.show()
-        self.images.append([img_label, pixmap, False])
-        row = (len(self.images) - 1) // 2
-        col = (len(self.images) - 1) % 2
-        self.grid_layout.addWidget(img_label, row, col, alignment=Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
-
-        if selected:
-            memorial = Memorial(pixmap)
-            self.levelData.memorials.append(memorial)
-            img_label.clicked.connect(lambda m=memorial: self.editMemorial(m))
+        label = DClickImgLabel()
+        pixmap.loadFromData(image.preview) if type == "class" else pixmap.load(image)
+        pixmap = pixmap.scaled(400, 300, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+        if not self.memorials:
+            label.setPixmap(pixmap)
+            self.memorials.append([label, Memorial(image) if type == 'file' else image, False])
         else:
-            img_label.clicked.connect(self.selectImage)
+            for i, (label, memorial, is_temp) in enumerate(self.memorials):
+                if is_temp:
+                    label.setPixmap(pixmap)
+                    if type == 'file':
+                        buffer = QtCore.QBuffer()
+                        buffer.open(QtCore.QIODevice.OpenModeFlag.ReadWrite)
+                        pixmap.save(buffer, "PNG")
+                        image = buffer.data()
+                        buffer.close()
+
+                    self.memorials[i][1:] = Memorial(image) if type == 'file' else image, False
+                    self.memorials[i][0].clicked.disconnect()
+                    self.memorials[i][0].clicked.connect(lambda: MemorialEditorWidget(self.memorials[i][1]).exec())
+
+        self.addTempImage()
 
     def addTempImage(self):
         img_label = DClickImgLabel()
         pixmap = QPixmap(getabspath("addmem.png"))
-        pixmap = pixmap.scaled(300, 150, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+        pixmap = pixmap.scaled(400, 300, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
         img_label.setPixmap(pixmap)
-        img_label.setFixedSize(pixmap.size())
         img_label.show()
-        self.images.append([img_label, pixmap, True])
-        row = (len(self.images) - 1) // 2
-        col = (len(self.images) - 1) % 2
-        self.grid_layout.addWidget(img_label, row, col, alignment=Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+        self.memorials.append([img_label, pixmap, True])
+        row = (len(self.memorials) - 1) // 2
+        col = (len(self.memorials) - 1) % 2
+        self.grid_layout.addWidget(img_label, row, col,
+                                   alignment=Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         img_label.clicked.connect(self.selectImage)
 
-    def editMemorial(self, memorial):
-        print(f"Editing memorial: {memorial.name}")
-
     def loadData(self):
-        if not self.levelData.memorials:
-            self.addTempImage()
-        else:
+        self.addTempImage()
+        if self.levelData.memorials:
             for memorial in self.levelData.memorials:
-                self.addImage(memorial.preview, type="buffer", selected=True)
-            self.addTempImage()
+                self.addImage(memorial, type="class")
+
 
     def selectImage(self):
-        path, _ = QFileDialog.getOpenFileName(self, "Выберите изображение", "", "Images (*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm)")
+        path, _ = QFileDialog.getOpenFileName(self, "Выберите изображение", "",
+                                              "Images (*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm)")
         if path:
-            self.addImage(path, selected=True)
-        self.levelData.isFilled = 1
+            self.addImage(path)
+
+    def saveData(self):
+        if self.memorials:
+            self.levelData.memorials = [m[1] for m in self.memorials if m[2] != True]
+        self.parent().close()
+
+
+class MemorialEditorWidget(QDialog):
+    def __init__(self, memorial):
+        super().__init__()
+        self.setWindowTitle("Редактор данных мемориала")
+        self.memorial = memorial
+        self.savebtn = QPushButton(text="Сохранить")
+        self.savebtn.setStyleSheet(buttonqss)
+        self.savebtn.setFixedSize(150, 50)
+        self.savebtn.clicked.connect(self.saveData)
+        self.images = [[DClickImgLabel(), QPixmap(), False] for _ in range(4)]
+        self.lout = QHBoxLayout()
+        self.objlout = QVBoxLayout()
+        self.mimageslout = QVBoxLayout()
+        self.imagelout1 = QHBoxLayout()
+        self.imagelout2 = QHBoxLayout()
+        self.nameinput = QLineEdit()
+        self.descinput = QTextEdit()
+        self.puzzle = QPixmap()
+        self.puzzlepartl = QLabel()
+        self.puzzlepartl.setPixmap(self.puzzle)
+        self.nameinput.setPlaceholderText("Введите название мемориала")
+        self.descinput.setPlaceholderText("Введите описание мемориала")
+        self.objlout.addWidget(self.nameinput)
+        self.objlout.addWidget(self.descinput)
+        self.objlout.addWidget(self.savebtn, alignment=Qt.AlignmentFlag.AlignRight)
+        for i in range(2):
+            self.imagelout1.addWidget(self.images[i][0], alignment=Qt.AlignmentFlag.AlignLeft)
+            self.imagelout2.addWidget(self.images[i + 2][0], alignment=Qt.AlignmentFlag.AlignLeft)
+            self.images[i][0].hide()
+            self.images[i + 2][0].hide()
+
+        self.images[0][0].show()
+        self.mimageslout.addLayout(self.imagelout1)
+        self.mimageslout.addLayout(self.imagelout2)
+        self.textlabel = QLabel(text="Загрузите фотографии мемориала 16:9, нажав на выделенное изображение сверху.\n"
+                                     "Максимум изображений: 4")
+        self.textlabel.setStyleSheet("""
+            QLabel {
+                font-size: 15px;
+            }
+        """)
+        self.textlabel.setMinimumWidth(500)
+        self.textlabel.setWordWrap(True)
+        self.puzzletextl = QLabel('Загрузите изображение, которое будет раздроблено на пазл мемориала')
+        self.puzzletextl.setStyleSheet("""
+            QLabel {
+                font-size: 15px;
+            }
+        """)
+        self.mimageslout.addWidget(self.textlabel, alignment=Qt.AlignmentFlag.AlignLeft)
+        self.mimageslout.addWidget(self.puzzletextl)
+        self.lout.addLayout(self.mimageslout)
+        self.lout.addLayout(self.objlout)
+        self.setLayout(self.lout)
+        self.loadData()
+
+    def addImage(self, image, type="file"):
+        for img in self.images:
+            if not img[2]:
+                if type == "file":
+                    img[1].load(image)
+                elif type == "buffer":
+                    img[1].loadFromData(image)
+                img[1] = img[1].scaled(300, 150, Qt.AspectRatioMode.KeepAspectRatio,
+                                       Qt.TransformationMode.SmoothTransformation)
+                img[0].setPixmap(img[1])
+                img[0].setFixedSize(img[1].size())
+                img[2] = True
+                img[0].setAlignment(Qt.AlignmentFlag.AlignLeft)
+                img[0].show()
+                if self.images.index(img) == 3:
+                    img[0].setStyleSheet("")
+                else:
+                    img[0].clicked.connect(self.selectImage)
+                break
+            else:
+                if img[0].styleSheet():
+                    img[0].clicked.disconnect()
+                    img[0].setStyleSheet("")
+
+    def selectImage(self):
+        path, _ = QFileDialog.getOpenFileName(self, "Выберите изображение", "",
+                                              "Images (*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm)")
+        if path:
+            self.addImage(path)
+
+    def loadData(self):
+        if not self.memorial.isFilled:
+            self.addImage(getabspath("add.png"))
+            self.puzzle.load(getabspath("addmem.png"))
+            self.puzzlepartl.setPixmap(self.puzzle)
+            self.images[0][2] = False
+        else:
+            for img in self.memorial.images:
+                self.addImage(img, type="buffer")
+            self.nameinput.setText(self.memorial.name)
+            self.descinput.setText(self.memorial.desc)
+
+    def saveData(self):
+        isPixmap = any([pixmap[2] for pixmap in self.images])
+        isDesc = self.descinput.toPlainText()
+        isName = self.nameinput.text()
+
+        if not isPixmap:
+            self.images[0][0].setStyleSheet(imgqss.replace("black", "red"))
+        if not isName:
+            self.nameinput.setStyleSheet("""
+            QLineEdit {
+                border: 2px solid red;
+                border-radius: 4px;
+            }
+            """)
+            self.nameinput.textChanged.connect(lambda: self.nameinput.setStyleSheet(""))
+        if not isDesc:
+            self.descinput.setStyleSheet("""
+            QTextEdit {
+                border: 2px solid red;
+                padding: 2px;
+                border-radius: 4px;
+            }
+            """)
+            self.descinput.textChanged.connect(lambda: self.descinput.setStyleSheet(""))
+
+        if all([isPixmap, isName, isDesc]):
+            self.memorial.images.clear()
+            for image in self.images:
+                if image[2]:
+                    pixmap = image[1]
+                    buffer = QtCore.QBuffer()
+                    buffer.open(QtCore.QIODevice.OpenModeFlag.ReadWrite)
+                    pixmap.save(buffer, "PNG")
+                    self.memorial.images.append(buffer.data())
+                    buffer.close()
+
+            self.memorial.name = isName
+            self.memorial.desc = isDesc
+            self.memorial.isFilled = True
+            self.close()
 
 
 class LevelRedactor(QDialog):
@@ -581,7 +714,7 @@ class LevelRedactor(QDialog):
 
     def execute(self):
         self.exec()
-        return self.levelData if self.levelData.isFilled else None
+        return self.levelData if self.levelData.isFilled > 0 else None
 
 
 class Finishing(StackedWidget):
