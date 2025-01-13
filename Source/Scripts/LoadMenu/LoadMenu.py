@@ -4,8 +4,8 @@ import pygame
 from pathlib import Path
 from Globals.Globals import rules, events # Импорт списка с правилами
 
-class MainMenu:
-    def __init__(self, level):
+class LoadMenu:
+    def __init__(self):
         self.map = None
         self.screen = pygame.display.set_mode((1280, 720))
         pygame.display.set_caption('Главное Меню')
@@ -76,7 +76,8 @@ class MainMenu:
                 self.OnLoadButtonClick(level_data[3])
 
     def OnLoadButtonClick(self, file_path):
-        print(f"Загружен файл: {file_path}")
+        print(file_path)
+        self.Unload()
 
     def Unload(self):
         if self.TableInteractEvent in events:

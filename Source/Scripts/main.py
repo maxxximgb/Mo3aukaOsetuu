@@ -1,11 +1,11 @@
 import sys
 import pygame
-from MainMenu.MainMenu import MainMenu
+from LoadMenu.LoadMenu import LoadMenu
 from Globals.Globals import rules, events
 
 pygame.init()
 running = True
-menu = MainMenu(sys.argv)
+menu = LoadMenu()
 
 while running:
     for event in pygame.event.get():
