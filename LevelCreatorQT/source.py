@@ -14,23 +14,23 @@ from PyQt6.QtWidgets import QMainWindow, QPushButton, QStackedWidget, QWidget, Q
 
 currentindexqss = """
         QLabel {
-            border-radius: 5px;      /* Закругленные углы */
-            font-family: "Arial";    /* Используем шрифт Arial */
-            font-size: 14px;         /* Размер шрифта */
-            font-weight: bold;       /* Жирный шрифт */
-            background-color: blue;  /* Фон серый при наведении */
+            border-radius: 5px;
+            font-family: "Arial";
+            font-size: 14px;
+            font-weight: bold;
+            background-color: blue;
         }
         """
 defaultqss = """
         QLabel {
-            border-radius: 5px;      /* Закругленные углы */
-            font-family: "Arial";    /* Используем шрифт Arial */
-            font-size: 14px;         /* Размер шрифта */
-            font-weight: bold;       /* Жирный шрифт */
+            border-radius: 5px;
+            font-family: "Arial";
+            font-size: 14px;
+            font-weight: bold;
         }
         
         QLabel:hover {
-            background-color: gray;  /* Фон серый при наведении */
+            background-color: gray;
         }
         """
 
