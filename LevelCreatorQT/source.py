@@ -1,14 +1,16 @@
 import os
+import shutil
 import sys
-
+from qasync import QApplication, QEventLoop, asyncSlot
+import asyncio
 from PIL import Image, ImageDraw
 import numpy as np
 from PyQt6 import QtCore
-from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtCore import Qt, pyqtSignal, QPoint
 from PyQt6.QtGui import QPixmap, QPainter, QPen, QColor, QKeyEvent, QImage, QIcon
-from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QStackedWidget, QWidget, QHBoxLayout, QListWidget, \
+from PyQt6.QtWidgets import QMainWindow, QPushButton, QStackedWidget, QWidget, QHBoxLayout, QListWidget, \
     QLabel, QListWidgetItem, QVBoxLayout, QMessageBox, QFileDialog, QDialog, QLineEdit, QTextEdit, QStackedLayout, \
-    QGridLayout
+    QGridLayout, QProgressBar
 
 currentindexqss = """
         QLabel {
@@ -280,6 +282,7 @@ class CreatingLevels(StackedWidget):
                 if abs(pos.x() - mouse_pos.x()) < 10 and abs(pos.y() - mouse_pos.y()) < 10:
                     levels.remove(posi)
                     self.imagelabel.update()
+                    if len(levels[1:]) == 0 and 3 in AvInd: AvInd.remove(3)
                     return
 
     def setImage(self, pixmap):
@@ -814,6 +817,7 @@ class Finishing(StackedWidget):
         }
         """)
         self.vlayout.addWidget(self.label)
+        self.sw = None
         self.path_layout = QHBoxLayout()
         self.path_line_edit = QLineEdit(self)
         self.path_line_edit.setPlaceholderText("Выберите путь для сохранения")
@@ -851,7 +855,10 @@ class Finishing(StackedWidget):
         self.path_layout.addWidget(self.select_path_button)
         self.vlayout.addLayout(self.path_layout)
         self.vlayout.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
-        self.vlayout.setSpacing(9)
+        self.saveBtn = QPushButton(text='Сохранить')
+        self.saveBtn.clicked.connect(self.check)
+        self.saveBtn.setStyleSheet(buttonqss)
+        self.vlayout.addWidget(self.saveBtn, alignment=Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignBottom)
 
     def show_file_dialog(self):
         path, _ = QFileDialog.getSaveFileName(self, "Выберите путь для сохранения", "", "Файлы уровней (*.level)")
@@ -859,6 +866,197 @@ class Finishing(StackedWidget):
         if path:
             self.path_line_edit.setText(path)
 
+    def check(self):
+        if not self.path_line_edit.text():
+            self.path_line_edit.setStyleSheet("""
+                QLineEdit {
+                    padding: 8px;
+                    border: 2px solid red;
+                    border-radius: 5px;
+                    font-size: 14px;
+                }
+                QLineEdit:focus {
+                    border-color: red;
+                }
+            """)
+            self.path_line_edit.textChanged.connect(lambda: self.path_line_edit.setStyleSheet("""
+                QLineEdit {
+                    padding: 8px;
+                    border: 2px solid #ccc;
+                    border-radius: 5px;
+                    font-size: 14px;
+                }
+                QLineEdit:focus {
+                    border-color: #6a9eda;
+                }
+            """))
+            return
+
+        global window
+        window.hide()
+        self.sw = SaveWidget(self.path_line_edit.text())
+        r = self.sw.checkAndSave()
+        if not r: window.show()
+
+
+class SaveWidget(QWidget):
+    def __init__(self, directory):
+        super().__init__()
+        self.dir = directory
+        self.setWindowTitle('Выполняется сохранение')
+        self.lout = QVBoxLayout()
+        self.donelout = QVBoxLayout()
+        self.progressbar = QProgressBar()
+        self.progresslabel = QLabel()
+        self.lout.addWidget(self.progresslabel, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.lout.addWidget(self.progressbar, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.donelabel = QLabel(
+            text='Поздравляем, вы успешно создали уровень. Он находится в указаной вами папке. Спасибо за использование программы! Для повторного использования перезапустите программу. Автоматический выход через 10 секунд.')
+        self.donelout.addWidget(self.donelabel)
+        self.exitbtn = QPushButton(text='Выход')
+        self.donelout.addWidget(self.exitbtn)
+        self.exitbtn.clicked.connect(os.abort)
+        self.setStyleSheet("""
+            QWidget {
+                background-color: #2E3440;
+                color: #D8DEE9;
+                font-size: 16px;
+            }
+            QProgressBar {
+                background-color: #4C566A;
+                color: #D8DEE9;
+                border: 2px solid #5E81AC;
+                border-radius: 5px;
+                text-align: center;
+                height: 30px;
+            }
+            QProgressBar::chunk {
+                background-color: #81A1C1;
+                border-radius: 3px;
+            }
+            QLabel {
+                color: #ECEFF4;
+                font-size: 18px;
+            }
+            QPushButton {
+                background-color: #4C566A;
+                color: #ECEFF4;
+                border: 2px solid #5E81AC;
+                border-radius: 5px;
+                padding: 10px 20px;
+                font-size: 16px;
+                font-weight: bold;
+            }
+            QPushButton:hover {
+                background-color: #5E81AC;
+                border: 2px solid #81A1C1;
+            }
+            QPushButton:pressed {
+                background-color: #81A1C1;
+                border: 2px solid #4C566A;
+            }
+        """)
+        self.setLayout(self.lout)
+
+    def checkAndSave(self):
+        global levels
+        if not levels:
+            QMessageBox(QMessageBox.Icon.Critical, 'Нечего сохранять', 'Вам нечего сохранять! Уровни не созданы!',
+                        QMessageBox.StandardButton.Ok).exec()
+            return False
+        nfl = 0
+        for level in levels[1:]:
+            print(level)
+            if level[1].isFilled != 1:
+                nfl += 1
+        if nfl > 0:
+            QMessageBox(QMessageBox.Icon.Warning, 'Некоторые уровни не заполнены!',
+                        'Некоторые уровни не заполнены или заполнены не до конца!\nПроверьте карту в третьем пункте на наличие желтых или красных кружков.\nЗаполните их или удалите. ',
+                        QMessageBox.StandardButton.Ok).exec()
+            return False
+        asyncio.ensure_future(self.save())
+        return True
+
+    @asyncSlot()
+    async def save(self):
+        self.show()
+        self.resize(400, 200)
+
+        self.progresslabel.setText('Создание временной папки')
+        if not os.path.exists('temp'):
+            os.mkdir('temp')
+        else:
+            shutil.rmtree('temp'), os.mkdir('temp')
+        self.progressbar.setValue(self.progressbar.value() + 15)
+        await asyncio.sleep(0.2)
+        pr = 50 / len(levels)
+        self.progresslabel.setText('Сохранение информации о точке входа')
+        with open('temp/ep.pos', 'w', encoding='UTF-8') as f:
+            f.write(f'{levels[0][0].x()} {levels[0][0].y()}')
+
+        self.progressbar.setValue(self.progressbar.value() + 2)
+        await asyncio.sleep(0.2)
+        for i, level in enumerate(levels[1:]):
+            self.progresslabel.setText(f'Сохранение информации о уровне {level[1].name}')
+            os.mkdir(f'temp/{i}')
+            with open(f'temp/{i}/info.txt', 'w', encoding='UTF-8') as f:
+                f.writelines('\n'.join([level[1].name, level[1].desc, f'{level[0].x()} {level[0].y()}']))
+            await asyncio.sleep(1)
+            self.progresslabel.setText(f'Сохранение изображений уровня {level[1].name}')
+            os.mkdir(f'temp/{i}/images')
+            for j, image in enumerate(level[1].images):
+                file = QtCore.QFile(f'temp/{i}/images/{j}.png')
+                file.open(QtCore.QIODevice.OpenModeFlag.ReadWrite)
+                file.write(image)
+                file.close()
+            await asyncio.sleep(0.2)
+            os.mkdir(f'temp/{i}/memorials')
+            for n, memorial in enumerate(level[1].memorials):
+                self.progresslabel.setText(f'Сохранение информации о мемориале {memorial.name} уровня {level[1].name}')
+                os.mkdir(f'temp/{i}/memorials/{n}')
+                with open(f'temp/{i}/memorials/{n}/info.txt', 'w', encoding='UTF-8') as f:
+                    f.writelines('\n'.join([memorial.name, memorial.desc]))
+                await asyncio.sleep(0.2)
+                self.progresslabel.setText(
+                    f'Сохранение изображений предпросмотра мемориала и пазла {memorial.name} уровня {level[1].name}')
+                file = QtCore.QFile(f'temp/{i}/memorials/{n}/images/preview.png')
+                file.open(QtCore.QIODevice.OpenModeFlag.ReadWrite)
+                file.write(memorial.preview)
+                file.close()
+                file = QtCore.QFile(f'temp/{i}/memorials/{n}/images/puzzle.png')
+                file.open(QtCore.QIODevice.OpenModeFlag.ReadWrite)
+                file.write(memorial.preview)
+                file.close()
+                await asyncio.sleep(0.2)
+                self.progresslabel.setText(f'Сохранение изображений мемориала {memorial.name} уровня {level[1].name}')
+                os.mkdir(f'temp/{i}/memorials/{n}/images')
+                for z, image in enumerate(memorial.images):
+                    file = QtCore.QFile(f'temp/{i}/memorials/{n}/images/{z}.png')
+                    file.open(QtCore.QIODevice.OpenModeFlag.ReadWrite)
+                    file.write(image)
+                    file.close()
+                await asyncio.sleep(0.2)
+                self.progresslabel.setText(
+                    f'Сохранение элементов пазла и их расположения мемориала {memorial.name} уровня {level[1].name}')
+                s = ''
+                os.mkdir(f'temp/{i}/memorials/{n}/images/puzzle')
+                for p in range(len(memorial.puzzleparts)):
+                    for ind, part in enumerate(memorial.puzzleparts[p]):
+                        part.save(f'temp/{i}/memorials/{n}/images/puzzle/{p}_{ind}.png')
+                        s += f'{p}_{ind}.png '
+                    s += '\n'
+
+                with open(f'temp/{i}/memorials/{n}/images/puzzle/matrix.txt', 'w') as f:
+                    f.write(s)
+
+            self.progressbar.setValue(int(self.progressbar.value() + pr))
+        await asyncio.sleep(0.2)
+        self.progresslabel.setText('Упаковка уровня в архив')
+        archive = shutil.make_archive(self.dir.split('/')[-1], 'zip', str(getabspath('temp')))
+        shutil.move(str(getabspath(archive)), self.dir)
+        self.progressbar.setValue(100)
+        self.progresslabel.setText('Готово')
+        self.setLayout(self.donelout)
 
 
 
@@ -891,5 +1089,8 @@ class MainWindow(QMainWindow):
 
 
 app = QApplication([])
+loop = QEventLoop(app)
+asyncio.set_event_loop(loop)
 window = MainWindow()
-app.exec()
+with loop:
+    loop.run_forever()
