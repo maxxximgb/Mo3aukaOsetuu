@@ -84,7 +84,7 @@ imgqss = """
                 background-color: gray;
             }
         """
-
+map = None
 AvInd = [1]
 levels = []
 
@@ -214,7 +214,12 @@ class LoadingMap(StackedWidget):
     def loadImage(self, path):
         self.pixmap.load(getabspath(path))
         self.imagelabel.setPixmap(self.pixmap)
-        global levels
+        global levels, map
+        buffer = QtCore.QBuffer()
+        buffer.open(QtCore.QIODevice.OpenModeFlag.ReadWrite)
+        self.pixmap.save(buffer, "PNG")
+        map = buffer.data()
+        buffer.close()
         levels.clear()
 
     def selectImage(self):
@@ -988,6 +993,12 @@ class SaveWidget(QWidget):
         else:
             shutil.rmtree('temp'), os.mkdir('temp')
         self.progressbar.setValue(self.progressbar.value() + 15)
+        self.progresslabel.setText(f'Сохранение карты')
+        global map
+        file = QtCore.QFile(f'temp/map.png')
+        file.open(QtCore.QIODevice.OpenModeFlag.ReadWrite)
+        file.write(map)
+        file.close()
         await asyncio.sleep(0.2)
         pr = 50 / len(levels)
         self.progresslabel.setText('Сохранение информации о точке входа')
