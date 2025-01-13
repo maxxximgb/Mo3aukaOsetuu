@@ -351,6 +351,7 @@ class Memorial:
         self.name = ''
         self.desc = ''
         self.puzzleparts = []
+        self.puzzle = None
 
 
 class LevelEditorWidget(QWidget):
@@ -487,16 +488,24 @@ class MemorialSelectorWidget(QWidget):
         super().__init__()
         self.lout = QVBoxLayout()
         self.grid_layout = QGridLayout()
+        self.backBtn = QPushButton(text='Назад')
         self.saveBtn = QPushButton(text="Сохранить")
+        self.btnLayout = QHBoxLayout()
         self.saveBtn.clicked.connect(self.saveData)
         self.saveBtn.setStyleSheet(buttonqss)
+        self.backBtn.setStyleSheet(buttonqss)
+        self.backBtn.clicked.connect(lambda: self.parent().stackedLayout.setCurrentIndex(0))
+        self.btnLayout.addWidget(self.backBtn, alignment=Qt.AlignmentFlag.AlignRight)
+        self.btnLayout.addWidget(self.saveBtn, alignment=Qt.AlignmentFlag.AlignRight)
+        self.btnLayout.setSpacing(3)
         self.levelData = LevelData
         self.memorials = []
         self.label = QLabel('Добавьте мемориалы выбранного города')
         self.label.setStyleSheet(defaultqss)
         self.lout.addWidget(self.label, alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignCenter)
         self.lout.addLayout(self.grid_layout)
-        self.lout.addWidget(self.saveBtn, alignment=Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignRight)
+        self.lout.addLayout(self.btnLayout)
+        self.btnLayout.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.setLayout(self.lout)
         self.loadData()
 
@@ -552,8 +561,18 @@ class MemorialSelectorWidget(QWidget):
             self.addImage(path)
 
     def saveData(self):
-        if self.memorials:
-            self.levelData.memorials = [m[1] for m in self.memorials if m[2] != True]
+        fl = False
+        if len(self.memorials) == 1:
+            self.memorials[0][0].setStyleSheet(imgqss.replace("black", "red"))
+            return
+        for memorial in self.memorials:
+            if memorial[2]: continue
+            if not memorial[1].isFilled:
+                fl = True
+                memorial[0].setStyleSheet(imgqss.replace("black", "red"))
+        if fl: return
+        self.levelData.memorials = [m[1] for m in self.memorials if m[2] != True]
+        self.levelData.isFilled = 1
         self.parent().close()
 
 
@@ -575,8 +594,9 @@ class MemorialEditorWidget(QDialog):
         self.nameinput = QLineEdit()
         self.descinput = QTextEdit()
         self.puzzle = QPixmap()
-        self.puzzlepartl = QLabel()
+        self.puzzlepartl = DClickImgLabel()
         self.puzzlepartl.setPixmap(self.puzzle)
+        self.puzzlepartl.clicked.connect(lambda: self.selectImage(type='puzzle'))
         self.nameinput.setPlaceholderText("Введите название мемориала")
         self.descinput.setPlaceholderText("Введите описание мемориала")
         self.objlout.addWidget(self.nameinput)
@@ -608,6 +628,7 @@ class MemorialEditorWidget(QDialog):
         """)
         self.mimageslout.addWidget(self.textlabel, alignment=Qt.AlignmentFlag.AlignLeft)
         self.mimageslout.addWidget(self.puzzletextl)
+        self.mimageslout.addWidget(self.puzzlepartl)
         self.lout.addLayout(self.mimageslout)
         self.lout.addLayout(self.objlout)
         self.setLayout(self.lout)
@@ -637,21 +658,41 @@ class MemorialEditorWidget(QDialog):
                     img[0].clicked.disconnect()
                     img[0].setStyleSheet("")
 
-    def selectImage(self):
+    def selectImage(self, type='default'):
         path, _ = QFileDialog.getOpenFileName(self, "Выберите изображение", "",
                                               "Images (*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm)")
+        if not path: return
+        if type == 'puzzle':
+            self.loadpuzzle(path)
+            return
         if path:
             self.addImage(path)
+
+    def loadpuzzle(self, file, type='file'):
+        self.puzzle.load(file) if type == 'file' else self.puzzle.loadFromData(file)
+        self.puzzle = self.puzzle.scaled(500, 500, Qt.AspectRatioMode.KeepAspectRatio,
+                                       Qt.TransformationMode.SmoothTransformation)
+        self.puzzlepartl.setPixmap(self.puzzle)
+        self.puzzlepartl.setFixedSize(self.puzzle.size())
+        if type == 'file':
+            buffer = QtCore.QBuffer()
+            buffer.open(QtCore.QIODevice.OpenModeFlag.ReadWrite)
+            self.puzzle.save(buffer, "PNG")
+            self.memorial.puzzle = buffer.data()
+            buffer.close()
 
     def loadData(self):
         if not self.memorial.isFilled:
             self.addImage(getabspath("add.png"))
             self.puzzle.load(getabspath("addmem.png"))
+            self.puzzle = self.puzzle.scaled(400, 400, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
             self.puzzlepartl.setPixmap(self.puzzle)
+            self.puzzlepartl.setFixedSize(400, 400)
             self.images[0][2] = False
         else:
             for img in self.memorial.images:
                 self.addImage(img, type="buffer")
+            self.loadpuzzle(self.memorial.puzzle, type='image')
             self.nameinput.setText(self.memorial.name)
             self.descinput.setText(self.memorial.desc)
 
@@ -751,6 +792,8 @@ class MainWindow(QMainWindow):
         self.resize(1280, 720)
         self.setCentralWidget(self.cw)
         self.show()
+
+
 
 
 app = QApplication([])
