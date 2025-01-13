@@ -2,9 +2,10 @@ import os
 import sys
 
 from PIL import Image, ImageDraw
+import numpy as np
 from PyQt6 import QtCore
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QPixmap, QPainter, QPen, QColor, QKeyEvent
+from PyQt6.QtGui import QPixmap, QPainter, QPen, QColor, QKeyEvent, QImage, QIcon
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QStackedWidget, QWidget, QHBoxLayout, QListWidget, \
     QLabel, QListWidgetItem, QVBoxLayout, QMessageBox, QFileDialog, QDialog, QLineEdit, QTextEdit, QStackedLayout, \
     QGridLayout
@@ -206,9 +207,6 @@ class LoadingMap(StackedWidget):
         }
         """)
         self.lout.addLayout(self.imagelout)
-        self.initialize()
-
-    def initialize(self):
         self.loadImage(getabspath("Preview.jpg"))
 
     def loadImage(self, path):
@@ -553,7 +551,6 @@ class MemorialSelectorWidget(QWidget):
             for memorial in self.levelData.memorials:
                 self.addImage(memorial, type="class")
 
-
     def selectImage(self):
         path, _ = QFileDialog.getOpenFileName(self, "Выберите изображение", "",
                                               "Images (*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm)")
@@ -669,23 +666,30 @@ class MemorialEditorWidget(QDialog):
             self.addImage(path)
 
     def loadpuzzle(self, file, type='file'):
-        self.puzzle.load(file) if type == 'file' else self.puzzle.loadFromData(file)
-        self.puzzle = self.puzzle.scaled(500, 500, Qt.AspectRatioMode.KeepAspectRatio,
-                                       Qt.TransformationMode.SmoothTransformation)
-        self.puzzlepartl.setPixmap(self.puzzle)
-        self.puzzlepartl.setFixedSize(self.puzzle.size())
         if type == 'file':
+            self.puzzle.load(file)
+            self.puzzle = self.puzzle.scaled(1500, 1500, Qt.AspectRatioMode.KeepAspectRatio,
+                                             Qt.TransformationMode.SmoothTransformation)
             buffer = QtCore.QBuffer()
             buffer.open(QtCore.QIODevice.OpenModeFlag.ReadWrite)
             self.puzzle.save(buffer, "PNG")
             self.memorial.puzzle = buffer.data()
             buffer.close()
 
+        else:
+            self.puzzle.loadFromData(file)
+
+        self.puzzle = self.puzzle.scaled(600, 600, Qt.AspectRatioMode.KeepAspectRatio,
+                                         Qt.TransformationMode.SmoothTransformation)
+        self.puzzlepartl.setPixmap(self.puzzle)
+        self.puzzlepartl.setFixedSize(self.puzzle.size())
+
     def loadData(self):
         if not self.memorial.isFilled:
             self.addImage(getabspath("add.png"))
             self.puzzle.load(getabspath("addmem.png"))
-            self.puzzle = self.puzzle.scaled(400, 400, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+            self.puzzle = self.puzzle.scaled(400, 400, Qt.AspectRatioMode.KeepAspectRatio,
+                                             Qt.TransformationMode.SmoothTransformation)
             self.puzzlepartl.setPixmap(self.puzzle)
             self.puzzlepartl.setFixedSize(400, 400)
             self.images[0][2] = False
@@ -700,6 +704,7 @@ class MemorialEditorWidget(QDialog):
         isPixmap = any([pixmap[2] for pixmap in self.images])
         isDesc = self.descinput.toPlainText()
         isName = self.nameinput.text()
+        isPuzzle = self.memorial.puzzle
 
         if not isPixmap:
             self.images[0][0].setStyleSheet(imgqss.replace("black", "red"))
@@ -720,8 +725,10 @@ class MemorialEditorWidget(QDialog):
             }
             """)
             self.descinput.textChanged.connect(lambda: self.descinput.setStyleSheet(""))
+        if not isPuzzle:
+            self.puzzlepartl.setStyleSheet(imgqss.replace("black", "red"))
 
-        if all([isPixmap, isName, isDesc]):
+        if all([isPixmap, isName, isDesc, isPuzzle]):
             self.memorial.images.clear()
             for image in self.images:
                 if image[2]:
@@ -732,10 +739,44 @@ class MemorialEditorWidget(QDialog):
                     self.memorial.images.append(buffer.data())
                     buffer.close()
 
+            self.memorial.puzzleparts = self.bytesToPuzzle(self.memorial.puzzle)
             self.memorial.name = isName
             self.memorial.desc = isDesc
             self.memorial.isFilled = True
             self.close()
+
+    def bytesToPuzzle(self, bytes):
+        image = QImage()
+        image.loadFromData(bytes)
+        pixmap = QPixmap.fromImage(image)
+        width = pixmap.width()
+        height = pixmap.height()
+
+        min_grid_size = 15
+        max_grid_size = 25
+
+        aspect_ratio = width / height
+        if aspect_ratio > 1:
+            cols = min(max_grid_size, max(min_grid_size, int((width / height) * min_grid_size)))
+            rows = min(max_grid_size, max(min_grid_size, int(min_grid_size / (width / height))))
+        else:
+            rows = min(max_grid_size, max(min_grid_size, int((height / width) * min_grid_size)))
+            cols = min(max_grid_size, max(min_grid_size, int(min_grid_size / (height / width))))
+
+        rows = min(rows, height)
+        cols = min(cols, width)
+        piece_width = width // cols
+        piece_height = height // rows
+        puzzle_matrix = np.empty((rows, cols), dtype=object)
+
+        for i in range(rows):
+            for j in range(cols):
+                piece = pixmap.copy(j * piece_width, i * piece_height, piece_width, piece_height)
+                qimage = piece.toImage()
+                pil_image = Image.fromqimage(qimage)
+                puzzle_matrix[i, j] = pil_image
+
+        return puzzle_matrix
 
 
 class LevelRedactor(QDialog):
@@ -764,6 +805,61 @@ class Finishing(StackedWidget):
         self.index = 3
         self.indexes.itemWidget(self.indexes.item(self.index)).setStyleSheet(currentindexqss)
         self.nextbtn.hide()
+        self.vlayout = QVBoxLayout()
+        self.lout.addLayout(self.vlayout)
+        self.label = QLabel("Укажите путь для сохранения уровня")
+        self.label.setStyleSheet("""
+        QLabel {
+            font-size: 25px;
+        }
+        """)
+        self.vlayout.addWidget(self.label)
+        self.path_layout = QHBoxLayout()
+        self.path_line_edit = QLineEdit(self)
+        self.path_line_edit.setPlaceholderText("Выберите путь для сохранения")
+        self.path_line_edit.setReadOnly(True)
+        self.path_line_edit.setStyleSheet("""
+            QLineEdit {
+                padding: 8px;
+                border: 2px solid #ccc;
+                border-radius: 5px;
+                font-size: 14px;
+            }
+            QLineEdit:focus {
+                border-color: #6a9eda;
+            }
+        """)
+        self.path_layout.addWidget(self.path_line_edit)
+        self.select_path_button = QPushButton(self)
+        self.select_path_button.setIcon(QIcon.fromTheme("folder"))
+        self.select_path_button.setStyleSheet("""
+            QPushButton {
+                background-color: #6a9eda;
+                border: none;
+                border-radius: 5px;
+                padding: 8px;
+                min-width: 40px;
+            }
+            QPushButton:hover {
+                background-color: #5a8ec9;
+            }
+            QPushButton:pressed {
+                background-color: #4a7db9;
+            }
+        """)
+        self.select_path_button.clicked.connect(self.show_file_dialog)
+        self.path_layout.addWidget(self.select_path_button)
+        self.vlayout.addLayout(self.path_layout)
+        self.vlayout.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
+        self.vlayout.setSpacing(9)
+
+    def show_file_dialog(self):
+        path, _ = QFileDialog.getSaveFileName(self, "Выберите путь для сохранения", "", "Файлы уровней (*.level)")
+
+        if path:
+            self.path_line_edit.setText(path)
+
+
 
 
 class DClickImgLabel(QLabel):
@@ -792,8 +888,6 @@ class MainWindow(QMainWindow):
         self.resize(1280, 720)
         self.setCentralWidget(self.cw)
         self.show()
-
-
 
 
 app = QApplication([])
