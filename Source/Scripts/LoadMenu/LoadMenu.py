@@ -1,14 +1,18 @@
 import os
+import shutil
 import time
 import pygame
 from pathlib import Path
-from Globals.Globals import rules, events # Импорт списка с правилами
+from Globals.Globals import rules, events, levels  # Импорт списка с правилами
+from MainMenu.MainMenu import MainMenu
+from LMClass.LM import Level, Memorial
+
 
 class LoadMenu:
     def __init__(self):
         self.map = None
         self.screen = pygame.display.set_mode((1280, 720))
-        pygame.display.set_caption('Главное Меню')
+        pygame.display.set_caption('Загрузка уровня')
         self.levels = []
         self.font = pygame.font.Font(None, 36)
         self.scroll_offset = 0
@@ -16,8 +20,8 @@ class LoadMenu:
         self.button_width = 150
         self.button_height = 30
         self.button_text = "Загрузить"
-        self.column_widths = [300, 350, 350, 150]  # Ширина колонок
-        self.row_height = 40  # Высота строки
+        self.column_widths = [300, 350, 350, 150]
+        self.row_height = 40
         self.LoadLevels()
 
     def LoadLevels(self):
@@ -48,13 +52,15 @@ class LoadMenu:
 
             for col, data in enumerate(level_data[:3]):
                 text_surface = self.font.render(data, True, (255, 255, 255))
-                self.screen.blit(text_surface, (50 + sum(self.column_widths[:col]), 100 + row * self.row_height - self.scroll_offset))
+                self.screen.blit(text_surface,
+                                 (50 + sum(self.column_widths[:col]), 100 + row * self.row_height - self.scroll_offset))
 
             button_x = 50 + sum(self.column_widths[:3])
             button_y = 100 + row * self.row_height - self.scroll_offset
             pygame.draw.rect(self.screen, (0, 128, 255), (button_x, button_y, self.button_width, self.button_height))
             text_surface = self.font.render(self.button_text, True, (255, 255, 255))
-            text_rect = text_surface.get_rect(center=(button_x + self.button_width // 2, button_y + self.button_height // 2))
+            text_rect = text_surface.get_rect(
+                center=(button_x + self.button_width // 2, button_y + self.button_height // 2))
             self.screen.blit(text_surface, text_rect)
 
     def TableInteractEvent(self, event):
@@ -72,11 +78,30 @@ class LoadMenu:
         for row, level_data in enumerate(self.levels):
             button_y = 100 + row * self.row_height - self.scroll_offset
             if (button_x <= mouse_pos[0] <= button_x + self.button_width and
-                button_y <= mouse_pos[1] <= button_y + self.button_height):
+                    button_y <= mouse_pos[1] <= button_y + self.button_height):
                 self.OnLoadButtonClick(level_data[3])
 
     def OnLoadButtonClick(self, file_path):
         print(file_path)
+        shutil.unpack_archive(file_path, 'Temp', 'zip')
+        for item in Path('Temp').iterdir():
+            if item.is_dir():
+                with open(os.path.join(os.getcwd(), item, 'info.txt'), 'r', encoding='UTF-8') as f:
+                    level = Level()
+                    level.name, level.desc, level.dotpos = f.readlines()
+                    level.name = level.name.strip('\n')
+                    level.desc = level.desc.strip('\n')
+                    level.dotpos = list(map(int, level.dotpos.split()))
+                for img in Path(os.path.join(item, 'images')).iterdir():
+                    level.images.append(pygame.image.load(img).convert())
+                for memorial in Path(os.path.join(item, 'memorials')).iterdir():
+                    mem = Memorial()
+                    with open(os.path.join(memorial, 'info.txt'), 'r', encoding='UTF-8') as m:
+                        l = [l.strip('\n') for l in m.readlines()]
+                        mem.name, mem.desc = l
+                    level.memorials.append(mem)
+                levels.append(level)
+        MainMenu()
         self.Unload()
 
     def Unload(self):
