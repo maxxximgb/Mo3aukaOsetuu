@@ -99,6 +99,12 @@ class LoadMenu:
                     with open(os.path.join(memorial, 'info.txt'), 'r', encoding='UTF-8') as m:
                         l = [l.strip('\n') for l in m.readlines()]
                         mem.name, mem.desc = l
+                    for img in Path(os.path.join(memorial, 'images')).iterdir():
+                        if img.is_file():
+                            mem.images.append(pygame.image.load(img).convert())
+                        else:
+                            with open(os.path.join(img, 'matrix.txt'), 'r', encoding='UTF-8') as matrix:
+                                mem.puzzlepos.extend([l.strip('\n').split() for l in matrix.readlines()])
                     level.memorials.append(mem)
                 levels.append(level)
         MainMenu()
