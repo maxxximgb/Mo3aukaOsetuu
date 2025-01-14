@@ -4,6 +4,7 @@ from LoadMenu.LoadMenu import LoadMenu
 from Globals.Globals import rules, events
 
 pygame.init()
+pygame.mixer.init()
 running = True
 menu = LoadMenu()
 
