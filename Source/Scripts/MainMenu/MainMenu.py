@@ -4,6 +4,7 @@ import pygame
 from LMClass.LM import Level, Memorial
 from Globals.Globals import rules, levels, events
 from pathlib import Path
+from CarsMiniGame.CarsMiniGame import CarsMiniGame
 
 
 class MainMenu:
@@ -11,7 +12,7 @@ class MainMenu:
         self.screen = pygame.Surface
         self.map = pygame.Surface
         self.entrypoint = []
-        pygame.display.set_caption('Загрузка уровня')
+        pygame.display.set_caption('Главное Меню')
         self.load()
 
     def load(self):
@@ -34,7 +35,8 @@ class MainMenu:
                 for level in levels:
                     if tuple(level.dotpos)[0] - 10 <= pygame.mouse.get_pos()[0] <= tuple(level.dotpos)[0] + 10 and \
                             tuple(level.dotpos)[1] - 10 <= pygame.mouse.get_pos()[1] <= tuple(level.dotpos)[1] + 10:
-                        print(level.name)
+                        self.Unload()
+                        CarsMiniGame()
 
     def Unload(self):
         if self.draw in rules: rules.remove(self.draw)

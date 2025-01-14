@@ -3,3 +3,4 @@
 rules = []
 events = []
 levels = []
+score = 0

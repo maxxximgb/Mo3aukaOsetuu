@@ -1,0 +1,561 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="62af72bd-3b00-41bb-9306-950d82b336e8" name="Changes" comment="Level Load added">
+      <change afterPath="$PROJECT_DIR$/Source/Media/BlueCar.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/Media/Bus.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/Media/GreenCar.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/Media/RedCar.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/Media/RoadVid.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/Media/SportCar.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/Media/YellowCar.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Images/Map.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/CarsMiniGame/CarsMiniGame.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/CarsMiniGame/CarsMiniGame.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/Globals/Globals.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/Globals/Globals.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/MainMenu/MainMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/MainMenu/MainMenu.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="gabis &lt;gabisovmaxim@gmail.com&gt;" />
+      </list>
+    </option>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="MainMenu" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="SET_USER_NAME_GLOBALLY" value="false" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;maxxximgb&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/maxxximgb/Mo3aukaOsetuu.git&quot;,
+    &quot;accountId&quot;: &quot;fb305d3a-1871-4d21-8aad-2493134f3b43&quot;
+  },
+  &quot;recentNewPullRequestHead&quot;: {
+    &quot;server&quot;: {
+      &quot;useHttp&quot;: false,
+      &quot;host&quot;: &quot;github.com&quot;,
+      &quot;port&quot;: null,
+      &quot;suffix&quot;: null
+    },
+    &quot;owner&quot;: &quot;maxxximgb&quot;,
+    &quot;repository&quot;: &quot;Mo3aukaOsetuu&quot;
+  }
+}</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/LevelCreatorQT/source.py" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2qQDOM6S5upNxPiiM92MLuII4G8" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Python.LoadMenu.executor&quot;: &quot;Run&quot;,
+    &quot;Python.MainMenu.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.source.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/gabis/PycharmProjects/Mo3aukaOsetuu/Source/Media&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Media" />
+      <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Images" />
+      <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\LevelCreatorQT" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Images" />
+      <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts\Levels" />
+      <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\LevelCreatorQT" />
+      <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="Mo3aukaOsetuu" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.12" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Source/Scripts/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-495700d161d3-aa17d162503b-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-243.22562.220" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="62af72bd-3b00-41bb-9306-950d82b336e8" name="Changes" comment="" />
+      <created>1734585871682</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1734585871682</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Create new dirs and files, where will be source code stored">
+      <option name="closed" value="true" />
+      <created>1734586441128</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1734586441128</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Create new dirs and files, where will be source code stored">
+      <option name="closed" value="true" />
+      <created>1734586638350</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1734586638350</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Created game loop and main menu class, not done">
+      <option name="closed" value="true" />
+      <created>1734589206394</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1734589206394</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Created game loop and main menu class, not done">
+      <option name="closed" value="true" />
+      <created>1734589385033</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1734589385033</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Removed unused files and created Unload function.">
+      <option name="closed" value="true" />
+      <created>1734618810945</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1734618810945</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Removed unused files and created Unload function.">
+      <option name="closed" value="true" />
+      <created>1734621006235</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1734621006235</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Removed unused files and created Unload function.">
+      <option name="closed" value="true" />
+      <created>1734621439144</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1734621439144</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Fixing working program state">
+      <option name="closed" value="true" />
+      <created>1734625878868</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1734625878868</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Map selection is now available">
+      <option name="closed" value="true" />
+      <created>1734706660300</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1734706660300</updated>
+    </task>
+    <task id="LOCAL-00010" summary="UI changes">
+      <option name="closed" value="true" />
+      <created>1734707126063</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1734707126063</updated>
+    </task>
+    <task id="LOCAL-00011" summary="UI changes">
+      <option name="closed" value="true" />
+      <created>1735026596263</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1735026596263</updated>
+    </task>
+    <task id="LOCAL-00012" summary="You can now add dots to the map">
+      <option name="closed" value="true" />
+      <created>1735035317496</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1735035317496</updated>
+    </task>
+    <task id="LOCAL-00013" summary="UI changes">
+      <option name="closed" value="true" />
+      <created>1735035648322</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1735035648322</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Removed unnecessary code">
+      <option name="closed" value="true" />
+      <created>1735035685704</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1735035685704</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Removed unnecessary code">
+      <option name="closed" value="true" />
+      <created>1735037062379</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1735037062379</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Created new classes where will level data be stored">
+      <option name="closed" value="true" />
+      <created>1735038217884</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1735038217884</updated>
+    </task>
+    <task id="LOCAL-00017" summary="UI changes">
+      <option name="closed" value="true" />
+      <created>1735115998667</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1735115998667</updated>
+    </task>
+    <task id="LOCAL-00018" summary="UI changes">
+      <option name="closed" value="true" />
+      <created>1735123402402</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1735123402402</updated>
+    </task>
+    <task id="LOCAL-00019" summary="UI changes">
+      <option name="closed" value="true" />
+      <created>1735123442396</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1735123442396</updated>
+    </task>
+    <task id="LOCAL-00020" summary="UI changes">
+      <option name="closed" value="true" />
+      <created>1735142843676</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1735142843676</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Save and load level data function is now added">
+      <option name="closed" value="true" />
+      <created>1735144030139</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1735144030139</updated>
+    </task>
+    <task id="LOCAL-00022" summary="UI Changes">
+      <option name="closed" value="true" />
+      <created>1735152254669</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1735152254669</updated>
+    </task>
+    <task id="LOCAL-00023" summary="UI Changes">
+      <option name="closed" value="true" />
+      <created>1735152423780</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1735152423780</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Memorial selection added">
+      <option name="closed" value="true" />
+      <created>1736613768622</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1736613768622</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Memorial selection added">
+      <option name="closed" value="true" />
+      <created>1736705841902</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1736705841902</updated>
+    </task>
+    <task id="LOCAL-00026" summary="normal memorial selection">
+      <option name="closed" value="true" />
+      <created>1736705875187</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1736705875187</updated>
+    </task>
+    <task id="LOCAL-00027" summary="memorial editing added">
+      <option name="closed" value="true" />
+      <created>1736706818658</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1736706818658</updated>
+    </task>
+    <task id="LOCAL-00028" summary="puzzle load addeed">
+      <option name="closed" value="true" />
+      <created>1736748455786</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1736748455786</updated>
+    </task>
+    <task id="LOCAL-00029" summary="ui changes">
+      <option name="closed" value="true" />
+      <created>1736757360848</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1736757360848</updated>
+    </task>
+    <task id="LOCAL-00030" summary="Final commit (maybe)">
+      <option name="closed" value="true" />
+      <created>1736766255421</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1736766255421</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Final commit (maybe)">
+      <option name="closed" value="true" />
+      <created>1736766890963</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1736766890963</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Level Created">
+      <option name="closed" value="true" />
+      <created>1736773748707</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1736773748707</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Final Commit">
+      <option name="closed" value="true" />
+      <created>1736790831528</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1736790831528</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Level Added">
+      <option name="closed" value="true" />
+      <created>1736791123636</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1736791123636</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Level Added">
+      <option name="closed" value="true" />
+      <created>1736791436732</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1736791436732</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Level Added">
+      <option name="closed" value="true" />
+      <created>1736791601281</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1736791601281</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Level Added">
+      <option name="closed" value="true" />
+      <created>1736791888693</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1736791888693</updated>
+    </task>
+    <task id="LOCAL-00038" summary="Level Added">
+      <option name="closed" value="true" />
+      <created>1736792762812</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1736792762812</updated>
+    </task>
+    <task id="LOCAL-00039" summary="Level Loading chernovik">
+      <option name="closed" value="true" />
+      <created>1736795829017</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1736795829017</updated>
+    </task>
+    <task id="LOCAL-00040" summary="Project structure changes">
+      <option name="closed" value="true" />
+      <created>1736796349435</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1736796349435</updated>
+    </task>
+    <task id="LOCAL-00041" summary="Bug fixes">
+      <option name="closed" value="true" />
+      <created>1736837245789</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1736837245789</updated>
+    </task>
+    <task id="LOCAL-00042" summary="Bug fixes">
+      <option name="closed" value="true" />
+      <created>1736837432378</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1736837432378</updated>
+    </task>
+    <task id="LOCAL-00043" summary="Level Load added">
+      <option name="closed" value="true" />
+      <created>1736837988678</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1736837988678</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="develop" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Create new dirs and files, where will be source code stored" />
+    <MESSAGE value="Created game loop and main menu class, not done" />
+    <MESSAGE value="Removed unused files and created Unload function." />
+    <MESSAGE value="Fixing working program state" />
+    <MESSAGE value="Map selection is now available" />
+    <MESSAGE value="You can now add dots to the map" />
+    <MESSAGE value="Removed unnecessary code" />
+    <MESSAGE value="Created new classes where will level data be stored" />
+    <MESSAGE value="UI changes" />
+    <MESSAGE value="Save and load level data function is now added" />
+    <MESSAGE value="UI Changes" />
+    <MESSAGE value="Memorial selection added" />
+    <MESSAGE value="Merge remote-tracking branch 'origin/LevelCreator' into LevelCreator" />
+    <MESSAGE value="normal memorial selection" />
+    <MESSAGE value="memorial editing added" />
+    <MESSAGE value="puzzle load addeed" />
+    <MESSAGE value="ui changes" />
+    <MESSAGE value="Final commit (maybe)" />
+    <MESSAGE value="Level Created" />
+    <MESSAGE value="Final Commit" />
+    <MESSAGE value="Level Added" />
+    <MESSAGE value="Level Loading chernovik" />
+    <MESSAGE value="Project structure changes" />
+    <MESSAGE value="Bug fixes" />
+    <MESSAGE value="Level Load added" />
+    <option name="LAST_COMMIT_MESSAGE" value="Level Load added" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/LevelCreatorQT/source.py</url>
+          <line>886</line>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="pm" />
+      </configuration>
+    </watches-manager>
+  </component>
+</project>

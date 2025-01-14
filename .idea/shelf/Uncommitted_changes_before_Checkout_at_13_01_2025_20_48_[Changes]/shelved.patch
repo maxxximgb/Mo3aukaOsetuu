@@ -1,0 +1,33 @@
+Index: Source/Scripts/Globals/Globals.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># Тут будут храниться переменные, необходимые для всех скриптов\r\n\r\nrules = []
+===================================================================
+diff --git a/Source/Scripts/Globals/Globals.py b/Source/Scripts/Globals/Globals.py
+--- a/Source/Scripts/Globals/Globals.py	(revision fb231234bd9532486b0cca523e0d2d9f4f208944)
++++ b/Source/Scripts/Globals/Globals.py	(date 1736773895457)
+@@ -1,3 +1,4 @@
+ # Тут будут храниться переменные, необходимые для всех скриптов
+ 
+-rules = []
+\ No newline at end of file
++rules = []
++levels = []
+\ No newline at end of file
+Index: Source/Scripts/MainMenu/MainMenu.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import os\r\nimport pygame\r\nimport zipfile\r\nfrom Globals.Globals import rules # Импорт списка с правилами\r\nfrom LevelClass.Level import Level\r\nfrom LevelClass.Memorial import Memorial\r\n\r\nclass MainMenu:\r\n    def __init__(self):\r\n        self.map = None\r\n        self.screen = pygame.display.set_mode((1280, 720))\r\n        pygame.display.set_caption('Главное Меню')\r\n        self.levels = []\r\n        self.LoadLevels()\r\n\r\n    def LoadLevels(self):\r\n        levels = os.listdir('Temp')\r\n        if not levels:\r\n            self.NoLevels()\r\n\r\n        for file in os.listdir('Temp'):\r\n            if file.endswith('.level'):\r\n                pass\r\n\r\n    def NoLevels(self):\r\n        pass\r\n\r\n    def Unload(self):\r\n        pass
+===================================================================
+diff --git a/Source/Scripts/MainMenu/MainMenu.py b/Source/Scripts/MainMenu/MainMenu.py
+--- a/Source/Scripts/MainMenu/MainMenu.py	(revision fb231234bd9532486b0cca523e0d2d9f4f208944)
++++ b/Source/Scripts/MainMenu/MainMenu.py	(date 1736773895452)
+@@ -1,7 +1,6 @@
+ import os
+ import pygame
+-import zipfile
+-from Globals.Globals import rules # Импорт списка с правилами
++from Globals.Globals import rules, levels # Импорт списка с правилами
+ from LevelClass.Level import Level
+ from LevelClass.Memorial import Memorial
+ 

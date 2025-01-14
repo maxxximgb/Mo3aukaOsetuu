@@ -1,0 +1,110 @@
+Index: Source/Scripts/main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import sys\r\nimport pygame\r\nfrom MainMenu.MainMenu import MainMenu\r\nfrom Globals.Globals import rules\r\n\r\npygame.init()\r\nrunning = True\r\nmenu = MainMenu()\r\n\r\nwhile running:\r\n    for event in pygame.event.get():\r\n        if event.type == pygame.QUIT:\r\n            pygame.display.quit()\r\n            sys.exit(0)\r\n\r\n    for rule in rules:  # Вызов правил окон (отображение картинки итд.) Чтобы добавить правило, нужно в список rules добавить необходимую функцию НЕ ВЫЗВАННУЮ.\r\n        if callable(rule):\r\n            rule()\r\n\r\n    pygame.display.flip()\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Source/Scripts/main.py b/Source/Scripts/main.py
+--- a/Source/Scripts/main.py	(revision 76dbadccdab0765f7cb8b000393fc856156cabf5)
++++ b/Source/Scripts/main.py	(date 1736771776199)
+@@ -1,8 +1,15 @@
++import os
+ import sys
+ import pygame
+ from MainMenu.MainMenu import MainMenu
+ from Globals.Globals import rules
+ 
++
++if not os.path.exists('Levels'):
++    os.mkdir('Levels')
++if not os.path.exists('Temp'):
++    os.mkdir('Temp')
++
+ pygame.init()
+ running = True
+ menu = MainMenu()
+@@ -10,8 +17,7 @@
+ while running:
+     for event in pygame.event.get():
+         if event.type == pygame.QUIT:
+-            pygame.display.quit()
+-            sys.exit(0)
++            running = False
+ 
+     for rule in rules:  # Вызов правил окон (отображение картинки итд.) Чтобы добавить правило, нужно в список rules добавить необходимую функцию НЕ ВЫЗВАННУЮ.
+         if callable(rule):
+Index: Source/Scripts/MainMenu/MainMenu.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import pygame\r\nfrom Globals.Globals import rules # Импорт списка с правилами\r\n\r\nclass MainMenu:\r\n    def __init__(self):\r\n        self.map = None\r\n        self.screen = pygame.display.set_mode((1280, 720))\r\n        pygame.display.set_caption('Главное Меню')\r\n        self.levels = []\r\n        self.LoadLevels()\r\n\r\n    def LoadLevels(self):\r\n        pass\r\n\r\n    def Unload(self):\r\n        pass # убрать тут функции в rules
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Source/Scripts/MainMenu/MainMenu.py b/Source/Scripts/MainMenu/MainMenu.py
+--- a/Source/Scripts/MainMenu/MainMenu.py	(revision 76dbadccdab0765f7cb8b000393fc856156cabf5)
++++ b/Source/Scripts/MainMenu/MainMenu.py	(date 1736771776198)
+@@ -1,5 +1,9 @@
++import os
+ import pygame
++import zipfile
+ from Globals.Globals import rules # Импорт списка с правилами
++from LevelClass.Level import Level
++from LevelClass.Memorial import Memorial
+ 
+ class MainMenu:
+     def __init__(self):
+@@ -10,7 +14,16 @@
+         self.LoadLevels()
+ 
+     def LoadLevels(self):
++        levels = os.listdir('Temp')
++        if not levels:
++            self.NoLevels()
++
++        for file in os.listdir('Temp'):
++            if file.endswith('.level'):
++                pass
++
++    def NoLevels(self):
+         pass
+ 
+     def Unload(self):
+-        pass # убрать тут функции в rules
+\ No newline at end of file
++        pass
+\ No newline at end of file
+Index: Source/Scripts/LevelClass/Level.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Source/Scripts/LevelClass/Level.py b/Source/Scripts/LevelClass/Level.py
+new file mode 100644
+--- /dev/null	(date 1736771776198)
++++ b/Source/Scripts/LevelClass/Level.py	(date 1736771776198)
+@@ -0,0 +1,6 @@
++class Level:
++    def __init__(self):
++        self.images = []
++        self.name = ''
++        self.desc = ''
++        self.memorials = []
+Index: Source/Scripts/LevelClass/Memorial.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Source/Scripts/LevelClass/Memorial.py b/Source/Scripts/LevelClass/Memorial.py
+new file mode 100644
+--- /dev/null	(date 1736771776198)
++++ b/Source/Scripts/LevelClass/Memorial.py	(date 1736771776198)
+@@ -0,0 +1,7 @@
++class Memorial:
++    def __init__(self):
++        self.preview = None
++        self.images = []
++        self.name = ''
++        self.desc = ''
++        self.puzzle_parts = None
+\ No newline at end of file
