@@ -2,9 +2,10 @@ import os.path
 
 import pygame
 from LMClass.LM import Level, Memorial
-from Globals.Globals import rules, levels, events
+from Globals.Globals import rules, levels, events, game_state
 from pathlib import Path
 from CarsMiniGame.CarsMiniGame import CarsMiniGame
+from CityScreen.CityScreen import CityScreen
 
 
 class MainMenu:
@@ -36,7 +37,14 @@ class MainMenu:
                     if tuple(level.dotpos)[0] - 10 <= pygame.mouse.get_pos()[0] <= tuple(level.dotpos)[0] + 10 and \
                             tuple(level.dotpos)[1] - 10 <= pygame.mouse.get_pos()[1] <= tuple(level.dotpos)[1] + 10:
                         self.Unload()
-                        CarsMiniGame()
+                        if not game_state.currentlvl:
+                            game_state.currentlvl = level
+                            CarsMiniGame(level)
+                        elif level == game_state.currentlvl:
+                            CityScreen(level)
+                        else:
+                            game_state.currentlvl = level
+                            CarsMiniGame(level)
 
     def Unload(self):
         if self.draw in rules: rules.remove(self.draw)

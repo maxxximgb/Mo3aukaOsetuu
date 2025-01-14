@@ -2,10 +2,12 @@ import random
 import pygame
 import cv2
 import time
-from Globals.Globals import rules
+from Globals.Globals import rules, game_state
+from CityScreen.CityScreen import CityScreen
 
 class CarsMiniGame:
-    def __init__(self):
+    def __init__(self, level):
+        self.level = level
         self.Bus = Bus('../Media/Bus.png')
         self.video = cv2.VideoCapture('../Media/RoadVid.mp4')
         self.screen = pygame.display.set_mode((int(self.video.get(3)), int(self.video.get(4))))
@@ -102,6 +104,8 @@ class CarsMiniGame:
         if self.game_over:
             if self.Bus.rect.x > self.screen.get_width():
                 self.Unload()
+                game_state.score += self.score
+                CityScreen(self.level)
             if not self.moving_cars and not self.parked_cars:
                 self.Bus.rect.x += 20
 

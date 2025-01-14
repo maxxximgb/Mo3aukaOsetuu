@@ -1,6 +1,7 @@
 # Тут будут храниться переменные, необходимые для всех скриптов
+from GameState.GameState import GameState
 
 rules = []
 events = []
 levels = []
-score = 0
+game_state = GameState()
