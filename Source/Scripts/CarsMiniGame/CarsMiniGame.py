@@ -1,18 +1,12 @@
 import random
-
 import pygame
 from Globals.Globals import rules, events
 import cv2
-
+import time
 
 class CarsMiniGame:
     def __init__(self):
-        self.ParkedBlueCar = pygame.image.load('../Media/BlueCar.png')
-        self.ParkedSportCar = pygame.image.load('../Media/SportCar.png')
         self.Bus = Bus('../Media/Bus.png')
-        self.GreenCar = pygame.image.load('../Media/GreenCar.png')
-        self.RedCar = pygame.image.load('../Media/RedCar.png')
-        self.YellowCar = pygame.image.load('../Media/YellowCar.png')
         self.video = cv2.VideoCapture('../Media/RoadVid.mp4')
         self.screen = pygame.display.set_mode((int(self.video.get(3)), int(self.video.get(4))))
         pygame.display.set_caption('Переход в уровень')
@@ -21,10 +15,10 @@ class CarsMiniGame:
         rules.append(self.render)
         self.moving_cars = pygame.sprite.Group()
         self.parked_cars = pygame.sprite.Group()
-
         self.create_moving_cars()
         self.create_parked_cars()
-
+        self.start_time = time.time()
+        self.game_over = False
 
     def create_moving_cars(self):
         pos1, pos2 = random.sample(
@@ -57,18 +51,34 @@ class CarsMiniGame:
         self.parked_cars.update()
         self.parked_cars.draw(self.screen)
         self.screen.blit(self.Bus.image, self.Bus.rect)
-        if len(self.moving_cars) == 0:
+        elapsed_time = time.time() - self.start_time
+        remaining_time = max(0, 30 - int(elapsed_time))
+        font = pygame.font.Font(None, 36)
+        text = font.render(f"Счет: {self.score}, До приезда: {remaining_time} секунд" if remaining_time > 0 else f"Счет: {self.score}, Закончите обьезжать машины", True, (0, 0, 0))
+        self.screen.blit(text, (self.screen.get_width() - 400, 10) if remaining_time > 0 else (self.screen.get_width() - 500, 10))
+
+        if remaining_time <= 0:
+            self.game_over = True
+
+        self.clock.tick(30)
+        if self.game_over:
+            if self.Bus.rect.x > self.screen.get_width():
+                self.Unload()
+            if len(self.moving_cars) == 0 and len(self.parked_cars) == 0:
+                self.Bus.rect.x += 20
+            else:
+                return
+
+        if len(self.moving_cars) == 0 and not self.game_over:
             self.create_moving_cars()
-        if len(self.parked_cars) == 0:
+        if len(self.parked_cars) == 0 and not self.game_over:
             self.create_parked_cars()
 
-        pygame.display.flip()
-        self.clock.tick(30)
 
     def Unload(self):
         if self.render in rules:
             rules.remove(self.render)
-            
+
 class Bus(pygame.sprite.Sprite):
     def __init__(self, image):
         super().__init__()
@@ -79,7 +89,6 @@ class Bus(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         self.rect.y += (keys[pygame.K_DOWN] - keys[pygame.K_UP]) * 13
         self.rect.y = max(140, min(self.rect.y, 720 - self.rect.height))
-
 
 class ParkedCar(pygame.sprite.Sprite):
     def __init__(self, image, x, y):
