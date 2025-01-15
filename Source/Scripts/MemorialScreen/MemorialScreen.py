@@ -9,14 +9,15 @@ class MemorialScreen:
         self.screen = pygame.Surface
         self.grid = list
         self.font_path = str
-        self.name_font = None
-        self.desc_font = None
-        self.button_font = None
+        self.name_font = pygame.font.Font
+        self.desc_font = pygame.font.Font
+        self.button_font = pygame.font.Font
         self.button_width = int
         self.button_height = int
         self.button_x = int
         self.button_y = int
-        self.button_rect = None
+        self.button_rect = pygame.Rect
+        self.puzzle_button_rect = pygame.Rect  # Новый атрибут для кнопки "К пазлу"
 
     def exec(self):
         global rules, game_state, events
@@ -35,7 +36,8 @@ class MemorialScreen:
         self.button_x = 1600 - self.button_width - 20
         self.button_y = 920 - self.button_height - 20
         self.button_rect = pygame.Rect(self.button_x, self.button_y, self.button_width, self.button_height)
-        events.append(self.BackBtnClick)
+        self.puzzle_button_rect = pygame.Rect(self.button_x - self.button_width - 20, self.button_y, self.button_width, self.button_height)
+        events.append(self.MouseBtnClick)
 
     def create_grid(self):
         num_images = len(self.memorial.images)
@@ -138,12 +140,17 @@ class MemorialScreen:
             desc_surface = self.desc_font.render(line, True, (0, 0, 0))
             self.screen.blit(desc_surface, (text_x, text_y + 50 + i * 30))
 
-        button_surface = self.button_font.render("Назад", True, (255, 255, 255))
-
+        back_button_surface = self.button_font.render("Назад", True, (255, 255, 255))
         pygame.draw.rect(self.screen, (0, 128, 0), self.button_rect)
-        text_x_pos = self.button_x + (self.button_width - button_surface.get_width()) // 2
-        text_y_pos = self.button_y + (self.button_height - button_surface.get_height()) // 2
-        self.screen.blit(button_surface, (text_x_pos, text_y_pos))
+        back_text_x_pos = self.button_x + (self.button_width - back_button_surface.get_width()) // 2
+        back_text_y_pos = self.button_y + (self.button_height - back_button_surface.get_height()) // 2
+        self.screen.blit(back_button_surface, (back_text_x_pos, back_text_y_pos))
+
+        puzzle_button_surface = self.button_font.render("К пазлу", True, (255, 255, 255))
+        pygame.draw.rect(self.screen, (0, 0, 128), self.puzzle_button_rect)
+        puzzle_text_x_pos = self.puzzle_button_rect.x + (self.button_width - puzzle_button_surface.get_width()) // 2
+        puzzle_text_y_pos = self.puzzle_button_rect.y + (self.button_height - puzzle_button_surface.get_height()) // 2
+        self.screen.blit(puzzle_button_surface, (puzzle_text_x_pos, puzzle_text_y_pos))
 
     def wrap_text(self, text, font, max_width):
         words = text.split(' ')
@@ -169,13 +176,19 @@ class MemorialScreen:
         self.Unload()
         switch(self, game_state.gameclasses.Selector, self.screen)
 
-    def BackBtnClick(self, event):
+    def toPuzzle(self):
+        self.Unload()
+        switch(self, game_state.gameclasses.PuzzleMiniGame, self.screen)
+
+    def MouseBtnClick(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 mouse_pos = pygame.mouse.get_pos()
                 if self.button_rect.collidepoint(mouse_pos):
                     self.toSelector()
+                if self.puzzle_button_rect.collidepoint(mouse_pos):
+                    self.toPuzzle()
 
     def Unload(self):
         if self.render in rules: rules.remove(self.render)
-        if self.BackBtnClick in events: events.remove(self.BackBtnClick)
+        if self.MouseBtnClick in events: events.remove(self.MouseBtnClick)

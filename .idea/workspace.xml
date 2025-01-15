@@ -4,23 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="62af72bd-3b00-41bb-9306-950d82b336e8" name="Changes" comment="Project structure changes + Memorial preview show added">
-      <change afterPath="$PROJECT_DIR$/Source/Media/busswitch.mp3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Scripts/SharedClasses/GameClasses.py" afterDir="false" />
+    <list default="true" id="62af72bd-3b00-41bb-9306-950d82b336e8" name="Changes" comment="Big commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/CarsMiniGame/CarsMiniGame.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/CarsMiniGame/CarsMiniGame.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/CityScreen/CityScreen.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/CityScreen/CityScreen.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/GameState/GameState.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/SharedClasses/GameState.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/Globals/SharedFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/Globals/SharedFunctions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/Globals/Variables.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/Globals/Variables.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/LMClass/LM.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/SharedClasses/LM.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/Levels/RSO-A.level" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Scripts/LoadMenu/LoadMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/LoadMenu/LoadMenu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/MainMenu/MainMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/MainMenu/MainMenu.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Scripts/MemorialScreen/MemorialScreen.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/MemorialScreen/MemorialScreen.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/MemorialScreen/Selector.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/MemorialScreen/Selector.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Scripts/PuzzleMiniGame/PuzzleMiniGame.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/PuzzleMiniGame/PuzzleMiniGame.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/SharedClasses/LM.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/SharedClasses/LM.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -150,14 +139,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1734585871682</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Created game loop and main menu class, not done">
-      <option name="closed" value="true" />
-      <created>1734589385033</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1734589385033</updated>
     </task>
     <task id="LOCAL-00005" summary="Removed unused files and created Unload function.">
       <option name="closed" value="true" />
@@ -543,7 +524,15 @@
       <option name="project" value="LOCAL" />
       <updated>1736950475023</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="Big commit">
+      <option name="closed" value="true" />
+      <created>1736961651853</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1736961651853</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -570,7 +559,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Removed unnecessary code" />
     <MESSAGE value="Created new classes where will level data be stored" />
     <MESSAGE value="Save and load level data function is now added" />
     <MESSAGE value="UI Changes" />
@@ -595,7 +583,8 @@
     <MESSAGE value="UI changes" />
     <MESSAGE value="Handle empty folder" />
     <MESSAGE value="Project structure changes + Memorial preview show added" />
-    <option name="LAST_COMMIT_MESSAGE" value="Project structure changes + Memorial preview show added" />
+    <MESSAGE value="Big commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Big commit" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

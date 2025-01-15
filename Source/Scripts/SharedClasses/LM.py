@@ -15,5 +15,5 @@ class Memorial:
         self.images = []
         self.name = ''
         self.desc = ''
-        self.puzzleparts = []
+        self.puzzlePath = None
         self.puzzlepos = []

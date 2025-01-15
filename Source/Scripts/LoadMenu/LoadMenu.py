@@ -131,6 +131,7 @@ class LoadMenu:
                         else:
                             with open(os.path.join(img, 'matrix.txt'), 'r', encoding='UTF-8') as matrix:
                                 mem.puzzlepos.extend([l.strip('\n').split() for l in matrix.readlines()])
+                            mem.puzzlePath = str(img)
                     level.memorials.append(mem)
                 levels.append(level)
         self.Unload()
