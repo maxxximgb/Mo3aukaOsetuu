@@ -1,4 +1,3 @@
-import sys
 import pygame
 from LoadMenu.LoadMenu import LoadMenu
 from Globals.Globals import rules, events
