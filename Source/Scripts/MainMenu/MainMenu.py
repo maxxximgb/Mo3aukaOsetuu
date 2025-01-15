@@ -45,7 +45,8 @@ class MainMenu:
                     if tuple(level.dotpos)[0] - 10 <= pygame.mouse.get_pos()[0] <= tuple(level.dotpos)[0] + 10 and \
                             tuple(level.dotpos)[1] - 10 <= pygame.mouse.get_pos()[1] <= tuple(level.dotpos)[1] + 10:
                         self.Unload()
-                        if level == game_state.currentlvl:
+                        if level != game_state.currentlvl:
+                            game_state.currentlvl = level
                             switch(self, game_state.gameclasses.CityScreen, self.screen)
                         else:
                             sound = pygame.mixer.Sound("../Media/busswitch.mp3")
