@@ -2,12 +2,32 @@ import random
 import pygame
 import cv2
 import time
-from Globals.Variables import rules, game_state
-from CityScreen.CityScreen import CityScreen
+
+from Globals.SharedFunctions import switch
+
+rules, game_state = [None] * 2
 
 class CarsMiniGame:
-    def __init__(self, level):
-        self.level = level
+    def __init__(self):
+        self.level = None
+        self.Bus = Bus
+        self.video = None
+        self.screen = pygame.Surface
+        self.collidesong = None
+        self.clock = pygame.time.Clock
+        self.score = int
+        self.moving_cars = pygame.sprite.Group
+        self.parked_cars = pygame.sprite.Group
+        self.start_time = time.time
+        self.game_over = bool
+        self.blink_timer = 0
+        self.show_hitboxes = bool
+        self.debug_message_timer = int
+
+    def exec(self):
+        global rules, game_state
+        from Globals.Variables import rules, game_state
+        self.level = game_state.currentlvl
         self.Bus = Bus('../Media/Bus.png')
         self.video = cv2.VideoCapture('../Media/RoadVid.mp4')
         self.screen = pygame.display.set_mode((int(self.video.get(3)), int(self.video.get(4))))
@@ -105,7 +125,7 @@ class CarsMiniGame:
             if self.Bus.rect.x > self.screen.get_width():
                 self.Unload()
                 game_state.score += self.score
-                CityScreen(self.level)
+                switch(self, game_state.gameclasses.CityScreen, self.screen, render_needed=False)
             if not self.moving_cars and not self.parked_cars:
                 self.Bus.rect.x += 20
 
@@ -113,8 +133,7 @@ class CarsMiniGame:
             self.create_cars()
 
     def Unload(self):
-        if self.render in rules:  # Проверяем, существует ли render в rules
-            rules.remove(self.render)
+        if self.render in rules: rules.remove(self.render)
 
 class Bus(pygame.sprite.Sprite):
     def __init__(self, image):

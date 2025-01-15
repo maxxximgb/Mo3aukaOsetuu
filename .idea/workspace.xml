@@ -4,15 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="62af72bd-3b00-41bb-9306-950d82b336e8" name="Changes" comment="Handle empty folder">
+    <list default="true" id="62af72bd-3b00-41bb-9306-950d82b336e8" name="Changes" comment="Project structure changes + Memorial preview show added">
+      <change afterPath="$PROJECT_DIR$/Source/Media/busswitch.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/Scripts/SharedClasses/GameClasses.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Scripts/CarsMiniGame/CarsMiniGame.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/CarsMiniGame/CarsMiniGame.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Scripts/CityScreen/CityScreen.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/CityScreen/CityScreen.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/Globals/Globals.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/Globals/Variables.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/Levels/RSO-A.level" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/Levels/RSO-A.level" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/GameState/GameState.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/SharedClasses/GameState.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/Globals/SharedFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/Globals/SharedFunctions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/Globals/Variables.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/Globals/Variables.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/LMClass/LM.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/SharedClasses/LM.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/Levels/RSO-A.level" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Scripts/LoadMenu/LoadMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/LoadMenu/LoadMenu.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Scripts/MainMenu/MainMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/MainMenu/MainMenu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/MemorialScreen/MemorialScreen.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/MemorialScreen/MemorialScreen.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Scripts/MemorialScreen/Selector.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/MemorialScreen/Selector.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/PuzzleMiniGame/PuzzleMiniGame.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/PuzzleMiniGame/PuzzleMiniGame.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Scripts/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -85,7 +92,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "develop",
-    "last_opened_file_path": "C:/Users/gabis/PycharmProjects/Mo3aukaOsetuu/Source/Scripts",
+    "last_opened_file_path": "C:/Users/gabis/PycharmProjects/Mo3aukaOsetuu/Source/Media",
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
 }]]></component>
@@ -96,11 +103,11 @@
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\LevelCreatorQT" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts\SharedClasses" />
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts\Levels" />
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts" />
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts\Globals" />
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Media" />
-      <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Images" />
     </key>
   </component>
   <component name="RunManager">
@@ -143,14 +150,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1734585871682</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Created game loop and main menu class, not done">
-      <option name="closed" value="true" />
-      <created>1734589206394</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1734589206394</updated>
     </task>
     <task id="LOCAL-00004" summary="Created game loop and main menu class, not done">
       <option name="closed" value="true" />
@@ -536,7 +535,15 @@
       <option name="project" value="LOCAL" />
       <updated>1736948742679</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="Project structure changes + Memorial preview show added">
+      <option name="closed" value="true" />
+      <created>1736950475023</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1736950475023</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -563,7 +570,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="You can now add dots to the map" />
     <MESSAGE value="Removed unnecessary code" />
     <MESSAGE value="Created new classes where will level data be stored" />
     <MESSAGE value="Save and load level data function is now added" />
@@ -588,7 +594,8 @@
     <MESSAGE value="Level images display + level info display added, hitboxes modified, and GameState class created." />
     <MESSAGE value="UI changes" />
     <MESSAGE value="Handle empty folder" />
-    <option name="LAST_COMMIT_MESSAGE" value="Handle empty folder" />
+    <MESSAGE value="Project structure changes + Memorial preview show added" />
+    <option name="LAST_COMMIT_MESSAGE" value="Project structure changes + Memorial preview show added" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -599,14 +606,14 @@
           <option name="timeStamp" value="16" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Source/Scripts/MemorialScreen/Selector.py</url>
-          <line>6</line>
-          <option name="timeStamp" value="17" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/LevelCreatorQT/source.py</url>
           <line>1034</line>
           <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Source/Scripts/CarsMiniGame/CarsMiniGame.py</url>
+          <line>127</line>
+          <option name="timeStamp" value="26" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

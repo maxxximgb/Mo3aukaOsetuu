@@ -5,7 +5,7 @@ from Globals.Variables import rules, events
 pygame.init()
 pygame.mixer.init()
 running = True
-menu = LoadMenu()
+menu = LoadMenu().exec()
 
 while running:
     for event in pygame.event.get():

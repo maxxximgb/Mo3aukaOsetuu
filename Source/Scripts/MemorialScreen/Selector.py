@@ -1,22 +1,33 @@
 import pygame
 from Globals.SharedFunctions import resize_image
-from Globals.Variables import rules, events
+from MemorialScreen.MemorialScreen import MemorialScreen
+from Globals.SharedFunctions import switch
 
+rules, events, game_state = [None] * 3
 
 class Selector:
-    def __init__(self, level):
-        self.memorials = level.memorials
+    def __init__(self):
+        self.memorials = list
+        self.screen = pygame.Surface
+        self.base_font_size = int
+        self.font = pygame.font.Font
+        self.resized_previews = list
+        self.hovered_index = None
+        self.button_font = pygame.font.Font
+        self.button_rect = pygame.Rect
+
+    def exec(self):
+        global rules, events, game_state
+        from Globals.Variables import rules, events, game_state
+        self.memorials = game_state.currentlvl.memorials
         self.screen = pygame.display.set_mode((1600, 920))
-        pygame.display.set_caption('Выбор объекта')
         self.base_font_size = 36
         self.font = pygame.font.Font(None, self.base_font_size)
-        self.resized_previews = self.load_previews()
+        self.resized_previews = [resize_image(p.preview, 300, 300) for p in self.memorials]
         self.hovered_index = None
-        events.append(self.MouseClickEvent)
-        rules.append(self.render)
-
-    def load_previews(self):
-        return [resize_image(p.preview, 300, 300) for p in self.memorials]
+        self.button_font = pygame.font.Font("../Media/Pangolin-Regular.ttf", 36)
+        self.button_rect = pygame.Rect(1600 - 200 - 20, 920 - 60 - 20, 200, 60)
+        self.addRules()
 
     def wrap_text(self, text, font, max_width):
         words = text.split(' ')
@@ -71,14 +82,31 @@ class Selector:
                 text_y = y + img_height + 10 + line_num * font.get_height()
                 self.screen.blit(text_surface, (text_x, text_y))
 
+        button_surface = self.button_font.render("Назад", True, (255, 255, 255))
+        pygame.draw.rect(self.screen, (0, 128, 0), self.button_rect)
+        self.screen.blit(button_surface, (self.button_rect.x + (self.button_rect.width - button_surface.get_width()) // 2, self.button_rect.y + (self.button_rect.height - button_surface.get_height()) // 2))
+
     def MouseClickEvent(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN and self.hovered_index is not None:
-            clicked_memorial = self.memorials[self.hovered_index]
-            self.ShowObj(clicked_memorial)
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.hovered_index is not None:
+                self.ShowObj(self.memorials[self.hovered_index])
+            elif self.button_rect.collidepoint(event.pos):
+                self.toScreen()
 
     def Unload(self):
         if self.MouseClickEvent in events: events.remove(self.MouseClickEvent)
         if self.render in rules: rules.remove(self.render)
 
+    def toScreen(self):
+        self.Unload()
+        switch(self, game_state.gameclasses.CityScreen, self.screen)
+
+    def addRules(self):
+        pygame.display.set_caption('Выбор объекта')
+        events.append(self.MouseClickEvent)
+        rules.append(self.render)
+
     def ShowObj(self, memorial):
-        print(f"Showing object: {memorial.name}")
+        self.Unload()
+        game_state.currentobj = memorial
+        switch(self, game_state.gameclasses.MemorialScreen, self.screen)

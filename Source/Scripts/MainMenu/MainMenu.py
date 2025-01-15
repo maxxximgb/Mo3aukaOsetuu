@@ -1,18 +1,21 @@
 import os.path
-
 import pygame
-from LMClass.LM import Level, Memorial
-from Globals.Variables import rules, levels, events, game_state
+from SharedClasses.LM import Level, Memorial
 from pathlib import Path
-from CarsMiniGame.CarsMiniGame import CarsMiniGame
-from CityScreen.CityScreen import CityScreen
+from Globals.SharedFunctions import switch
 
+rules, levels, events, game_state = [None] * 4
 
 class MainMenu:
     def __init__(self):
         self.screen = pygame.Surface
         self.map = pygame.Surface
-        self.entrypoint = []
+        self.entrypoint = list
+
+    def exec(self):
+        global rules, levels, events, game_state
+        from Globals.Variables import rules, levels, events, game_state
+        self.entrypoint = list()
         pygame.display.set_caption('Главное Меню')
         self.load()
 
@@ -21,13 +24,18 @@ class MainMenu:
             self.entrypoint = list(map(int, f.read().split()))
         self.map = pygame.image.load("Temp/map.png").convert()
         self.screen = pygame.display.set_mode(self.map.get_size())
-        rules.append(self.draw)
+        rules.append(self.render)
         events.append(self.mouseClickEvent)
 
-    def draw(self):
+    def render(self):
         self.screen.blit(self.map, (0, 0))
         for l in levels:
-            pygame.draw.circle(self.screen, (255, 0, 0) if not l.completed else (0, 255, 0), tuple(l.dotpos), 10, 0)
+            if l.completed:
+                pygame.draw.circle(self.screen,(0, 255, 0), tuple(l.dotpos), 10, 0)
+            elif l == game_state.currentlvl:
+                pygame.draw.circle(self.screen, (255, 255, 0) , tuple(l.dotpos), 10, 0)
+            else:
+                pygame.draw.circle(self.screen, (255, 0, 0), tuple(l.dotpos), 10, 0)
         pygame.draw.circle(self.screen, (0, 0, 255), tuple(self.entrypoint), 10, 0)
 
     def mouseClickEvent(self, event):
@@ -37,14 +45,17 @@ class MainMenu:
                     if tuple(level.dotpos)[0] - 10 <= pygame.mouse.get_pos()[0] <= tuple(level.dotpos)[0] + 10 and \
                             tuple(level.dotpos)[1] - 10 <= pygame.mouse.get_pos()[1] <= tuple(level.dotpos)[1] + 10:
                         self.Unload()
-                        if not game_state.currentlvl:
-                            game_state.currentlvl = level
-                            CarsMiniGame(level)
-                        elif level == game_state.currentlvl:
-                            CityScreen(level)
+                        if level == game_state.currentlvl:
+                            switch(self, game_state.gameclasses.CityScreen, self.screen)
                         else:
+                            sound = pygame.mixer.Sound("../Media/busswitch.mp3")
+                            sound.play()
+                            while pygame.mixer.get_busy():
+                                pygame.time.delay(10)
+
                             game_state.currentlvl = level
-                            CarsMiniGame(level)
+                            switch(self, game_state.gameclasses.CarsMiniGame, self.screen, fade_speed=20)
 
     def Unload(self):
-        if self.draw in rules: rules.remove(self.draw)
+        if self.render in rules: rules.remove(self.render)
+        if self.mouseClickEvent in events: events.remove(self.mouseClickEvent)

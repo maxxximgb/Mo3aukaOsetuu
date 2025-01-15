@@ -3,13 +3,28 @@ import shutil
 import time
 import pygame
 from pathlib import Path
-from Globals.Variables import rules, events, levels  # Импорт списка с правилами
-from MainMenu.MainMenu import MainMenu
-from LMClass.LM import Level, Memorial
+from SharedClasses.LM import Level, Memorial
+from Globals.SharedFunctions import switch
 
+rules, events, levels, game_state = [None] * 4
 
 class LoadMenu:
     def __init__(self):
+        self.map = None
+        self.screen = pygame.Surface
+        self.levels = list
+        self.font = None
+        self.scroll_offset = int
+        self.scroll_speed = int
+        self.button_width = int
+        self.button_height = int
+        self.button_text = str
+        self.column_widths = list
+        self.row_height = int
+
+    def exec(self):
+        global rules, events, levels, game_state
+        from Globals.Variables import rules, events, levels, game_state
         self.map = None
         self.screen = pygame.display.set_mode((1280, 720))
         pygame.display.set_caption('Загрузка уровня')
@@ -34,7 +49,7 @@ class LoadMenu:
             self.levels.append((file_name, creation_time_str, modification_time_str, level))
         if self.levels:
             events.append(self.TableInteractEvent)
-            rules.append(self.DrawTable)
+            rules.append(self.render)
         else:
             self.screen.fill((255, 255, 255))
             font = pygame.font.Font('../Media/Pangolin-Regular.ttf', 39)
@@ -42,7 +57,7 @@ class LoadMenu:
             rules.append(lambda: self.screen.blit(text_surface, (0, 300)))
 
 
-    def DrawTable(self):
+    def render(self):
         self.screen.fill((30, 30, 30))
         headers = ["Имя файла", "Дата создания", "Дата изменения", "Действие"]
 
@@ -118,11 +133,11 @@ class LoadMenu:
                                 mem.puzzlepos.extend([l.strip('\n').split() for l in matrix.readlines()])
                     level.memorials.append(mem)
                 levels.append(level)
-        MainMenu()
         self.Unload()
+        switch(self, game_state.gameclasses.MainMenu, self.screen, fade_speed=10)
 
     def Unload(self):
         if self.TableInteractEvent in events:
             events.remove(self.TableInteractEvent)
-        if self.DrawTable in rules:
-            rules.remove(self.DrawTable)
+        if self.render in rules:
+            rules.remove(self.render)
