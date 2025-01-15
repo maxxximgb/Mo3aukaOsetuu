@@ -1011,7 +1011,7 @@ class SaveWidget(QWidget):
             self.progresslabel.setText(f'Сохранение информации о уровне {level[1].name}')
             os.mkdir(f'temp/{i}')
             with open(f'temp/{i}/info.txt', 'w', encoding='UTF-8') as f:
-                f.writelines('\n'.join([level[1].name, level[1].desc, f'{level[0].x()} {level[0].y()}']))
+                f.writelines('\n'.join([level[1].name.replace('\n', ' '), level[1].desc.replace('\n', ' '), f'{level[0].x()} {level[0].y()}']))
             await asyncio.sleep(1)
             self.progresslabel.setText(f'Сохранение изображений уровня {level[1].name}')
             os.mkdir(f'temp/{i}/images')
@@ -1026,10 +1026,11 @@ class SaveWidget(QWidget):
                 self.progresslabel.setText(f'Сохранение информации о мемориале {memorial.name} уровня {level[1].name}')
                 os.mkdir(f'temp/{i}/memorials/{n}')
                 with open(f'temp/{i}/memorials/{n}/info.txt', 'w', encoding='UTF-8') as f:
-                    f.writelines('\n'.join([memorial.name, memorial.desc]))
+                    f.writelines('\n'.join([memorial.name.replace('\n', ' '), memorial.desc.replace('\n', ' ')]))
                 await asyncio.sleep(0.2)
                 self.progresslabel.setText(
                     f'Сохранение изображений предпросмотра мемориала и пазла {memorial.name} уровня {level[1].name}')
+                os.mkdir(f'temp/{i}/memorials/{n}/images')
                 file = QtCore.QFile(f'temp/{i}/memorials/{n}/images/preview.png')
                 file.open(QtCore.QIODevice.OpenModeFlag.ReadWrite)
                 file.write(memorial.preview)
@@ -1040,7 +1041,7 @@ class SaveWidget(QWidget):
                 file.close()
                 await asyncio.sleep(0.2)
                 self.progresslabel.setText(f'Сохранение изображений мемориала {memorial.name} уровня {level[1].name}')
-                os.mkdir(f'temp/{i}/memorials/{n}/images')
+
                 for z, image in enumerate(memorial.images):
                     file = QtCore.QFile(f'temp/{i}/memorials/{n}/images/{z}.png')
                     file.open(QtCore.QIODevice.OpenModeFlag.ReadWrite)
