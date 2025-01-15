@@ -35,6 +35,12 @@ class LoadMenu:
         if self.levels:
             events.append(self.TableInteractEvent)
             rules.append(self.DrawTable)
+        else:
+            self.screen.fill((255, 255, 255))
+            font = pygame.font.Font('../Media/Pangolin-Regular.ttf', 39)
+            text_surface = font.render('Отсутствуют уровни. Добавьте их в папку Levels и перезапустите программу.', True, (0, 0, 0))
+            rules.append(lambda: self.screen.blit(text_surface, (0, 300)))
+
 
     def DrawTable(self):
         self.screen.fill((30, 30, 30))
