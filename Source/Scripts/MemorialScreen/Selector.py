@@ -6,7 +6,7 @@ class Selector:
         self.memorials = level.memorials
         self.screen = pygame.display.set_mode((1600, 920))
         pygame.display.set_caption('Выбор объекта')
-        self.font = pygame.font.Font(None, 36)  # Шрифт для текста
+        self.font = pygame.font.Font(None, 36)
         self.resized_previews = self.load_previews()
 
 

@@ -4,14 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="62af72bd-3b00-41bb-9306-950d82b336e8" name="Changes" comment="Level images display + level info display added, hitboxes modified, and GameState class created.">
-      <change afterPath="$PROJECT_DIR$/LevelCreatorQT/build.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Media/Pangolin-Regular.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Scripts/Globals/SharedFunctions.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Scripts/MemorialScreen/Selector.py" afterDir="false" />
+    <list default="true" id="62af72bd-3b00-41bb-9306-950d82b336e8" name="Changes" comment="UI changes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LevelCreatorQT/source.py" beforeDir="false" afterPath="$PROJECT_DIR$/LevelCreatorQT/source.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/CityScreen/CityScreen.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/CityScreen/CityScreen.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -526,7 +520,15 @@
       <option name="project" value="LOCAL" />
       <updated>1736922588638</updated>
     </task>
-    <option name="localTasksCounter" value="49" />
+    <task id="LOCAL-00049" summary="UI changes">
+      <option name="closed" value="true" />
+      <created>1736947594905</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1736947594905</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -557,7 +559,6 @@
     <MESSAGE value="You can now add dots to the map" />
     <MESSAGE value="Removed unnecessary code" />
     <MESSAGE value="Created new classes where will level data be stored" />
-    <MESSAGE value="UI changes" />
     <MESSAGE value="Save and load level data function is now added" />
     <MESSAGE value="UI Changes" />
     <MESSAGE value="Memorial selection added" />
@@ -578,7 +579,8 @@
     <MESSAGE value="Removed thrash + new code" />
     <MESSAGE value="Removed thrash + funny collision audio added" />
     <MESSAGE value="Level images display + level info display added, hitboxes modified, and GameState class created." />
-    <option name="LAST_COMMIT_MESSAGE" value="Level images display + level info display added, hitboxes modified, and GameState class created." />
+    <MESSAGE value="UI changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="UI changes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
