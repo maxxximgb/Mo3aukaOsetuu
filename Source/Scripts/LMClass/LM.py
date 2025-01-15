@@ -11,6 +11,7 @@ class Level:
 class Memorial:
     def __init__(self):
         self.preview = None
+        self.puzzle = None
         self.images = []
         self.name = ''
         self.desc = ''

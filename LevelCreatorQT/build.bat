@@ -1,0 +1,1 @@
+pyinstaller --onefile --noconsole --add-data "add.png:." --add-data "addmem.png:." --add-data "Preview.jpg:." source.py

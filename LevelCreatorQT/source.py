@@ -1030,6 +1030,7 @@ class SaveWidget(QWidget):
                 await asyncio.sleep(0.2)
                 self.progresslabel.setText(
                     f'Сохранение изображений предпросмотра мемориала и пазла {memorial.name} уровня {level[1].name}')
+                os.mkdir(f'temp/{i}/memorials/{n}/images')
                 file = QtCore.QFile(f'temp/{i}/memorials/{n}/images/preview.png')
                 file.open(QtCore.QIODevice.OpenModeFlag.ReadWrite)
                 file.write(memorial.preview)
@@ -1040,7 +1041,7 @@ class SaveWidget(QWidget):
                 file.close()
                 await asyncio.sleep(0.2)
                 self.progresslabel.setText(f'Сохранение изображений мемориала {memorial.name} уровня {level[1].name}')
-                os.mkdir(f'temp/{i}/memorials/{n}/images')
+
                 for z, image in enumerate(memorial.images):
                     file = QtCore.QFile(f'temp/{i}/memorials/{n}/images/{z}.png')
                     file.open(QtCore.QIODevice.OpenModeFlag.ReadWrite)

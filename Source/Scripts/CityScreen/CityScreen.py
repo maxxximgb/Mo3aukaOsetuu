@@ -1,31 +1,26 @@
 import pygame
-from Globals.Globals import rules, game_state
+from Globals.Globals import rules, game_state, events
+from Globals.SharedFunctions import resize_image, get_aspect_ratio
+from MemorialScreen.Selector import Selector
 
-def get_aspect_ratio(image):
-    return image.get_width() / image.get_height()
-
-def resize_image(image, target_width, target_height):
-    original_width, original_height = image.get_size()
-    original_ratio = original_width / original_height
-    target_ratio = target_width / target_height
-
-    if original_ratio > target_ratio:
-        new_width = target_width
-        new_height = int(target_width / original_ratio)
-    else:
-        new_height = target_height
-        new_width = int(target_height * original_ratio)
-
-    return pygame.transform.scale(image, (new_width, new_height))
 
 class CityScreen:
     def __init__(self, level):
         self.level = level
         self.screen = pygame.display.set_mode((1600, 920))
         pygame.display.set_caption(self.level.name)
-        self.font = pygame.font.Font(None, 36)
         self.grid = self.create_grid()
         rules.append(self.render)
+        self.font_path = "../Media/Pangolin-Regular.ttf"
+        self.name_font = pygame.font.Font(self.font_path, 48)
+        self.desc_font = pygame.font.Font(self.font_path, 36)
+        self.button_font = pygame.font.Font(self.font_path, 36)
+        self.button_width = 200
+        self.button_height = 60
+        self.button_x = 1600 - self.button_width - 20
+        self.button_y = 920 - self.button_height - 20
+        self.button_rect = pygame.Rect(self.button_x, self.button_y, self.button_width, self.button_height)
+        events.append(self.nextbtnclick)
 
     def create_grid(self):
         num_images = len(self.level.images)
@@ -120,17 +115,21 @@ class CityScreen:
         text_x = right_boundary + 10
         text_y = 10
 
-        name_font = pygame.font.Font(None, 48)
-        name_surface = name_font.render(self.level.name, True, (0, 0, 0))
+        name_surface = self.name_font.render(self.level.name, True, (0, 0, 0))
         self.screen.blit(name_surface, (text_x, text_y))
 
-        desc_font = pygame.font.Font(None, 36)
-        desc_lines = self.wrap_text(self.level.desc, desc_font, 1600 - text_x - 10)
+        desc_lines = self.wrap_text(self.level.desc, self.desc_font, 1600 - text_x - 10)
         for i, line in enumerate(desc_lines):
-            desc_surface = desc_font.render(line, True, (0, 0, 0))
+            desc_surface = self.desc_font.render(line, True, (0, 0, 0))
             self.screen.blit(desc_surface, (text_x, text_y + 50 + i * 30))
 
-        pygame.display.flip()
+        button_text = "Далее"
+        button_surface = self.button_font.render(button_text, True, (255, 255, 255))
+
+        pygame.draw.rect(self.screen, (0, 128, 0), self.button_rect)
+        text_x_pos = self.button_x + (self.button_width - button_surface.get_width()) // 2
+        text_y_pos = self.button_y + (self.button_height - button_surface.get_height()) // 2
+        self.screen.blit(button_surface, (text_x_pos, text_y_pos))
 
     def wrap_text(self, text, font, max_width):
         words = text.split(' ')
@@ -151,3 +150,18 @@ class CityScreen:
             lines.append(current_line)
 
         return lines
+
+    def to_mem(self):
+        self.Unload()
+        Selector(self.level)
+
+    def nextbtnclick(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                mouse_pos = pygame.mouse.get_pos()
+                if self.button_rect.collidepoint(mouse_pos):
+                    self.to_mem()
+
+    def Unload(self):
+        if self.render in rules: rules.remove(self.render)
+        if self.nextbtnclick in events: events.remove(self.nextbtnclick)

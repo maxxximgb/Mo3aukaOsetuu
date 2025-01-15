@@ -4,19 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="62af72bd-3b00-41bb-9306-950d82b336e8" name="Changes" comment="Removed thrash + funny collision audio added">
+    <list default="true" id="62af72bd-3b00-41bb-9306-950d82b336e8" name="Changes" comment="Level images display + level info display added, hitboxes modified, and GameState class created.">
+      <change afterPath="$PROJECT_DIR$/LevelCreatorQT/build.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/Media/Pangolin-Regular.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/Scripts/Globals/SharedFunctions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/Scripts/MemorialScreen/Selector.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Media/BlueCar.png" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Media/BlueCar.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Media/Bus.png" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Media/Bus.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Media/GreenCar.png" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Media/GreenCar.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Media/RedCar.png" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Media/RedCar.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Media/SportCar.png" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Media/SportCar.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Media/YellowCar.png" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Media/YellowCar.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/CarsMiniGame/CarsMiniGame.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/CarsMiniGame/CarsMiniGame.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LevelCreatorQT/source.py" beforeDir="false" afterPath="$PROJECT_DIR$/LevelCreatorQT/source.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Scripts/CityScreen/CityScreen.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/CityScreen/CityScreen.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/FirstLaunch/FirstLaunch.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/GameState/GameState.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/Globals/Globals.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/Globals/Globals.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/MainMenu/MainMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/MainMenu/MainMenu.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,21 +72,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Python.CarsMiniGame.executor&quot;: &quot;Run&quot;,
-    &quot;Python.LoadMenu.executor&quot;: &quot;Run&quot;,
-    &quot;Python.MainMenu.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;Python.source.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/gabis/PycharmProjects/Mo3aukaOsetuu/Source/Media&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Python.CarsMiniGame.executor": "Run",
+    "Python.LoadMenu.executor": "Run",
+    "Python.MainMenu.executor": "Run",
+    "Python.main.executor": "Debug",
+    "Python.source.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "develop",
+    "last_opened_file_path": "C:/Users/gabis/PycharmProjects/Mo3aukaOsetuu/Source/Scripts",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Media" />
@@ -99,11 +94,11 @@
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\LevelCreatorQT" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts\Globals" />
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Media" />
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Images" />
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts\Levels" />
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\LevelCreatorQT" />
-      <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts" />
     </key>
   </component>
   <component name="RunManager">
@@ -117,7 +112,7 @@
       </envs>
       <option name="SDK_HOME" value="" />
       <option name="SDK_NAME" value="Python 3.12" />
-      <option name="WORKING_DIRECTORY" value="" />
+      <option name="WORKING_DIRECTORY" value="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
@@ -515,7 +510,23 @@
       <option name="project" value="LOCAL" />
       <updated>1736853834976</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="Level images display + level info display added, hitboxes modified, and GameState class created.">
+      <option name="closed" value="true" />
+      <created>1736884643924</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1736884643924</updated>
+    </task>
+    <task id="LOCAL-00048" summary="Level images display + level info display added, hitboxes modified, and GameState class created.">
+      <option name="closed" value="true" />
+      <created>1736922588638</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1736922588638</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -542,7 +553,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fixing working program state" />
     <MESSAGE value="Map selection is now available" />
     <MESSAGE value="You can now add dots to the map" />
     <MESSAGE value="Removed unnecessary code" />
@@ -567,7 +577,8 @@
     <MESSAGE value="Car minigame draft" />
     <MESSAGE value="Removed thrash + new code" />
     <MESSAGE value="Removed thrash + funny collision audio added" />
-    <option name="LAST_COMMIT_MESSAGE" value="Removed thrash + funny collision audio added" />
+    <MESSAGE value="Level images display + level info display added, hitboxes modified, and GameState class created." />
+    <option name="LAST_COMMIT_MESSAGE" value="Level images display + level info display added, hitboxes modified, and GameState class created." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -576,6 +587,16 @@
           <url>file://$PROJECT_DIR$/LevelCreatorQT/source.py</url>
           <line>886</line>
           <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Source/Scripts/MemorialScreen/Selector.py</url>
+          <line>5</line>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/LevelCreatorQT/source.py</url>
+          <line>1034</line>
+          <option name="timeStamp" value="18" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
