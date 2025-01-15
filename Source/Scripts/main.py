@@ -1,6 +1,6 @@
 import pygame
 from LoadMenu.LoadMenu import LoadMenu
-from Globals.Globals import rules, events
+from Globals.Variables import rules, events
 
 pygame.init()
 pygame.mixer.init()

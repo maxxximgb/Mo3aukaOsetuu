@@ -4,10 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="62af72bd-3b00-41bb-9306-950d82b336e8" name="Changes" comment="UI changes">
+    <list default="true" id="62af72bd-3b00-41bb-9306-950d82b336e8" name="Changes" comment="Handle empty folder">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/Levels/RSO-A.level" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/RSO-A.level" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/CarsMiniGame/CarsMiniGame.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/CarsMiniGame/CarsMiniGame.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/CityScreen/CityScreen.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/CityScreen/CityScreen.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/Globals/Globals.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/Globals/Variables.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/Levels/RSO-A.level" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/Levels/RSO-A.level" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Scripts/LoadMenu/LoadMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/LoadMenu/LoadMenu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/MainMenu/MainMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/MainMenu/MainMenu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/MemorialScreen/Selector.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/MemorialScreen/Selector.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,8 +96,8 @@
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\LevelCreatorQT" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts" />
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts\Levels" />
+      <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts" />
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts\Globals" />
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Media" />
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Images" />
@@ -137,14 +143,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1734585871682</updated>
-    </task>
-    <task id="LOCAL-00002" summary="Create new dirs and files, where will be source code stored">
-      <option name="closed" value="true" />
-      <created>1734586638350</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1734586638350</updated>
     </task>
     <task id="LOCAL-00003" summary="Created game loop and main menu class, not done">
       <option name="closed" value="true" />
@@ -530,7 +528,15 @@
       <option name="project" value="LOCAL" />
       <updated>1736948195873</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="Handle empty folder">
+      <option name="closed" value="true" />
+      <created>1736948742679</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1736948742679</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -557,7 +563,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Map selection is now available" />
     <MESSAGE value="You can now add dots to the map" />
     <MESSAGE value="Removed unnecessary code" />
     <MESSAGE value="Created new classes where will level data be stored" />
@@ -582,7 +587,8 @@
     <MESSAGE value="Removed thrash + funny collision audio added" />
     <MESSAGE value="Level images display + level info display added, hitboxes modified, and GameState class created." />
     <MESSAGE value="UI changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="UI changes" />
+    <MESSAGE value="Handle empty folder" />
+    <option name="LAST_COMMIT_MESSAGE" value="Handle empty folder" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -594,7 +600,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Source/Scripts/MemorialScreen/Selector.py</url>
-          <line>5</line>
+          <line>6</line>
           <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">

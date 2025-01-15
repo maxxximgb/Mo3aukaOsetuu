@@ -1,5 +1,5 @@
 import pygame
-from Globals.Globals import rules, game_state, events
+from Globals.Variables import rules, game_state, events
 from Globals.SharedFunctions import resize_image, get_aspect_ratio
 from MemorialScreen.Selector import Selector
 

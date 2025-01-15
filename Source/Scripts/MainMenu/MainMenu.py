@@ -2,7 +2,7 @@ import os.path
 
 import pygame
 from LMClass.LM import Level, Memorial
-from Globals.Globals import rules, levels, events, game_state
+from Globals.Variables import rules, levels, events, game_state
 from pathlib import Path
 from CarsMiniGame.CarsMiniGame import CarsMiniGame
 from CityScreen.CityScreen import CityScreen

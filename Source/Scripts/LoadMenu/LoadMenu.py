@@ -3,7 +3,7 @@ import shutil
 import time
 import pygame
 from pathlib import Path
-from Globals.Globals import rules, events, levels  # Импорт списка с правилами
+from Globals.Variables import rules, events, levels  # Импорт списка с правилами
 from MainMenu.MainMenu import MainMenu
 from LMClass.LM import Level, Memorial
 
@@ -107,9 +107,9 @@ class LoadMenu:
                         mem.name, mem.desc = l
                     for img in Path(os.path.join(memorial, 'images')).iterdir():
                         if img.is_file():
-                            if str(img).startswith('preview'):
+                            if img.name.startswith('preview'):
                                 mem.preview = pygame.image.load(img).convert()
-                            elif str(img).startswith('puzzle'):
+                            elif img.name.startswith('puzzle'):
                                 mem.puzzle = pygame.image.load(img).convert()
                             else:
                                 mem.images.append(pygame.image.load(img).convert())

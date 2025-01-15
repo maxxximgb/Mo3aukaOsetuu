@@ -2,7 +2,7 @@ import random
 import pygame
 import cv2
 import time
-from Globals.Globals import rules, game_state
+from Globals.Variables import rules, game_state
 from CityScreen.CityScreen import CityScreen
 
 class CarsMiniGame:
