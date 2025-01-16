@@ -140,12 +140,12 @@ class MemorialScreen:
         back_text_x_pos = self.button_rect.x + (self.button_rect.width - back_button_surface.get_width()) // 2
         back_text_y_pos = self.button_rect.y + (self.button_rect.height - back_button_surface.get_height()) // 2
         self.screen.blit(back_button_surface, (back_text_x_pos, back_text_y_pos))
-
-        puzzle_button_surface = self.button_font.render("К пазлу", True, (255, 255, 255))
-        pygame.draw.rect(self.screen, (0, 0, 128), self.puzzle_button_rect)
-        puzzle_text_x_pos = self.puzzle_button_rect.x + (self.puzzle_button_rect.width - puzzle_button_surface.get_width()) // 2
-        puzzle_text_y_pos = self.puzzle_button_rect.y + (self.puzzle_button_rect.height - puzzle_button_surface.get_height()) // 2
-        self.screen.blit(puzzle_button_surface, (puzzle_text_x_pos, puzzle_text_y_pos))
+        if not self.memorial.completed:
+            puzzle_button_surface = self.button_font.render("К пазлу", True, (255, 255, 255))
+            pygame.draw.rect(self.screen, (0, 0, 128), self.puzzle_button_rect)
+            puzzle_text_x_pos = self.puzzle_button_rect.x + (self.puzzle_button_rect.width - puzzle_button_surface.get_width()) // 2
+            puzzle_text_y_pos = self.puzzle_button_rect.y + (self.puzzle_button_rect.height - puzzle_button_surface.get_height()) // 2
+            self.screen.blit(puzzle_button_surface, (puzzle_text_x_pos, puzzle_text_y_pos))
 
     def wrap_text(self, text, font, max_width):
         words = text.split(' ')

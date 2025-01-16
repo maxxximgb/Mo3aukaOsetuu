@@ -103,7 +103,7 @@ class LoadMenu:
                 self.OnLoadButtonClick(level_data[3])
 
     def OnLoadButtonClick(self, file_path):
-        shutil.rmtree('Temp')
+        if os.path.exists('Temp'): shutil.rmtree('Temp')
         os.mkdir('Temp')
         shutil.unpack_archive(file_path, 'Temp', 'zip')
         for item in Path('Temp').iterdir():
