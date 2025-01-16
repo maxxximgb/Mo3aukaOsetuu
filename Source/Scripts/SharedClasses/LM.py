@@ -6,7 +6,6 @@ class Level:
         self.name = ''
         self.desc = ''
         self.memorials = []
-        self.uid = int
 
 
 class Memorial:

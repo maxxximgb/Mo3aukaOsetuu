@@ -4,13 +4,17 @@ import pygame
 import random
 import copy
 
+from Source.Scripts.Globals.SharedFunctions import switch
+
+game_state, rules, events, screen = [None] * 4
+
 class EmptyPart:
     def __init__(self, position):
         self.position = position
         self.puzzle_part = None
 
 class PuzzlePart(pygame.sprite.Sprite):
-    def __init__(self, image, position, correct_position, screen):
+    def __init__(self, image, position, correct_position):
         super().__init__()
         self.image = image
         self.rect = self.image.get_rect(topleft=position)
@@ -19,15 +23,16 @@ class PuzzlePart(pygame.sprite.Sprite):
         self.offset_x = 0
         self.offset_y = 0
         self.cell = None
-        self.screen = screen
+
 
     def update(self):
         if self.dragging:
+            global screen
             mouse_x, mouse_y = pygame.mouse.get_pos()
             self.rect.x = mouse_x + self.offset_x
             self.rect.y = mouse_y + self.offset_y
-            self.rect.x = max(0, min(self.rect.x, self.screen.get_width() - self.rect.width))
-            self.rect.y = max(0, min(self.rect.y, self.screen.get_height() - self.rect.height))
+            self.rect.x = max(0, min(self.rect.x, screen.get_width() - self.rect.width))
+            self.rect.y = max(0, min(self.rect.y, screen.get_height() - self.rect.height))
 
 class Cell(pygame.sprite.Sprite):
     def __init__(self, position, size):
@@ -69,8 +74,11 @@ class PuzzleMiniGame:
     def exec(self):
         global game_state, rules, events
         from Globals.Variables import game_state, rules, events
-        if self.currentlvl != game_state.currentobj:
-            self.currentlvl = copy.deepcopy(game_state.currentobj)
+        print(id(self.currentlvl))
+        print(id(game_state.currentobj))
+
+        if self.currentlvl != id(game_state.currentobj):
+            self.currentlvl = id(game_state.currentobj)
             self.expire_time = time.time()
             self.puzzle = game_state.currentobj.puzzle
             self.matrix = game_state.currentobj.puzzlepos
@@ -83,9 +91,10 @@ class PuzzleMiniGame:
             self.sprites = pygame.sprite.Group()
             self.highlight_enabled = True
             self.resize_puzzle()
-            self.set_screen_size()
             self.loadPieces()
             self.CreateGrid()
+
+        self.set_screen_size()
         events.append(self.MouseClickEvent)
         events.append(self.KeyboardEvent)
         rules.append(self.render)
@@ -106,7 +115,9 @@ class PuzzleMiniGame:
         grid_height = self.puzzle.get_height()
         screen_width = grid_width + 300
         screen_height = grid_height + 100
-        self.screen = pygame.display.set_mode((screen_width, screen_height))
+        global screen
+        screen = pygame.display.set_mode((screen_width, screen_height))
+        self.screen = screen
 
     def loadPieces(self):
         piece_width = self.puzzle.get_width() // len(self.matrix[0])
@@ -120,7 +131,6 @@ class PuzzleMiniGame:
                     piece_image,
                     (random.randint(0, 300 - piece_width), random.randint(0, self.puzzle.get_height() - piece_height)),
                     (i, j),
-                    self.screen
                 )
                 self.puzzle_pieces[i].append(puzzle_part)
                 self.sprites.add(puzzle_part)
@@ -171,7 +181,8 @@ class PuzzleMiniGame:
             self.screen.blit(debug_text_surface, (self.screen.get_width() - 250, self.screen.get_height() - 40))
 
     def back_button_clicked(self):
-        print("Кнопка 'Назад' нажата")
+        self.Unload()
+        switch(self, game_state.gameclasses.MemorialScreen, self.screen)
 
     def checkPiece(self, piece):
         for row in self.grid:
@@ -231,3 +242,8 @@ class PuzzleMiniGame:
                 if cell.puzzle_part is None or cell.puzzle_part.correctPos != cell.position:
                     return False
         return True
+
+    def Unload(self):
+        if self.MouseClickEvent in events: events.remove(self.MouseClickEvent)
+        if self.KeyboardEvent in events: events.remove(self.KeyboardEvent)
+        if self.render in rules: rules.remove(self.render)
