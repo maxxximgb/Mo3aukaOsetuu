@@ -1,6 +1,8 @@
 import os.path
+import time
 import pygame
 import random
+import copy
 
 class EmptyPart:
     def __init__(self, position):
@@ -27,8 +29,9 @@ class PuzzlePart(pygame.sprite.Sprite):
             self.rect.x = max(0, min(self.rect.x, self.screen.get_width() - self.rect.width))
             self.rect.y = max(0, min(self.rect.y, self.screen.get_height() - self.rect.height))
 
-class Cell:
+class Cell(pygame.sprite.Sprite):
     def __init__(self, position, size):
+        super().__init__()
         self.position = position
         self.size = size
         self.empty_part = EmptyPart(position)
@@ -39,53 +42,50 @@ class Cell:
             self.puzzle_part = puzzle_part
             puzzle_part.cell = self
             self.empty_part.puzzle_part = puzzle_part
-        else:
-            print("Ячейка уже занята!")
 
-    def remove_puzzle_part(self):
-        if self.puzzle_part is not None:
-            self.puzzle_part.cell = None
-            self.empty_part.puzzle_part = None
-            self.puzzle_part = None
-        else:
-            print("Ячейка уже пуста!")
+    def get_rect(self):
+        cell_x = 300 + self.position[1] * self.size[0]
+        cell_y = self.position[0] * self.size[1]
+        return pygame.Rect(cell_x, cell_y, self.size[0], self.size[1])
 
 class PuzzleMiniGame:
     def __init__(self):
-        self.piece_sizes = []
-        self.puzzlePath = ""
-        self.puzzle = None
-        self.matrix = []
-        self.puzzle_pieces = []
-        self.grid_size = (0, 0)
-        self.screen = None
-        self.sprites = pygame.sprite.Group()
-        self.show_full_image = False
-        self.buttons = []
-        self.grid = []
+        self.currentlvl = None
+        self.expire_time = time.time
+        self.piece_sizes = list
+        self.puzzlePath = str
+        self.puzzle = pygame.Surface
+        self.matrix = list
+        self.puzzle_pieces = list
+        self.grid_size = tuple
+        self.screen = pygame.Surface
+        self.sprites = pygame.sprite.Group
+        self.show_full_image = bool
+        self.grid = list
         self.dragging_piece = None
-        self.highlight_enabled = False
+        self.highlight_enabled = bool
         self.sound_placed = None
 
     def exec(self):
         global game_state, rules, events
         from Globals.Variables import game_state, rules, events
-
-        self.puzzle = game_state.currentobj.puzzle
-        self.matrix = game_state.currentobj.puzzlepos
-        self.puzzlePath = game_state.currentobj.puzzlePath
-        self.puzzle_pieces = []
-        self.piece_sizes = []
-        self.buttons = []
-        self.show_full_image = False
-        self.sound_placed = pygame.mixer.Sound("../Media/puzzle.mp3")
-        self.sprites = pygame.sprite.Group()
-
-        self.resize_puzzle()
-        self.set_screen_size()
-        self.loadPieces()
-        self.CreateGrid()
-
+        if self.currentlvl != game_state.currentobj:
+            self.currentlvl = copy.deepcopy(game_state.currentobj)
+            self.expire_time = time.time()
+            self.puzzle = game_state.currentobj.puzzle
+            self.matrix = game_state.currentobj.puzzlepos
+            self.puzzlePath = game_state.currentobj.puzzlePath
+            self.grid_size = (0, 0)
+            self.puzzle_pieces = []
+            self.piece_sizes = []
+            self.show_full_image = False
+            self.sound_placed = pygame.mixer.Sound("../Media/puzzle.mp3")
+            self.sprites = pygame.sprite.Group()
+            self.highlight_enabled = True
+            self.resize_puzzle()
+            self.set_screen_size()
+            self.loadPieces()
+            self.CreateGrid()
         events.append(self.MouseClickEvent)
         events.append(self.KeyboardEvent)
         rules.append(self.render)
@@ -93,37 +93,32 @@ class PuzzleMiniGame:
     def resize_puzzle(self):
         original_width, original_height = self.puzzle.get_size()
         min_size = 900
-
         if original_width >= original_height:
             new_width = min_size
             new_height = int((min_size / original_width) * original_height)
         else:
             new_height = min_size
             new_width = int((min_size / original_height) * original_width)
-
         self.puzzle = pygame.transform.scale(self.puzzle, (new_width, new_height))
 
     def set_screen_size(self):
         grid_width = self.puzzle.get_width()
         grid_height = self.puzzle.get_height()
         screen_width = grid_width + 300
-        screen_height = grid_height
+        screen_height = grid_height + 100
         self.screen = pygame.display.set_mode((screen_width, screen_height))
 
     def loadPieces(self):
         piece_width = self.puzzle.get_width() // len(self.matrix[0])
         piece_height = self.puzzle.get_height() // len(self.matrix)
-
         for i, row in enumerate(self.matrix):
             self.puzzle_pieces.append([])
             for j, piece in enumerate(row):
                 piece_image = pygame.image.load(os.path.join(self.puzzlePath, piece))
                 piece_image = pygame.transform.scale(piece_image, (piece_width, piece_height))
-                piece_rect = piece_image.get_rect()
-                self.piece_sizes.append(piece_rect.size)
                 puzzle_part = PuzzlePart(
                     piece_image,
-                    (random.randint(0, 300 - piece_rect.width), random.randint(0, self.puzzle.get_height() - piece_rect.height)),
+                    (random.randint(0, 300 - piece_width), random.randint(0, self.puzzle.get_height() - piece_height)),
                     (i, j),
                     self.screen
                 )
@@ -131,67 +126,57 @@ class PuzzleMiniGame:
                 self.sprites.add(puzzle_part)
 
     def CreateGrid(self):
-        if not self.piece_sizes:
-            raise ValueError("Список piece_sizes пуст. Убедитесь, что loadPieces был вызван.")
-
         piece_width = self.puzzle.get_width() // len(self.matrix[0])
         piece_height = self.puzzle.get_height() // len(self.matrix)
-
         self.grid_size = (len(self.matrix[0]), len(self.matrix))
-        self.grid = []
-
-        for i in range(self.grid_size[1]):
-            row = []
-            for j in range(self.grid_size[0]):
-                cell = Cell((i, j), (piece_width, piece_height))
-                row.append(cell)
-            self.grid.append(row)
-
+        self.grid = [[Cell((i, j), (piece_width, piece_height)) for j in range(self.grid_size[0])] for i in range(self.grid_size[1])]
         for i, row in enumerate(self.puzzle_pieces):
             for j, piece in enumerate(row):
                 self.grid[i][j].empty_part.puzzle_part = piece
 
-    def highlight_cell(self, cell, color=(0, 255, 0), border_width=3):
-        cell_x = 300 + cell.position[1] * cell.size[0]
-        cell_y = cell.position[0] * cell.size[1]
-        pygame.draw.rect(self.screen, color, (cell_x, cell_y, cell.size[0], cell.size[1]), border_width)
-
     def render(self):
         self.screen.fill((50, 50, 50))
         pygame.draw.rect(self.screen, (100, 100, 100), (0, 0, 300, self.puzzle.get_height()))
-
-        for i in range(self.grid_size[0] + 1):
-            x = 300 + i * self.grid[0][0].size[0]
-            pygame.draw.line(self.screen, (200, 200, 200), (x, 0), (x, self.puzzle.get_height()), 2)
-        for j in range(self.grid_size[1] + 1):
-            y = j * self.grid[0][0].size[1]
-            pygame.draw.line(self.screen, (200, 200, 200), (300, y), (300 + self.puzzle.get_width(), y), 2)
+        if self.show_full_image:
+            self.screen.blit(self.puzzle, (300, 0))
+        else:
+            for i in range(self.grid_size[0] + 1):
+                x = 300 + i * self.grid[0][0].size[0]
+                pygame.draw.line(self.screen, (200, 200, 200), (x, 0), (x, self.puzzle.get_height()), 2)
+            for j in range(self.grid_size[1] + 1):
+                y = j * self.grid[0][0].size[1]
+                pygame.draw.line(self.screen, (200, 200, 200), (300, y), (300 + self.puzzle.get_width(), y), 2)
 
         if self.dragging_piece and self.highlight_enabled:
             correct_cell = self.grid[self.dragging_piece.correctPos[0]][self.dragging_piece.correctPos[1]]
-            self.highlight_cell(correct_cell, color=(0, 255, 0), border_width=3)
+            pygame.draw.rect(self.screen, (0, 255, 0), correct_cell.get_rect(), 3)
 
         self.sprites.update()
         self.sprites.draw(self.screen)
 
-        font = pygame.font.SysFont("Arial", 18)
-        debug_text = font.render(f"Отладка: подсветка нужных мест {'вкл' if self.highlight_enabled else 'выкл'}", True, (255, 255, 255))
-        self.screen.blit(debug_text, (10, self.screen.get_height() - 30))
+        pygame.draw.rect(self.screen, (0, 0, 0), (0, self.puzzle.get_height(), self.screen.get_width(), 100))
+        back_button_rect = pygame.Rect(50, self.puzzle.get_height() + 20, 150, 60)
+        pygame.draw.rect(self.screen, (0, 128, 255), back_button_rect)
+        font = pygame.font.SysFont(None, 36)
+        back_text = font.render("Назад", True, (255, 255, 255))
+        self.screen.blit(back_text, (back_button_rect.x + 30, back_button_rect.y + 20))
 
-        pygame.display.flip()
+        show_image_button_rect = pygame.Rect(250, self.puzzle.get_height() + 20, 250, 60)
+        pygame.draw.rect(self.screen, (0, 128, 255), show_image_button_rect)
+        show_image_text = font.render("Показать картину", True, (255, 255, 255))
+        self.screen.blit(show_image_text, (show_image_button_rect.x + 20, show_image_button_rect.y + 20))
 
-    def is_mouse_over_cell(self, mouse_pos, cell):
-        cell_x = 300 + cell.position[1] * cell.size[0]
-        cell_y = cell.position[0] * cell.size[1]
-        cell_rect = pygame.Rect(cell_x, cell_y, cell.size[0], cell.size[1])
-        return cell_rect.collidepoint(mouse_pos)
+        if time.time() < self.expire_time:
+            debug_text_surface = font.render(f"Подсветка: {'вкл' if self.highlight_enabled else 'выкл'}", True, (255, 255, 255))
+            self.screen.blit(debug_text_surface, (self.screen.get_width() - 250, self.screen.get_height() - 40))
 
-    def puzzleAdded(self, piece):
-        mouse_x, mouse_y = pygame.mouse.get_pos()
+    def back_button_clicked(self):
+        print("Кнопка 'Назад' нажата")
 
+    def checkPiece(self, piece):
         for row in self.grid:
             for cell in row:
-                if self.is_mouse_over_cell((mouse_x, mouse_y), cell):
+                if cell.get_rect().colliderect(piece.rect):
                     if cell.empty_part.puzzle_part == piece:
                         cell.set_puzzle_part(piece)
                         offset_x = (cell.size[0] - piece.rect.width) // 2
@@ -208,7 +193,15 @@ class PuzzleMiniGame:
 
     def MouseClickEvent(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
-            for piece in self.sprites:
+            back_button_rect = pygame.Rect(50, self.puzzle.get_height() + 20, 150, 60)
+            if back_button_rect.collidepoint(event.pos):
+                self.back_button_clicked()
+
+            show_image_button_rect = pygame.Rect(250, self.puzzle.get_height() + 20, 250, 60)
+            if show_image_button_rect.collidepoint(event.pos):
+                self.show_full_image = not self.show_full_image
+
+            for piece in reversed(self.sprites.sprites()):
                 if piece.rect.collidepoint(event.pos):
                     if piece.cell is not None and piece.correctPos == piece.cell.position:
                         continue
@@ -216,17 +209,21 @@ class PuzzleMiniGame:
                     piece.offset_x = piece.rect.x - event.pos[0]
                     piece.offset_y = piece.rect.y - event.pos[1]
                     self.dragging_piece = piece
+                    self.sprites.remove(piece)
+                    self.sprites.add(piece)
+                    break
         elif event.type == pygame.MOUSEBUTTONUP:
             for piece in self.sprites:
                 if piece.dragging:
                     piece.dragging = False
-                    self.puzzleAdded(piece)
+                    self.checkPiece(piece)
                     self.dragging_piece = None
 
     def KeyboardEvent(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_F9:
                 self.highlight_enabled = not self.highlight_enabled
+                self.expire_time = time.time() + 2
 
     def is_puzzle_complete(self):
         for row in self.grid:
