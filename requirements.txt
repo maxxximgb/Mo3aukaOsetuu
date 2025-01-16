@@ -1,0 +1,6 @@
+pygame~=2.6.1
+opencv-python~=4.10.0.84
+numpy~=2.2.1
+qasync~=0.27.1
+pillow~=10.4.0
+PyQt6~=6.8.0

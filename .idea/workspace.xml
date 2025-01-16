@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="62af72bd-3b00-41bb-9306-950d82b336e8" name="Changes" comment="Puzzle solved logics added">
-      <change afterPath="$PROJECT_DIR$/Source/Media/puzzlesolved.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/LoadMenu/LoadMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/LoadMenu/LoadMenu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/MainMenu/MainMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/MainMenu/MainMenu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/MemorialScreen/MemorialScreen.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/MemorialScreen/MemorialScreen.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/PuzzleMiniGame/PuzzleMiniGame.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/PuzzleMiniGame/PuzzleMiniGame.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/SharedClasses/LM.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/SharedClasses/LM.py" afterDir="false" />
-    </list>
+    <list default="true" id="62af72bd-3b00-41bb-9306-950d82b336e8" name="Changes" comment="Puzzle solved logics added" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -143,14 +135,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1734585871682</updated>
-    </task>
-    <task id="LOCAL-00017" summary="UI changes">
-      <option name="closed" value="true" />
-      <created>1735115998667</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1735115998667</updated>
     </task>
     <task id="LOCAL-00018" summary="UI changes">
       <option name="closed" value="true" />
@@ -536,7 +520,15 @@
       <option name="project" value="LOCAL" />
       <updated>1737034012264</updated>
     </task>
-    <option name="localTasksCounter" value="66" />
+    <task id="LOCAL-00066" summary="Puzzle solved logics added">
+      <option name="closed" value="true" />
+      <created>1737034296940</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1737034296940</updated>
+    </task>
+    <option name="localTasksCounter" value="67" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -595,7 +587,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/LevelCreatorQT/source.py</url>
-          <line>181</line>
+          <line>810</line>
           <option name="timeStamp" value="16" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
