@@ -20,7 +20,7 @@ class MainMenu:
         pygame.display.set_caption('Главное Меню')
         if not self.initialized:
             self.load()
-        self.screen = pygame.display.set_mode(self.map.get_size())
+        self.screen = pygame.display.set_mode((self.map.get_size()[0], self.map.get_size()[1] + 20))
         rules.append(self.render)
         events.append(self.mouseClickEvent)
         self.load()
