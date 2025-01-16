@@ -6,11 +6,11 @@ class Level:
         self.name = ''
         self.desc = ''
         self.memorials = []
-        self.uid = int
 
 
 class Memorial:
     def __init__(self):
+        self.completed = False
         self.preview = None
         self.puzzle = None
         self.images = []

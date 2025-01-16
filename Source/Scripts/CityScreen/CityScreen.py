@@ -1,15 +1,11 @@
 import pygame
-from Globals.SharedFunctions import resize_image, get_aspect_ratio
-from MemorialScreen.Selector import Selector
-from Globals.SharedFunctions import switch
+from Globals.SharedFunctions import resize_image, get_aspect_ratio, switch
 
 rules, game_state, events = [None] * 3
 
 
 class CityScreen:
     def __init__(self):
-        self.map_button_x = int
-        self.map_button_y = int
         self.level = None
         self.screen = pygame.Surface
         self.grid = list
@@ -17,32 +13,23 @@ class CityScreen:
         self.name_font = pygame.font.Font
         self.desc_font = pygame.font.Font
         self.button_font = pygame.font.Font
-        self.button_width = int
-        self.button_height = int
-        self.button_x = int
-        self.button_y = int
         self.button_rect = pygame.Rect
-        self.map_button_rect = pygame.Rect  # Новая кнопка "К карте"
+        self.map_button_rect = pygame.Rect
 
     def exec(self):
         global rules, game_state, events
         from Globals.Variables import rules, game_state, events
-        self.level = game_state.currentlvl
         self.screen = pygame.display.set_mode((1600, 920))
-        pygame.display.set_caption(self.level.name)
-        self.grid = self.create_grid()
-        self.font_path = "../Media/Pangolin-Regular.ttf"
-        self.name_font = pygame.font.Font(self.font_path, 48)
-        self.desc_font = pygame.font.Font(self.font_path, 36)
-        self.button_font = pygame.font.Font(self.font_path, 36)
-        self.button_width = 200
-        self.button_height = 60
-        self.button_x = 1600 - self.button_width - 20
-        self.button_y = 920 - self.button_height - 20
-        self.button_rect = pygame.Rect(self.button_x, self.button_y, self.button_width, self.button_height)
-        self.map_button_x = self.button_x - self.button_width - 20  # Слева от кнопки "Далее"
-        self.map_button_y = self.button_y
-        self.map_button_rect = pygame.Rect(self.map_button_x, self.map_button_y, self.button_width, self.button_height)
+        if self.level is not game_state.currentlvl:
+            self.level = game_state.currentlvl
+            pygame.display.set_caption(self.level.name)
+            self.grid = self.create_grid()
+            self.font_path = "../Media/Pangolin-Regular.ttf"
+            self.name_font = pygame.font.Font(self.font_path, 48)
+            self.desc_font = pygame.font.Font(self.font_path, 36)
+            self.button_font = pygame.font.Font(self.font_path, 36)
+            self.button_rect = pygame.Rect(1600 - 200 - 20, 920 - 60 - 20, 200, 60)
+            self.map_button_rect = pygame.Rect(self.button_rect.x - 200 - 20, self.button_rect.y, 200, 60)
 
         self.addRules()
 
@@ -163,18 +150,16 @@ class CityScreen:
             desc_surface = self.desc_font.render(line, True, (0, 0, 0))
             self.screen.blit(desc_surface, (text_x, text_y + 50 + i * 30))
 
-        # Отрисовка кнопки "Далее"
         button_surface = self.button_font.render("Далее", True, (255, 255, 255))
         pygame.draw.rect(self.screen, (0, 128, 0), self.button_rect)
-        text_x_pos = self.button_x + (self.button_width - button_surface.get_width()) // 2
-        text_y_pos = self.button_y + (self.button_height - button_surface.get_height()) // 2
+        text_x_pos = self.button_rect.x + (self.button_rect.width - button_surface.get_width()) // 2
+        text_y_pos = self.button_rect.y + (self.button_rect.height - button_surface.get_height()) // 2
         self.screen.blit(button_surface, (text_x_pos, text_y_pos))
 
-        # Отрисовка кнопки "К карте"
         map_button_surface = self.button_font.render("К карте", True, (255, 255, 255))
         pygame.draw.rect(self.screen, (0, 128, 128), self.map_button_rect)  # Цвет кнопки "К карте"
-        map_text_x_pos = self.map_button_x + (self.button_width - map_button_surface.get_width()) // 2
-        map_text_y_pos = self.map_button_y + (self.button_height - map_button_surface.get_height()) // 2
+        map_text_x_pos = self.map_button_rect.x + (self.map_button_rect.width - map_button_surface.get_width()) // 2
+        map_text_y_pos = self.map_button_rect.y + (self.map_button_rect.height - map_button_surface.get_height()) // 2
         self.screen.blit(map_button_surface, (map_text_x_pos, map_text_y_pos))
 
     def wrap_text(self, text, font, max_width):

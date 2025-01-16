@@ -23,26 +23,30 @@ class CarsMiniGame:
         self.blink_timer = 0
         self.show_hitboxes = bool
         self.debug_message_timer = int
+        self.loaded = False
 
     def exec(self):
         global rules, game_state
         from Globals.Variables import rules, game_state
-        self.level = game_state.currentlvl
-        self.Bus = Bus('../Media/Bus.png')
-        self.video = cv2.VideoCapture('../Media/RoadVid.mp4')
-        self.screen = pygame.display.set_mode((int(self.video.get(3)), int(self.video.get(4))))
-        self.collidesong = pygame.mixer.Sound('../Media/collide.mp3')
-        pygame.display.set_caption('Переход в уровень')
-        self.clock = pygame.time.Clock()
-        self.score = 10
-        self.moving_cars = pygame.sprite.Group()
-        self.parked_cars = pygame.sprite.Group()
+        if not self.loaded:
+            self.video = cv2.VideoCapture('../Media/RoadVid.mp4')
+            self.collidesong = pygame.mixer.Sound('../Media/collide.mp3')
+            self.clock = pygame.time.Clock()
+            self.moving_cars = pygame.sprite.Group()
+            self.parked_cars = pygame.sprite.Group()
+            self.blink_timer = 0
+            self.show_hitboxes = False
+            self.debug_message_timer = 0
+            self.loaded = True
         self.start_time = time.time()
+        self.screen = pygame.display.set_mode((int(self.video.get(3)), int(self.video.get(4))))
+        self.Bus = Bus('../Media/Bus.png')
+        pygame.display.set_caption('Переход в уровень')
         self.game_over = False
-        self.blink_timer = 0
-        self.show_hitboxes = False
-        self.debug_message_timer = 0
+        self.score = 10
         self.create_cars()
+        self.level = game_state.currentlvl
+
         rules.append(self.render)
 
     def create_cars(self):

@@ -28,7 +28,7 @@ defaultqss = """
             font-size: 14px;
             font-weight: bold;
         }
-        
+
         QLabel:hover {
             background-color: gray;
         }
@@ -46,11 +46,11 @@ buttonqss = """
             border-radius: 12px;
             transition: background-color 0.3s ease;
         }
-        
+
         QPushButton:hover {
             background-color: blue;
         }
-        
+
         QPushButton:pressed {
             background-color: black;
         }
@@ -64,11 +64,11 @@ loadbtnqss = """
             padding: 10px 20px;
             font-weight: bold;
         }
-        
+
         QPushButton:hover {
             background-color: #c0c0c0;
         }
-        
+
         QPushButton:pressed {
             background-color: #a0a0a0;
         }
@@ -1011,7 +1011,8 @@ class SaveWidget(QWidget):
             self.progresslabel.setText(f'Сохранение информации о уровне {level[1].name}')
             os.mkdir(f'temp/{i}')
             with open(f'temp/{i}/info.txt', 'w', encoding='UTF-8') as f:
-                f.writelines('\n'.join([level[1].name.replace('\n', ' '), level[1].desc.replace('\n', ' '), f'{level[0].x()} {level[0].y()}']))
+                f.writelines('\n'.join([level[1].name.replace('\n', ' '), level[1].desc.replace('\n', ' '),
+                                        f'{level[0].x()} {level[0].y()}']))
             await asyncio.sleep(1)
             self.progresslabel.setText(f'Сохранение изображений уровня {level[1].name}')
             os.mkdir(f'temp/{i}/images')
@@ -1037,7 +1038,7 @@ class SaveWidget(QWidget):
                 file.close()
                 file = QtCore.QFile(f'temp/{i}/memorials/{n}/images/puzzle.png')
                 file.open(QtCore.QIODevice.OpenModeFlag.ReadWrite)
-                file.write(memorial.preview)
+                file.write(memorial.puzzle)
                 file.close()
                 await asyncio.sleep(0.2)
                 self.progresslabel.setText(f'Сохранение изображений мемориала {memorial.name} уровня {level[1].name}')
@@ -1069,7 +1070,6 @@ class SaveWidget(QWidget):
         self.progressbar.setValue(100)
         self.progresslabel.setText('Готово')
         self.setLayout(self.donelout)
-
 
 
 class DClickImgLabel(QLabel):
