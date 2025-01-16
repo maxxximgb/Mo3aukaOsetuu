@@ -31,7 +31,7 @@ class Selector:
             self.currentlvl = game_state.currentlvl
             self.memorials = game_state.currentlvl.memorials
             self.screen = pygame.display.set_mode((1600, 920))
-            self.base_font_size = 36
+            self.base_font_size = 20
             self.font = pygame.font.Font(None, self.base_font_size)
             self.resized_previews = [resize_image(p.preview, 300, 300) for p in self.memorials]
             self.hovered_index = None
@@ -43,7 +43,7 @@ class Selector:
     def calculate_image_positions(self):
         self.image_data_list = []
         padding = 20
-        text_height = 40
+        text_height = 20
 
         x, y = padding, padding
         max_row_height = 0
