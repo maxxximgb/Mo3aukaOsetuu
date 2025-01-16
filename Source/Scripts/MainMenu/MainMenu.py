@@ -33,9 +33,12 @@ class MainMenu:
 
     def render(self):
         self.screen.blit(self.map, (0, 0))
+        pygame.draw.circle(self.screen, (255, 0, 0), self.entrypoint if not game_state.currentlvl else game_state.currentlvl.dotpos, 13)
         for l in levels:
-            if l.completed:
+            if all([m.completed for m in l.memorials]):
                 pygame.draw.circle(self.screen,(0, 255, 0), tuple(l.dotpos), 10, 0)
+            elif any([m.completed for m in l.memorials]):
+                pygame.draw.circle(self.screen, (0, 255, 255), tuple(l.dotpos), 10, 0)
             elif l == game_state.currentlvl:
                 pygame.draw.circle(self.screen, (255, 255, 0) , tuple(l.dotpos), 10, 0)
             else:
