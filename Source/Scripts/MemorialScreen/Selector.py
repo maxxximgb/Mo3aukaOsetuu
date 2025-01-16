@@ -5,11 +5,11 @@ rules, events, game_state = [None] * 3
 
 class ImageData:
     def __init__(self, image_rect, text_lines, font_size, text_position):
-        self.image_rect = image_rect  # Позиция и размер изображения (x, y, width, height)
-        self.text_lines = text_lines  # Строки текста
-        self.font_size = font_size    # Размер шрифта
-        self.text_position = text_position  # Позиция текста (x, y)
-        self.is_hovered = False  # Булева переменная для отслеживания наведения мыши
+        self.image_rect = image_rect
+        self.text_lines = text_lines
+        self.font_size = font_size
+        self.text_position = text_position
+        self.is_hovered = False
 
 class Selector:
     def __init__(self):
@@ -92,28 +92,22 @@ class Selector:
         return lines
 
     def render(self):
-        self.screen.fill((255, 255, 255))  # Очистка экрана
-
-        # Отрисовка изображений и текста
+        self.screen.fill((255, 255, 255))
         for i, image_data in enumerate(self.image_data_list):
             x, y, img_width, img_height = image_data.image_rect
 
-            # Отрисовка рамки, если изображение выделено
             if image_data.is_hovered:
                 pygame.draw.rect(self.screen, (255, 0, 0), (x - 5, y - 5, img_width + 10, img_height + 10), 5)
 
-            # Отрисовка изображения
             self.screen.blit(self.resized_previews[i], (x, y))
 
-            # Отрисовка текста
-            font = pygame.font.Font(None, image_data.font_size)
+            font = pygame.font.Font('../Media/Pangolin-Regular.ttf', image_data.font_size)
             for line_num, line in enumerate(image_data.text_lines):
                 text_surface = font.render(line, True, (0, 0, 0))
                 text_x = x + (img_width - text_surface.get_width()) // 2
                 text_y = image_data.text_position[1] + line_num * font.get_height()
                 self.screen.blit(text_surface, (text_x, text_y))
 
-        # Отрисовка кнопки "Назад"
         button_surface = self.button_font.render("Назад", True, (255, 255, 255))
         pygame.draw.rect(self.screen, (0, 128, 0), self.button_rect)
         self.screen.blit(button_surface, (
@@ -122,21 +116,19 @@ class Selector:
         ))
 
     def MouseEvent(self, event):
-        if event.type == pygame.MOUSEMOTION:  # Обработка движения мыши
+        if event.type == pygame.MOUSEMOTION:
             mouse_pos = pygame.mouse.get_pos()
             self.hovered_index = None
 
             for i, image_data in enumerate(self.image_data_list):
                 x, y, img_width, img_height = image_data.image_rect
-
-                # Проверяем, наведена ли мышь на изображение
                 if x <= mouse_pos[0] <= x + img_width and y <= mouse_pos[1] <= y + img_height:
                     image_data.is_hovered = True
                     self.hovered_index = i
                 else:
                     image_data.is_hovered = False
 
-        if event.type == pygame.MOUSEBUTTONDOWN:  # Обработка кликов
+        if event.type == pygame.MOUSEBUTTONDOWN:
             if self.hovered_index is not None:
                 self.ShowObj(self.memorials[self.hovered_index])
             elif self.button_rect.collidepoint(event.pos):
