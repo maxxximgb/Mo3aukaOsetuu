@@ -12,31 +12,26 @@ class MemorialScreen:
         self.name_font = pygame.font.Font
         self.desc_font = pygame.font.Font
         self.button_font = pygame.font.Font
-        self.button_width = int
-        self.button_height = int
-        self.button_x = int
-        self.button_y = int
         self.button_rect = pygame.Rect
-        self.puzzle_button_rect = pygame.Rect  # Новый атрибут для кнопки "К пазлу"
+        self.puzzle_button_rect = pygame.Rect
 
     def exec(self):
         global rules, game_state, events
         from Globals.Variables import rules, game_state, events
-        self.memorial = game_state.currentobj
+
+        if self.memorial is not game_state.currentobj:
+            self.memorial = game_state.currentobj
+            self.grid = self.create_grid()
+            self.font_path = "../Media/Pangolin-Regular.ttf"
+            self.name_font = pygame.font.Font(self.font_path, 48)
+            self.desc_font = pygame.font.Font(self.font_path, 36)
+            self.button_font = pygame.font.Font(self.font_path, 34)
+            self.button_rect = pygame.Rect(1600 - 200 - 20, 920 - 60 - 20, 200, 60)
+            self.puzzle_button_rect = pygame.Rect(self.button_rect.x - 200 - 20, self.button_rect.y, 200, 60)
+
         self.screen = pygame.display.set_mode((1600, 920))
         pygame.display.set_caption(self.memorial.name)
-        self.grid = self.create_grid()
         rules.append(self.render)
-        self.font_path = "../Media/Pangolin-Regular.ttf"
-        self.name_font = pygame.font.Font(self.font_path, 48)
-        self.desc_font = pygame.font.Font(self.font_path, 36)
-        self.button_font = pygame.font.Font(self.font_path, 34)
-        self.button_width = 200
-        self.button_height = 60
-        self.button_x = 1600 - self.button_width - 20
-        self.button_y = 920 - self.button_height - 20
-        self.button_rect = pygame.Rect(self.button_x, self.button_y, self.button_width, self.button_height)
-        self.puzzle_button_rect = pygame.Rect(self.button_x - self.button_width - 20, self.button_y, self.button_width, self.button_height)
         events.append(self.MouseBtnClick)
 
     def create_grid(self):
@@ -142,14 +137,14 @@ class MemorialScreen:
 
         back_button_surface = self.button_font.render("Назад", True, (255, 255, 255))
         pygame.draw.rect(self.screen, (0, 128, 0), self.button_rect)
-        back_text_x_pos = self.button_x + (self.button_width - back_button_surface.get_width()) // 2
-        back_text_y_pos = self.button_y + (self.button_height - back_button_surface.get_height()) // 2
+        back_text_x_pos = self.button_rect.x + (self.button_rect.width - back_button_surface.get_width()) // 2
+        back_text_y_pos = self.button_rect.y + (self.button_rect.height - back_button_surface.get_height()) // 2
         self.screen.blit(back_button_surface, (back_text_x_pos, back_text_y_pos))
 
         puzzle_button_surface = self.button_font.render("К пазлу", True, (255, 255, 255))
         pygame.draw.rect(self.screen, (0, 0, 128), self.puzzle_button_rect)
-        puzzle_text_x_pos = self.puzzle_button_rect.x + (self.button_width - puzzle_button_surface.get_width()) // 2
-        puzzle_text_y_pos = self.puzzle_button_rect.y + (self.button_height - puzzle_button_surface.get_height()) // 2
+        puzzle_text_x_pos = self.puzzle_button_rect.x + (self.puzzle_button_rect.width - puzzle_button_surface.get_width()) // 2
+        puzzle_text_y_pos = self.puzzle_button_rect.y + (self.puzzle_button_rect.height - puzzle_button_surface.get_height()) // 2
         self.screen.blit(puzzle_button_surface, (puzzle_text_x_pos, puzzle_text_y_pos))
 
     def wrap_text(self, text, font, max_width):
