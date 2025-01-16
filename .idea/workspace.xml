@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="62af72bd-3b00-41bb-9306-950d82b336e8" name="Changes" comment="Optimizations, removed trash">
+    <list default="true" id="62af72bd-3b00-41bb-9306-950d82b336e8" name="Changes" comment="Puzzle solved logics added">
       <change afterPath="$PROJECT_DIR$/Source/Media/puzzlesolved.mp3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/Scripts/LoadMenu/LoadMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/LoadMenu/LoadMenu.py" afterDir="false" />
@@ -143,14 +143,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1734585871682</updated>
-    </task>
-    <task id="LOCAL-00016" summary="Created new classes where will level data be stored">
-      <option name="closed" value="true" />
-      <created>1735038217884</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1735038217884</updated>
     </task>
     <task id="LOCAL-00017" summary="UI changes">
       <option name="closed" value="true" />
@@ -536,7 +528,15 @@
       <option name="project" value="LOCAL" />
       <updated>1737030352180</updated>
     </task>
-    <option name="localTasksCounter" value="65" />
+    <task id="LOCAL-00065" summary="Puzzle solved logics added">
+      <option name="closed" value="true" />
+      <created>1737034012263</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1737034012264</updated>
+    </task>
+    <option name="localTasksCounter" value="66" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -563,7 +563,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Merge remote-tracking branch 'origin/LevelCreator' into LevelCreator" />
     <MESSAGE value="normal memorial selection" />
     <MESSAGE value="memorial editing added" />
     <MESSAGE value="puzzle load addeed" />
@@ -588,7 +587,8 @@
     <MESSAGE value="Puzzle added" />
     <MESSAGE value="Optimizations" />
     <MESSAGE value="Optimizations, removed trash" />
-    <option name="LAST_COMMIT_MESSAGE" value="Optimizations, removed trash" />
+    <MESSAGE value="Puzzle solved logics added" />
+    <option name="LAST_COMMIT_MESSAGE" value="Puzzle solved logics added" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -600,7 +600,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Source/Scripts/PuzzleMiniGame/PuzzleMiniGame.py</url>
-          <line>274</line>
+          <line>275</line>
           <option name="timeStamp" value="30" />
         </line-breakpoint>
       </breakpoints>
