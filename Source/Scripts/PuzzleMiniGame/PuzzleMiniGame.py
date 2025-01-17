@@ -4,7 +4,7 @@ import pygame
 import random
 import copy
 
-from Globals.SharedFunctions import switch
+from Shared.SharedFunctions import switch
 
 game_state, rules, events, screen = [None] * 4
 
@@ -182,7 +182,6 @@ class PuzzleMiniGame:
             pygame.draw.rect(self.screen, (0, 255, 0), correct_cell.get_rect(), 3)
 
 
-
         pygame.draw.rect(self.screen, (0, 0, 0), (0, self.puzzle.get_height(), self.screen.get_width(), 100))
         pygame.draw.rect(self.screen, (0, 128, 255), self.back_button_rect)
         back_text = self.font.render("Назад", True, (255, 255, 255))
@@ -226,6 +225,7 @@ class PuzzleMiniGame:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.solved:
                 if self.completed_button_rect.collidepoint(event.pos):
+                    self.Unload()
                     switch(self, game_state.gameclasses.MemorialScreen, self.screen)
                     return
             if self.back_button_rect.collidepoint(event.pos):

@@ -1,5 +1,5 @@
 import pygame
-from Globals.SharedFunctions import resize_image, get_aspect_ratio, switch
+from Shared.SharedFunctions import resize_image, get_aspect_ratio, switch
 
 rules, game_state, events = [None] * 3
 

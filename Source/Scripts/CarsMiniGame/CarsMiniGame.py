@@ -3,7 +3,7 @@ import pygame
 import cv2
 import time
 
-from Globals.SharedFunctions import switch
+from Shared.SharedFunctions import switch
 
 rules, game_state = [None] * 2
 

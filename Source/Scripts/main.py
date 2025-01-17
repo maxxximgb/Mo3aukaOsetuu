@@ -1,11 +1,10 @@
 import pygame
-from LoadMenu.LoadMenu import LoadMenu
-from Globals.Variables import rules, events
+from Globals.Variables import rules, events, game_state
 
 pygame.init()
 pygame.mixer.init()
 running = True
-menu = LoadMenu().exec()
+game_state.gameclasses.LoadMenu.exec()
 
 while running:
     for event in pygame.event.get():

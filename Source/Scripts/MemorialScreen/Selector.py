@@ -1,5 +1,5 @@
 import pygame
-from Globals.SharedFunctions import resize_image, switch
+from Shared.SharedFunctions import resize_image, switch
 
 rules, events, game_state = [None] * 3
 

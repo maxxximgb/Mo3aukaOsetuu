@@ -1,5 +1,5 @@
 # Тут будут храниться переменные, необходимые для всех скриптов
-from SharedClasses.GameState import GameState
+from Shared.GameState import GameState
 
 rules = []
 events = []

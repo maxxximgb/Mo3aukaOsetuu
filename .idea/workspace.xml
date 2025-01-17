@@ -4,7 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="62af72bd-3b00-41bb-9306-950d82b336e8" name="Changes" comment="Puzzle solved logics added" />
+    <list default="true" id="62af72bd-3b00-41bb-9306-950d82b336e8" name="Changes" comment="Current level marking">
+      <change afterPath="$PROJECT_DIR$/Source/Scripts/DBManager/DBManager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/CarsMiniGame/CarsMiniGame.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/CarsMiniGame/CarsMiniGame.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/CityScreen/CityScreen.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/CityScreen/CityScreen.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/Globals/SharedFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/Shared/SharedFunctions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/Globals/Variables.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/Globals/Variables.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/Levels/RSO-A - Copy (2).level" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/Levels/RSO-A.level" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/LoadMenu/LoadMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/LoadMenu/LoadMenu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/MainMenu/MainMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/MainMenu/MainMenu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/MemorialScreen/MemorialScreen.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/MemorialScreen/MemorialScreen.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/MemorialScreen/Selector.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/MemorialScreen/Selector.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/PuzzleMiniGame/PuzzleMiniGame.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/PuzzleMiniGame/PuzzleMiniGame.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/SharedClasses/GameClasses.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/Shared/GameClasses.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/SharedClasses/GameState.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/Shared/GameState.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/SharedClasses/LM.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/Shared/LM.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/main.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -64,35 +82,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Python.CarsMiniGame.executor": "Run",
-    "Python.LoadMenu.executor": "Run",
-    "Python.MainMenu.executor": "Run",
-    "Python.PuzzleMiniGame.executor": "Debug",
-    "Python.main.executor": "Run",
-    "Python.source.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "develop",
-    "last_opened_file_path": "C:/Users/gabis/PycharmProjects/Mo3aukaOsetuu/Source/Media",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Python.CarsMiniGame.executor&quot;: &quot;Run&quot;,
+    &quot;Python.LoadMenu.executor&quot;: &quot;Run&quot;,
+    &quot;Python.MainMenu.executor&quot;: &quot;Run&quot;,
+    &quot;Python.PuzzleMiniGame.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.source.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/gabis/PycharmProjects/Mo3aukaOsetuu/Source/Scripts/Levels&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Media" />
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts\Levels" />
+      <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Media" />
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Images" />
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\LevelCreatorQT" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts\Shared" />
+      <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts\Levels" />
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Media" />
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts\SharedClasses" />
-      <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts\Levels" />
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts" />
-      <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts\Globals" />
     </key>
   </component>
   <component name="RunManager">
@@ -135,30 +153,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1734585871682</updated>
-    </task>
-    <task id="LOCAL-00018" summary="UI changes">
-      <option name="closed" value="true" />
-      <created>1735123402402</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1735123402402</updated>
-    </task>
-    <task id="LOCAL-00019" summary="UI changes">
-      <option name="closed" value="true" />
-      <created>1735123442396</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1735123442396</updated>
-    </task>
-    <task id="LOCAL-00020" summary="UI changes">
-      <option name="closed" value="true" />
-      <created>1735142843676</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1735142843676</updated>
     </task>
     <task id="LOCAL-00021" summary="Save and load level data function is now added">
       <option name="closed" value="true" />
@@ -528,7 +522,31 @@
       <option name="project" value="LOCAL" />
       <updated>1737034296940</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="Requirements added">
+      <option name="closed" value="true" />
+      <created>1737034428162</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1737034428162</updated>
+    </task>
+    <task id="LOCAL-00068" summary="Current level marking">
+      <option name="closed" value="true" />
+      <created>1737041159339</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1737041159340</updated>
+    </task>
+    <task id="LOCAL-00069" summary="Current level marking">
+      <option name="closed" value="true" />
+      <created>1737041355013</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1737041355013</updated>
+    </task>
+    <option name="localTasksCounter" value="70" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -555,8 +573,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="normal memorial selection" />
-    <MESSAGE value="memorial editing added" />
     <MESSAGE value="puzzle load addeed" />
     <MESSAGE value="ui changes" />
     <MESSAGE value="Final commit (maybe)" />
@@ -580,20 +596,27 @@
     <MESSAGE value="Optimizations" />
     <MESSAGE value="Optimizations, removed trash" />
     <MESSAGE value="Puzzle solved logics added" />
-    <option name="LAST_COMMIT_MESSAGE" value="Puzzle solved logics added" />
+    <MESSAGE value="Requirements added" />
+    <MESSAGE value="Current level marking" />
+    <option name="LAST_COMMIT_MESSAGE" value="Current level marking" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/LevelCreatorQT/source.py</url>
-          <line>810</line>
+          <line>811</line>
           <option name="timeStamp" value="16" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Source/Scripts/PuzzleMiniGame/PuzzleMiniGame.py</url>
-          <line>275</line>
-          <option name="timeStamp" value="30" />
+          <url>file://$PROJECT_DIR$/Source/Scripts/MainMenu/MainMenu.py</url>
+          <line>117</line>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Source/Scripts/DBManager/DBManager.py</url>
+          <line>47</line>
+          <option name="timeStamp" value="28" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
