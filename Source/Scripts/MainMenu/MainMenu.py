@@ -113,8 +113,9 @@ class MainMenu:
                             switch(self, game_state.gameclasses.CarsMiniGame, self.screen, fade_speed=20)
                 if self.saveBtn.collidepoint(event.pos):
                     self.is_saving = True
-                    self.save_message = 'Сохранение'
+                    self.save_message = 'Сохранение...'
                     self.save_message_start_time = time.time()
+                    self.render()
                     if not os.path.exists('Saves'): os.mkdir('Saves')
                     open(f"Saves/{game_state.name}.sqlite", 'w').close()
                     db = DBManager(f"Saves/{game_state.name}.sqlite")
