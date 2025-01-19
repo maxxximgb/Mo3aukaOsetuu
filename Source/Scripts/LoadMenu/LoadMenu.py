@@ -162,7 +162,6 @@ class LoadMenu:
         switch(self, game_state.gameclasses.MainMenu, self.screen)
 
     def OnLoadButtonClick(self, file_path):
-        print(f"Загрузка уровня {file_path}")
         self.LoadLevel(file_path)
         self.Unload()
         switch(self, game_state.gameclasses.MainMenu, self.screen)
