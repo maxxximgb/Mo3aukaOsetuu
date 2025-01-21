@@ -6,16 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="62af72bd-3b00-41bb-9306-950d82b336e8" name="Changes" comment="Final commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/CarsMiniGame/CarsMiniGame.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/CarsMiniGame/CarsMiniGame.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/CityScreen/CityScreen.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/CityScreen/CityScreen.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/DBManager/DBManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/DBManager/DBManager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/EndWindow/EndWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/EndWindow/EndWindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/LoadMenu/LoadMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/LoadMenu/LoadMenu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/MainMenu/MainMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/MainMenu/MainMenu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/MemorialScreen/MemorialScreen.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/MemorialScreen/MemorialScreen.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/MemorialScreen/Selector.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/MemorialScreen/Selector.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/PuzzleMiniGame/PuzzleMiniGame.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/PuzzleMiniGame/PuzzleMiniGame.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/Shared/GameState.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/Shared/GameState.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LevelCreatorQT/source.py" beforeDir="false" afterPath="$PROJECT_DIR$/LevelCreatorQT/source.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,22 +138,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1734585871682</updated>
-    </task>
-    <task id="LOCAL-00025" summary="Memorial selection added">
-      <option name="closed" value="true" />
-      <created>1736705841902</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1736705841902</updated>
-    </task>
-    <task id="LOCAL-00026" summary="normal memorial selection">
-      <option name="closed" value="true" />
-      <created>1736705875187</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1736705875187</updated>
     </task>
     <task id="LOCAL-00027" summary="memorial editing added">
       <option name="closed" value="true" />
@@ -540,7 +515,23 @@
       <option name="project" value="LOCAL" />
       <updated>1737444552905</updated>
     </task>
-    <option name="localTasksCounter" value="74" />
+    <task id="LOCAL-00074" summary="Final commit">
+      <option name="closed" value="true" />
+      <created>1737472123656</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1737472123656</updated>
+    </task>
+    <task id="LOCAL-00075" summary="Final commit">
+      <option name="closed" value="true" />
+      <created>1737472204776</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1737472204776</updated>
+    </task>
+    <option name="localTasksCounter" value="76" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -599,13 +590,23 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/LevelCreatorQT/source.py</url>
-          <line>811</line>
+          <line>821</line>
           <option name="timeStamp" value="16" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Source/Scripts/EndWindow/EndWindow.py</url>
           <line>51</line>
           <option name="timeStamp" value="49" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/LevelCreatorQT/source.py</url>
+          <line>739</line>
+          <option name="timeStamp" value="50" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/LevelCreatorQT/source.py</url>
+          <line>755</line>
+          <option name="timeStamp" value="51" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

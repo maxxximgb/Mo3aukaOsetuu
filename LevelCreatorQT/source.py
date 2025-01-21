@@ -368,7 +368,7 @@ class LevelEditorWidget(QWidget):
         self.nextbtn.setStyleSheet(buttonqss)
         self.nextbtn.setFixedSize(100, 50)
         self.nextbtn.clicked.connect(self.saveData)
-        self.images = [[DClickImgLabel(), QPixmap(), False] for _ in range(4)]
+        self.images = [[DClickImgLabel(), QPixmap(), False, QPixmap()] for _ in range(4)]
         self.lout = QHBoxLayout()
         self.objlout = QVBoxLayout()
         self.mimageslout = QVBoxLayout()
@@ -411,8 +411,10 @@ class LevelEditorWidget(QWidget):
             if not img[2]:
                 if type == "file":
                     img[1].load(image)
+                    img[3].load(image)
                 elif type == "buffer":
                     img[1].loadFromData(image)
+                    img[3].loadFromData(image)
                 img[1] = img[1].scaled(300, 150, Qt.AspectRatioMode.KeepAspectRatio,
                                        Qt.TransformationMode.SmoothTransformation)
                 img[0].setPixmap(img[1])
@@ -475,7 +477,7 @@ class LevelEditorWidget(QWidget):
             self.levelData.images.clear()
             for image in self.images:
                 if image[2]:
-                    pixmap = image[1]
+                    pixmap = image[3]
                     buffer = QtCore.QBuffer()
                     buffer.open(QtCore.QIODevice.OpenModeFlag.ReadWrite)
                     pixmap.save(buffer, "PNG")
@@ -518,19 +520,27 @@ class MemorialSelectorWidget(QWidget):
     def addImage(self, image, type="file"):
         pixmap = QPixmap()
         label = DClickImgLabel()
-        pixmap.loadFromData(image.preview) if type == "class" else pixmap.load(image)
-        pixmap = pixmap.scaled(400, 300, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+
+        if type == "class":
+            pixmap.loadFromData(image.preview)
+        else:
+            pixmap.load(image)
+
+        original_pixmap = pixmap.copy()
+        scaled_pixmap = pixmap.scaled(400, 300, Qt.AspectRatioMode.KeepAspectRatio,
+                                      Qt.TransformationMode.SmoothTransformation)
+
         if not self.memorials:
-            label.setPixmap(pixmap)
-            self.memorials.append([label, Memorial(image) if type == 'file' else image, False])
+            label.setPixmap(scaled_pixmap)
+            self.memorials.append([label, Memorial(original_pixmap) if type == 'file' else image, False])
         else:
             for i, (label, memorial, is_temp) in enumerate(self.memorials):
                 if is_temp:
-                    label.setPixmap(pixmap)
+                    label.setPixmap(scaled_pixmap)
                     if type == 'file':
                         buffer = QtCore.QBuffer()
                         buffer.open(QtCore.QIODevice.OpenModeFlag.ReadWrite)
-                        pixmap.save(buffer, "PNG")
+                        original_pixmap.save(buffer, "PNG")
                         image = buffer.data()
                         buffer.close()
 
@@ -624,7 +634,7 @@ class MemorialEditorWidget(QDialog):
         self.savebtn.setStyleSheet(buttonqss)
         self.savebtn.setFixedSize(150, 50)
         self.savebtn.clicked.connect(self.saveData)
-        self.images = [[DClickImgLabel(), QPixmap(), False] for _ in range(4)]
+        self.images = [[DClickImgLabel(), QPixmap(), False, QPixmap()] for _ in range(4)]
         self.lout = QHBoxLayout()
         self.objlout = QVBoxLayout()
         self.mimageslout = QVBoxLayout()
@@ -678,8 +688,11 @@ class MemorialEditorWidget(QDialog):
             if not img[2]:
                 if type == "file":
                     img[1].load(image)
+                    img[3].load(image)
                 elif type == "buffer":
                     img[1].loadFromData(image)
+                    img[3].loadFromData(image)
+
                 img[1] = img[1].scaled(300, 150, Qt.AspectRatioMode.KeepAspectRatio,
                                        Qt.TransformationMode.SmoothTransformation)
                 img[0].setPixmap(img[1])
@@ -710,14 +723,11 @@ class MemorialEditorWidget(QDialog):
     def loadpuzzle(self, file, type='file'):
         if type == 'file':
             self.puzzle.load(file)
-            self.puzzle = self.puzzle.scaled(1500, 1500, Qt.AspectRatioMode.KeepAspectRatio,
-                                             Qt.TransformationMode.SmoothTransformation)
             buffer = QtCore.QBuffer()
             buffer.open(QtCore.QIODevice.OpenModeFlag.ReadWrite)
             self.puzzle.save(buffer, "PNG")
             self.memorial.puzzle = buffer.data()
             buffer.close()
-
         else:
             self.puzzle.loadFromData(file)
 
@@ -774,7 +784,7 @@ class MemorialEditorWidget(QDialog):
             self.memorial.images.clear()
             for image in self.images:
                 if image[2]:
-                    pixmap = image[1]
+                    pixmap = image[3]
                     buffer = QtCore.QBuffer()
                     buffer.open(QtCore.QIODevice.OpenModeFlag.ReadWrite)
                     pixmap.save(buffer, "PNG")
@@ -1066,7 +1076,7 @@ class SaveWidget(QWidget):
             self.progressbar.setValue(int(self.progressbar.value() + pr))
         await asyncio.sleep(0.2)
         self.progresslabel.setText('Упаковка уровня в архив')
-        archive = shutil.make_archive(self.dir.split('/')[-1], 'zip', str(getabspath('temp')))
+        archive = shutil.make_archive(self.dir.split('/')[-1], 'zip', str(os.path.join(os.getcwd(), 'temp')))
         shutil.move(str(getabspath(archive)), self.dir)
         self.progressbar.setValue(100)
         self.progresslabel.setText('Готово')
