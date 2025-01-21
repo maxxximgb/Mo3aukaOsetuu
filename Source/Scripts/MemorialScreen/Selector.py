@@ -146,7 +146,6 @@ class Selector:
     def addRules(self):
         pygame.display.set_caption('Выбор объекта')
         events.append(self.MouseEvent)
-        rules.append(self.render)
 
     def ShowObj(self, memorial):
         self.Unload()

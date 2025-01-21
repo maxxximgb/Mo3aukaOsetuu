@@ -7,3 +7,6 @@ class GameState:
         self.currentobj = None
         self.gameclasses = GameClasses()
         self.name = str
+        self.car_trips = 0
+        self.car_faults = 0
+        self.puzzletime = []

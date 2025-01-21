@@ -200,7 +200,6 @@ class CityScreen:
                     self.toMap()
 
     def addRules(self):
-        rules.append(self.render)
         events.append(self.BtnClick)
 
     def Unload(self):

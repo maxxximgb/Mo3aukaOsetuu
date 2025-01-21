@@ -30,7 +30,6 @@ class MainMenu:
         self.screen = pygame.display.set_mode((self.map.get_width(), self.map.get_height() + 80))
         self.saveBtn = pygame.Rect(0, self.screen.get_height() - 40, self.screen.get_width(), 40)
         self.endBtn = pygame.Rect(0, self.screen.get_height() - 80, self.screen.get_width(), 40)
-        rules.append(self.render)
         events.append(self.mouseClickEvent)
         self.load()
 
@@ -106,7 +105,7 @@ class MainMenu:
                         self.save_message_start_time = time.time()
                 elif self.endBtn.collidepoint(event.pos):
                     self.Unload()
-                    switch(self, game_state.gameclasses.EndWindow, self.screen)
+                    switch(self, game_state.gameclasses.EndWindow, self.screen, fade_speed=10)
 
     def Unload(self):
         if self.render in rules: rules.remove(self.render)

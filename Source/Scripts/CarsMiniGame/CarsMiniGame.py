@@ -46,8 +46,8 @@ class CarsMiniGame:
         self.score = 10
         self.create_cars()
         self.level = game_state.currentlvl
+        game_state.car_trips += 1
 
-        rules.append(self.render)
 
     def create_cars(self):
         positions = [self.screen.get_height() // 4 + 100, self.screen.get_height() // 2 + 100, (self.screen.get_height() * 3) // 4 + 100]
@@ -86,6 +86,7 @@ class CarsMiniGame:
 
         if pygame.sprite.spritecollideany(self.Bus, self.moving_cars) or pygame.sprite.spritecollideany(self.Bus, self.parked_cars):
             if self.blink_timer == 0:
+                game_state.car_faults += 1
                 self.score -= 1
                 self.collidesong.play()
                 self.blink_timer = time.time()

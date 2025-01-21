@@ -1,9 +1,13 @@
+import math
 import os
 import pathlib
 import shutil
+import threading
 import time
 import pygame
 from pathlib import Path
+import cv2
+import numpy as np
 from Shared.LM import Level, Memorial
 from Shared.SharedFunctions import switch
 from DBManager.DBManager import DBManager
@@ -11,8 +15,41 @@ from DBManager.DBManager import DBManager
 rules, events, levels, game_state = [None] * 4
 
 
+def count_steps():
+    total_steps = 1
+    levels = [item for item in Path(os.path.join(os.getcwd(), 'Temp')).iterdir()
+              if item.is_dir() and item.name not in ['ep.pos', 'map.png']]
+
+    total_steps += len(levels)
+
+    for level in levels:
+        if level.is_dir():
+            images_folder = level / 'images'
+            if images_folder.exists():
+                level_images = len(list(images_folder.iterdir()))
+                total_steps += level_images
+
+            memorials_folder = level / 'memorials'
+            if memorials_folder.exists():
+                memorials = list(memorials_folder.iterdir())
+                total_steps += 2 * len(memorials)
+
+                for memorial in memorials:
+                    if memorial.is_dir():
+                        mem_images_folder = memorial / 'images'
+                        if mem_images_folder.exists():
+                            mem_images = len(list(mem_images_folder.iterdir())) - 2
+                            total_steps += mem_images
+                        total_steps += 1
+
+    return total_steps
+
+
 class LoadMenu:
     def __init__(self):
+        self.anim = LoadAnimation
+        self.completed = int
+        self.total = int
         self.map = None
         self.screen = pygame.Surface
         self.levels = list
@@ -152,28 +189,38 @@ class LoadMenu:
                     self.OnLoadButtonClick(level_data[3])
 
     def OnLoadSaveButtonClick(self, file_path):
-        self.LoadLevel(file_path)
-        db = DBManager(Path('Saves') / f"{Path(file_path).stem}.sqlite")
-        db.load_all()
-        db.close()
-        del db
+        self.anim = LoadAnimation(save=file_path)
         self.Unload()
-        switch(self, game_state.gameclasses.MainMenu, self.screen)
+        switch(self, self.anim, self.screen)
+        self.anim.toggle_type()
+        threading.Thread(target=self.LoadLevel, args=[file_path]).start()
 
     def OnLoadButtonClick(self, file_path):
-        self.LoadLevel(file_path)
+        self.anim = LoadAnimation()
         self.Unload()
-        switch(self, game_state.gameclasses.MainMenu, self.screen)
+        switch(self, self.anim, self.screen)
+        self.anim.toggle_type()
+        threading.Thread(target=self.LoadLevel, args=[file_path]).start()
 
     def LoadLevel(self, file_path):
-        if os.path.exists('Temp'): shutil.rmtree('Temp')
+        self.completed = 0
+        self.anim.txt = 'Проверка временной папки'
+        if os.path.exists('Temp'):
+            shutil.rmtree('Temp')
         os.mkdir('Temp')
+
+        self.anim.txt = 'Распаковка файла уровня'
         shutil.unpack_archive(file_path, 'Temp', 'zip')
+
+        self.total = count_steps()
+        self.updateProgress()
         game_state.name = '.'.join(pathlib.PurePath(file_path).name.split('.')[:-1])
         level_id = 1
         mem_id = 1
+
         for item in Path('Temp').iterdir():
             if item.is_dir():
+                self.anim.txt = 'Чтение информации об уровне'
                 with open(os.path.join(os.getcwd(), item, 'info.txt'), 'r', encoding='UTF-8') as f:
                     level = Level()
                     level.name, level.desc, level.dotpos = f.readlines()
@@ -181,33 +228,204 @@ class LoadMenu:
                     level.desc = level.desc.strip('\n')
                     level.id = level_id
                     level.dotpos = list(map(int, level.dotpos.split()))
-                for img in Path(os.path.join(item, 'images')).iterdir():
-                    level.images.append(pygame.image.load(img).convert())
-                for memorial in Path(os.path.join(item, 'memorials')).iterdir():
-                    mem = Memorial()
-                    mem.id = mem_id
-                    mem_id += 1
-                    with open(os.path.join(memorial, 'info.txt'), 'r', encoding='UTF-8') as m:
-                        l = [l.strip('\n') for l in m.readlines()]
-                        mem.name, mem.desc = l
-                    for img in Path(os.path.join(memorial, 'images')).iterdir():
-                        if img.is_file():
-                            if img.name.startswith('preview'):
-                                mem.preview = pygame.image.load(img).convert()
-                            elif img.name.startswith('puzzle'):
-                                mem.puzzle = pygame.image.load(img).convert()
-                            else:
-                                mem.images.append(pygame.image.load(img).convert())
-                        else:
-                            with open(os.path.join(img, 'matrix.txt'), 'r', encoding='UTF-8') as matrix:
-                                mem.puzzlepos.extend([l.strip('\n').split() for l in matrix.readlines()])
-                            mem.puzzlePath = str(img)
-                    level.memorials.append(mem)
+                self.updateProgress()
+
+                self.anim.txt = f'Чтение картинок уровня {level.name}'
+                images_folder = Path(os.path.join(item, 'images'))
+                if images_folder.exists():
+                    for img in images_folder.iterdir():
+                        level.images.append(pygame.image.load(img).convert())
+                        self.updateProgress()
+
+                memorials_folder = Path(os.path.join(item, 'memorials'))
+                if memorials_folder.exists():
+                    for memorial in memorials_folder.iterdir():
+                        mem = Memorial()
+                        mem.id = mem_id
+                        mem_id += 1
+                        self.anim.txt = f'Чтение информации о памятнике уровня {level.name}'
+                        with open(os.path.join(memorial, 'info.txt'), 'r', encoding='UTF-8') as m:
+                            l = [l.strip('\n') for l in m.readlines()]
+                            mem.name, mem.desc = l
+                        self.updateProgress()
+
+                        self.anim.txt = f'Загрузка картинок памятника {mem.name} уровня {level.name}'
+                        mem_images_folder = Path(os.path.join(memorial, 'images'))
+                        if mem_images_folder.exists():
+                            for img in mem_images_folder.iterdir():
+                                if img.is_file():
+                                    if img.name.startswith('preview'):
+                                        mem.preview = pygame.image.load(img).convert()
+                                    elif img.name.startswith('puzzle'):
+                                        mem.puzzle = pygame.image.load(img).convert()
+                                    else:
+                                        mem.images.append(pygame.image.load(img).convert())
+                                    self.updateProgress()
+                                else:
+                                    with open(os.path.join(img, 'matrix.txt'), 'r', encoding='UTF-8') as matrix:
+                                        mem.puzzlepos.extend([l.strip('\n').split() for l in matrix.readlines()])
+                                    mem.puzzlePath = str(img)
+                                    self.updateProgress()
+
+                        level.memorials.append(mem)
                 level_id += 1
                 levels.append(level)
+        self.anim.finish()
+
+    def updateProgress(self):
+        self.completed += 1
+        self.anim.set_progress((self.completed / self.total) * 100)
 
     def Unload(self):
         if self.TableInteractEvent in events:
             events.remove(self.TableInteractEvent)
         if self.render in rules:
             rules.remove(self.render)
+
+
+class LoadAnimation:
+    def __init__(self, save=None):
+        self.save = save
+        self.Unloading = False
+        self.progress_bar_rect = pygame.Rect
+        self.screen = pygame.Surface
+        self.txt = 'Инициализация...'
+        self.video_paths = ['../Media/loading.mp4', '../Media/loading2.mp4']
+        self.current_video_index = 0
+        self.cap = cv2.VideoCapture(self.video_paths[self.current_video_index])
+        self.video_fps = self.cap.get(cv2.CAP_PROP_FPS)
+        self.video_width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH) * 0.5)
+        self.video_height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT) * 0.5)
+        self.font = pygame.font.Font(None, 36)
+        self.clock = pygame.time.Clock()
+        self.stripes_offset = 0
+        self.stripes_speed = 2
+        self.progress = 0
+        self.prev_progress = 0
+        self.indeterminate = True
+        self.progress_bar_width = 300
+        self.progress_bar_height = 20
+        self.working = True
+        self.stripe_surface = pygame.Surface((self.progress_bar_width, self.progress_bar_height), pygame.SRCALPHA)
+        for x in range(self.progress_bar_width):
+            blue = int(255 * (1 - (x / self.progress_bar_width)))
+            pygame.draw.line(self.stripe_surface, (blue, blue, 255, 255), (x, 0), (x, self.progress_bar_height), 3)
+
+        self.mask = pygame.Surface((self.progress_bar_width, self.progress_bar_height), pygame.SRCALPHA)
+        pygame.draw.rect(self.mask, (255, 255, 255, 255), (0, 0, self.progress_bar_width, self.progress_bar_height),
+                         border_radius=10)
+
+    def exec(self):
+        self.screen = pygame.display.set_mode((1280, 720))
+        self.progress_bar_rect = pygame.Rect(
+            self.screen.get_width() // 2 - self.progress_bar_width // 2,
+            self.screen.get_height() // 2 + self.video_height // 2 + 20,
+            self.progress_bar_width,
+            self.progress_bar_height
+        )
+
+    def toggle_type(self):
+        self.indeterminate = not self.indeterminate
+        self.current_video_index = 1 if self.current_video_index == 0 else 0
+        self.cap.release()
+        self.cap = cv2.VideoCapture(self.video_paths[self.current_video_index])
+
+    def update(self):
+        ret, frame = self.cap.read()
+        if not ret:
+            self.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+            ret, frame = self.cap.read()
+        if ret:
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            frame = cv2.resize(frame, (self.video_width, self.video_height))
+            frame = cv2.flip(frame, 1)
+            self.current_frame = pygame.surfarray.make_surface(frame)
+
+    def render_text_with_wrap(self, text, font, max_width):
+        words = text.split(' ')
+        lines = []
+        current_line = ''
+        for word in words:
+            test_line = current_line + ' ' + word if current_line else word
+            test_width, _ = font.size(test_line)
+            if test_width <= max_width:
+                current_line = test_line
+            else:
+                lines.append(current_line)
+                current_line = word
+        if current_line:
+            lines.append(current_line)
+        return lines
+
+    def render(self):
+        self.update()
+        self.screen.fill((255, 255, 255))
+        if hasattr(self, 'current_frame'):
+            frame_x = self.screen.get_width() // 2 - self.video_width // 2
+            frame_y = self.screen.get_height() // 2 - self.video_height // 2 - 50
+            self.screen.blit(self.current_frame, (frame_x, frame_y))
+            max_text_width = self.screen.get_width() - 40
+            text_lines = self.render_text_with_wrap(self.txt, self.font, max_text_width)
+            text_y = frame_y + self.video_height + 20
+            total_text_height = len(text_lines) * self.font.get_height()
+
+            for line in text_lines:
+                text_surface = self.font.render(line, True, (0, 0, 0))
+                text_x = self.screen.get_width() // 2 - text_surface.get_width() // 2
+                self.screen.blit(text_surface, (text_x, text_y))
+                text_y += text_surface.get_height() + 5
+
+            progress_bar_y = frame_y + self.video_height + 20 + total_text_height + 20
+            self.progress_bar_rect.y = progress_bar_y
+
+            pygame.draw.rect(self.screen, (200, 200, 200), self.progress_bar_rect, border_radius=10)
+
+            if self.indeterminate:
+                self.stripes_offset = (self.stripes_offset + self.stripes_speed) % self.progress_bar_width
+                stripe_surface_scroll = pygame.Surface((self.progress_bar_width, self.progress_bar_height),
+                                                       pygame.SRCALPHA)
+                stripe_surface_scroll.blit(self.stripe_surface, (self.stripes_offset - self.progress_bar_width, 0))
+                stripe_surface_scroll.blit(self.stripe_surface, (self.stripes_offset, 0))
+                stripe_surface_scroll.blit(self.mask, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
+                self.screen.blit(stripe_surface_scroll, self.progress_bar_rect.topleft)
+            else:
+                progress_width = int(self.progress_bar_width * (self.progress / 100))
+                pygame.draw.rect(self.screen, (0, 0, 255), (
+                self.progress_bar_rect.x, self.progress_bar_rect.y, progress_width, self.progress_bar_height),
+                                 border_radius=10)
+                progress_text = self.font.render(f"{int(self.progress)}%", True, (0, 0, 0))
+                text_x = self.progress_bar_rect.x + self.progress_bar_width // 2 - progress_text.get_width() // 2
+                text_y = self.progress_bar_rect.y + self.progress_bar_height // 2 - progress_text.get_height() // 2
+                self.screen.blit(progress_text, (text_x, text_y))
+
+        if self.txt == 'Переход на карту' and not self.Unloading:
+            self.Unload()
+            switch(self, game_state.gameclasses.MainMenu, self.screen)
+
+        self.clock.tick(self.video_fps)
+
+    def set_progress(self, progress):
+        if not self.indeterminate and self.current_video_index == 1:
+            delta_progress = progress - self.prev_progress
+            if delta_progress > 0:
+                total_frames = int(self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
+                frames_to_skip = int(total_frames * (delta_progress / 100))
+                current_frame = int(self.cap.get(cv2.CAP_PROP_POS_FRAMES))
+                new_frame = min(current_frame + frames_to_skip, total_frames - 1)
+                self.cap.set(cv2.CAP_PROP_POS_FRAMES, new_frame)
+        self.progress = progress
+        self.prev_progress = progress
+
+    def finish(self):
+        self.toggle_type()
+        if self.save:
+            self.txt = 'Загрузка сохранения'
+            db = DBManager(Path('Saves') / f"{Path(self.save).stem}.sqlite")
+            db.load_all()
+            db.close()
+            del db
+        self.txt = 'Переход на карту'
+
+    def Unload(self):
+        self.Unloading = True
+        if self.render in rules: rules.remove(self.render)
