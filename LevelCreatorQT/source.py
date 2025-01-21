@@ -581,6 +581,40 @@ class MemorialSelectorWidget(QWidget):
         self.parent().close()
 
 
+def bytesToPuzzle(bytes):
+    image = QImage()
+    image.loadFromData(bytes)
+    pixmap = QPixmap.fromImage(image)
+    width = pixmap.width()
+    height = pixmap.height()
+
+    min_grid_size = 5
+    max_grid_size = 8
+
+    aspect_ratio = width / height
+    if aspect_ratio > 1:
+        cols = min(max_grid_size, max(min_grid_size, int((width / height) * min_grid_size)))
+        rows = min(max_grid_size, max(min_grid_size, int(min_grid_size / (width / height))))
+    else:
+        rows = min(max_grid_size, max(min_grid_size, int((height / width) * min_grid_size)))
+        cols = min(max_grid_size, max(min_grid_size, int(min_grid_size / (height / width))))
+
+    rows = min(rows, height)
+    cols = min(cols, width)
+    piece_width = width // cols
+    piece_height = height // rows
+    puzzle_matrix = np.empty((rows, cols), dtype=object)
+
+    for i in range(rows):
+        for j in range(cols):
+            piece = pixmap.copy(j * piece_width, i * piece_height, piece_width, piece_height)
+            qimage = piece.toImage()
+            pil_image = Image.fromqimage(qimage)
+            puzzle_matrix[i, j] = pil_image
+
+    return puzzle_matrix
+
+
 class MemorialEditorWidget(QDialog):
     def __init__(self, memorial):
         super().__init__()
@@ -747,44 +781,11 @@ class MemorialEditorWidget(QDialog):
                     self.memorial.images.append(buffer.data())
                     buffer.close()
 
-            self.memorial.puzzleparts = self.bytesToPuzzle(self.memorial.puzzle)
+            self.memorial.puzzleparts = bytesToPuzzle(self.memorial.puzzle)
             self.memorial.name = isName
             self.memorial.desc = isDesc
             self.memorial.isFilled = True
             self.close()
-
-    def bytesToPuzzle(self, bytes):
-        image = QImage()
-        image.loadFromData(bytes)
-        pixmap = QPixmap.fromImage(image)
-        width = pixmap.width()
-        height = pixmap.height()
-
-        min_grid_size = 15
-        max_grid_size = 25
-
-        aspect_ratio = width / height
-        if aspect_ratio > 1:
-            cols = min(max_grid_size, max(min_grid_size, int((width / height) * min_grid_size)))
-            rows = min(max_grid_size, max(min_grid_size, int(min_grid_size / (width / height))))
-        else:
-            rows = min(max_grid_size, max(min_grid_size, int((height / width) * min_grid_size)))
-            cols = min(max_grid_size, max(min_grid_size, int(min_grid_size / (height / width))))
-
-        rows = min(rows, height)
-        cols = min(cols, width)
-        piece_width = width // cols
-        piece_height = height // rows
-        puzzle_matrix = np.empty((rows, cols), dtype=object)
-
-        for i in range(rows):
-            for j in range(cols):
-                piece = pixmap.copy(j * piece_width, i * piece_height, piece_width, piece_height)
-                qimage = piece.toImage()
-                pil_image = Image.fromqimage(qimage)
-                puzzle_matrix[i, j] = pil_image
-
-        return puzzle_matrix
 
 
 class LevelRedactor(QDialog):

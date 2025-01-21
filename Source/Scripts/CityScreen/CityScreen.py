@@ -1,5 +1,5 @@
 import pygame
-from Globals.SharedFunctions import resize_image, get_aspect_ratio, switch
+from Shared.SharedFunctions import resize_image, get_aspect_ratio, switch
 
 rules, game_state, events = [None] * 3
 
@@ -200,7 +200,6 @@ class CityScreen:
                     self.toMap()
 
     def addRules(self):
-        rules.append(self.render)
         events.append(self.BtnClick)
 
     def Unload(self):

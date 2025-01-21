@@ -4,7 +4,7 @@ import pygame
 import random
 import copy
 
-from Globals.SharedFunctions import switch
+from Shared.SharedFunctions import switch
 
 game_state, rules, events, screen = [None] * 4
 
@@ -80,6 +80,7 @@ class PuzzleMiniGame:
         self.dragging_piece = None
         self.highlight_enabled = bool
         self.sound_placed = None
+        self.start_time = None
 
     def exec(self):
         global game_state, rules, events
@@ -104,6 +105,7 @@ class PuzzleMiniGame:
             self.resize_puzzle()
             self.loadPieces()
             self.CreateGrid()
+            self.start_time = time.time()
 
         self.set_screen_size()
         self.back_button_rect = pygame.Rect(50, self.puzzle.get_height() + 20, 150, 60)
@@ -111,7 +113,6 @@ class PuzzleMiniGame:
         self.font = pygame.font.Font("../Media/Pangolin-Regular.ttf", 27)
         events.append(self.MouseClickEvent)
         events.append(self.KeyboardEvent)
-        rules.append(self.render)
 
     def resize_puzzle(self):
         original_width, original_height = self.puzzle.get_size()
@@ -182,7 +183,6 @@ class PuzzleMiniGame:
             pygame.draw.rect(self.screen, (0, 255, 0), correct_cell.get_rect(), 3)
 
 
-
         pygame.draw.rect(self.screen, (0, 0, 0), (0, self.puzzle.get_height(), self.screen.get_width(), 100))
         pygame.draw.rect(self.screen, (0, 128, 255), self.back_button_rect)
         back_text = self.font.render("Назад", True, (255, 255, 255))
@@ -226,6 +226,7 @@ class PuzzleMiniGame:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.solved:
                 if self.completed_button_rect.collidepoint(event.pos):
+                    self.Unload()
                     switch(self, game_state.gameclasses.MemorialScreen, self.screen)
                     return
             if self.back_button_rect.collidepoint(event.pos):
@@ -282,6 +283,9 @@ class PuzzleMiniGame:
                     return False
         self.solved = True
         self.puzzle_solved.play()
+        if self.start_time is not None:
+            game_state.puzzletime.append(time.time() - self.start_time)
+
         global screen
         screen = pygame.display.set_mode((self.puzzle.get_size()[0], self.puzzle.get_size()[1]))
         self.completed_button_rect = pygame.Rect(

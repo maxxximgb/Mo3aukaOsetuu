@@ -1,5 +1,5 @@
 import pygame
-from Globals.SharedFunctions import resize_image, get_aspect_ratio, switch
+from Shared.SharedFunctions import resize_image, get_aspect_ratio, switch
 
 rules, game_state, events = [None] * 3
 
@@ -31,7 +31,6 @@ class MemorialScreen:
 
         self.screen = pygame.display.set_mode((1600, 920))
         pygame.display.set_caption(self.memorial.name)
-        rules.append(self.render)
         events.append(self.MouseBtnClick)
 
     def create_grid(self):

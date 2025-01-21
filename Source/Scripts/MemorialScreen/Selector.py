@@ -1,5 +1,5 @@
 import pygame
-from Globals.SharedFunctions import resize_image, switch
+from Shared.SharedFunctions import resize_image, switch
 
 rules, events, game_state = [None] * 3
 
@@ -38,6 +38,7 @@ class Selector:
             self.button_font = pygame.font.Font("../Media/Pangolin-Regular.ttf", 36)
             self.button_rect = pygame.Rect(1600 - 200 - 20, 920 - 60 - 20, 200, 60)
             self.calculate_image_positions()
+        if all([mem.completed for mem in self.currentlvl.memorials]): self.currentlvl.completed = True
         self.addRules()
 
     def calculate_image_positions(self):
@@ -145,7 +146,6 @@ class Selector:
     def addRules(self):
         pygame.display.set_caption('Выбор объекта')
         events.append(self.MouseEvent)
-        rules.append(self.render)
 
     def ShowObj(self, memorial):
         self.Unload()
