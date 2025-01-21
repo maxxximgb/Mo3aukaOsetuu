@@ -1,4 +1,4 @@
-import math
+import pygame.gfxdraw
 import os
 import pathlib
 import shutil
@@ -7,7 +7,6 @@ import time
 import pygame
 from pathlib import Path
 import cv2
-import numpy as np
 from Shared.LM import Level, Memorial
 from Shared.SharedFunctions import switch
 from DBManager.DBManager import DBManager
@@ -286,146 +285,156 @@ class LoadMenu:
 class LoadAnimation:
     def __init__(self, save=None):
         self.save = save
-        self.Unloading = False
-        self.progress_bar_rect = pygame.Rect
-        self.screen = pygame.Surface
-        self.txt = 'Инициализация...'
-        self.video_paths = ['../Media/loading.mp4', '../Media/loading2.mp4']
-        self.current_video_index = 0
-        self.cap = cv2.VideoCapture(self.video_paths[self.current_video_index])
-        self.video_fps = self.cap.get(cv2.CAP_PROP_FPS)
-        self.video_width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH) * 0.5)
-        self.video_height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT) * 0.5)
-        self.font = pygame.font.Font(None, 36)
-        self.clock = pygame.time.Clock()
-        self.stripes_offset = 0
-        self.stripes_speed = 2
+        self.txt = "Инициализация..."
         self.progress = 0
-        self.prev_progress = 0
         self.indeterminate = True
-        self.progress_bar_width = 300
-        self.progress_bar_height = 20
-        self.working = True
-        self.stripe_surface = pygame.Surface((self.progress_bar_width, self.progress_bar_height), pygame.SRCALPHA)
-        for x in range(self.progress_bar_width):
-            blue = int(255 * (1 - (x / self.progress_bar_width)))
-            pygame.draw.line(self.stripe_surface, (blue, blue, 255, 255), (x, 0), (x, self.progress_bar_height), 3)
-
-        self.mask = pygame.Surface((self.progress_bar_width, self.progress_bar_height), pygame.SRCALPHA)
-        pygame.draw.rect(self.mask, (255, 255, 255, 255), (0, 0, self.progress_bar_width, self.progress_bar_height),
-                         border_radius=10)
+        self.Unloading = False
+        self.frame_index = 0
+        self.last_update = 0
+        self.stripes_offset = 0
+        self.finished = False
 
     def exec(self):
         self.screen = pygame.display.set_mode((1280, 720))
-        self.progress_bar_rect = pygame.Rect(
-            self.screen.get_width() // 2 - self.progress_bar_width // 2,
-            self.screen.get_height() // 2 + self.video_height // 2 + 20,
-            self.progress_bar_width,
-            self.progress_bar_height
-        )
+        self.cap = cv2.VideoCapture('../Media/loading.mp4')
+        self.gif_frames = self._load_gif()
+        self._create_stripes()
 
-    def toggle_type(self):
-        self.indeterminate = not self.indeterminate
-        self.current_video_index = 1 if self.current_video_index == 0 else 0
-        self.cap.release()
-        self.cap = cv2.VideoCapture(self.video_paths[self.current_video_index])
+    def _create_stripes(self):
+        self.stripes = pygame.Surface((300, 20), pygame.SRCALPHA)
+        for x in range(300):
+            blue = int(255 * (1 - x / 300))
+            pygame.draw.line(self.stripes, (blue, blue, 255, 255), (x, 0), (x, 20), 3)
+        self.mask = pygame.Surface((300, 20), pygame.SRCALPHA)
+        pygame.draw.rect(self.mask, (255, 255, 255, 255), (0, 0, 300, 20), border_radius=10)
 
-    def update(self):
+    def _load_gif(self):
+        cap = cv2.VideoCapture("../Media/loading.gif")
+        frames = []
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if not ret: break
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            frame = cv2.resize(frame, (int(self.cap.get(3) * 0.5), int(self.cap.get(4) * 0.5)))
+            frames.append(pygame.surfarray.make_surface(frame))
+        cap.release()
+        return frames
+
+    def render(self):
+        self.screen.fill((255, 255, 255))
+        font = pygame.font.Font(None, 36)
+
+        animation_height = self._draw_animation()
+        text_bottom = self._draw_text(font, animation_height)
+        self._draw_progress_bar(font, text_bottom)
+
+        if self.finished and not self.Unloading:
+            self._finalize()
+
+
+    def _draw_animation(self):
+        if self.indeterminate:
+            return self._draw_video()
+        else:
+            return self._draw_gif()
+
+    def _draw_video(self):
         ret, frame = self.cap.read()
         if not ret:
             self.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
             ret, frame = self.cap.read()
         if ret:
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            frame = cv2.resize(frame, (self.video_width, self.video_height))
-            frame = cv2.flip(frame, 1)
-            self.current_frame = pygame.surfarray.make_surface(frame)
+            frame = cv2.cvtColor(cv2.resize(frame, (int(self.cap.get(3) * 0.5), int(self.cap.get(4) * 0.5))),
+                                 cv2.COLOR_BGR2RGB)
+            video_surface = pygame.surfarray.make_surface(cv2.flip(frame, 1))
+            video_rect = video_surface.get_rect(
+                center=(self.screen.get_width() // 2, self.screen.get_height() // 2 - 50))
+            self.screen.blit(video_surface, video_rect)
+            return video_rect.bottom
+        return self.screen.get_height() // 2
 
-    def render_text_with_wrap(self, text, font, max_width):
-        words = text.split(' ')
+    def _draw_gif(self):
+        radius = 100
+        if pygame.time.get_ticks() - self.last_update > 100:
+            self.frame_index = (self.frame_index + 1) % len(self.gif_frames)
+            self.last_update = pygame.time.get_ticks()
+
+        circle_surf = pygame.Surface((radius * 2, radius * 2), pygame.SRCALPHA)
+        pygame.draw.circle(circle_surf, (255, 255, 255, 255), (radius, radius), radius)
+        gif_frame = pygame.transform.rotate(pygame.transform.scale(self.gif_frames[self.frame_index], (radius, radius)), 270)
+        circle_surf.blit(gif_frame, (radius // 2, radius // 2), special_flags=pygame.BLEND_RGBA_MULT)
+        circle_rect = circle_surf.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 2))
+        self.screen.blit(circle_surf, circle_rect)
+
+        pygame.gfxdraw.arc(self.screen, self.screen.get_width() // 2, self.screen.get_height() // 2,
+                           radius, 90, 90 + int(3.6 * self.progress), (0, 0, 255))
+        return circle_rect.bottom
+
+    def _draw_text(self, font, start_y):
         lines = []
-        current_line = ''
-        for word in words:
-            test_line = current_line + ' ' + word if current_line else word
-            test_width, _ = font.size(test_line)
-            if test_width <= max_width:
-                current_line = test_line
+        current_line = []
+        max_width = self.screen.get_width() - 40
+
+        for word in self.txt.split():
+            test_line = ' '.join(current_line + [word])
+            if font.size(test_line)[0] > max_width:
+                lines.append(' '.join(current_line))
+                current_line = [word]
             else:
-                lines.append(current_line)
-                current_line = word
+                current_line.append(word)
         if current_line:
-            lines.append(current_line)
-        return lines
+            lines.append(' '.join(current_line))
 
-    def render(self):
-        self.update()
-        self.screen.fill((255, 255, 255))
-        if hasattr(self, 'current_frame'):
-            frame_x = self.screen.get_width() // 2 - self.video_width // 2
-            frame_y = self.screen.get_height() // 2 - self.video_height // 2 - 50
-            self.screen.blit(self.current_frame, (frame_x, frame_y))
-            max_text_width = self.screen.get_width() - 40
-            text_lines = self.render_text_with_wrap(self.txt, self.font, max_text_width)
-            text_y = frame_y + self.video_height + 20
-            total_text_height = len(text_lines) * self.font.get_height()
+        y = start_y + 20
+        for line in lines:
+            text = font.render(line, True, (0, 0, 0))
+            text_rect = text.get_rect(centerx=self.screen.get_width() // 2, y=y)
+            self.screen.blit(text, text_rect)
+            y += text.get_height() + 5
 
-            for line in text_lines:
-                text_surface = self.font.render(line, True, (0, 0, 0))
-                text_x = self.screen.get_width() // 2 - text_surface.get_width() // 2
-                self.screen.blit(text_surface, (text_x, text_y))
-                text_y += text_surface.get_height() + 5
+        return y
 
-            progress_bar_y = frame_y + self.video_height + 20 + total_text_height + 20
-            self.progress_bar_rect.y = progress_bar_y
+    def _draw_progress_bar(self, font, start_y):
+        bar_rect = pygame.Rect(0, start_y + 20, 300, 20)
+        bar_rect.centerx = self.screen.get_width() // 2
 
-            pygame.draw.rect(self.screen, (200, 200, 200), self.progress_bar_rect, border_radius=10)
+        pygame.draw.rect(self.screen, (200, 200, 200), bar_rect, border_radius=10)
 
-            if self.indeterminate:
-                self.stripes_offset = (self.stripes_offset + self.stripes_speed) % self.progress_bar_width
-                stripe_surface_scroll = pygame.Surface((self.progress_bar_width, self.progress_bar_height),
-                                                       pygame.SRCALPHA)
-                stripe_surface_scroll.blit(self.stripe_surface, (self.stripes_offset - self.progress_bar_width, 0))
-                stripe_surface_scroll.blit(self.stripe_surface, (self.stripes_offset, 0))
-                stripe_surface_scroll.blit(self.mask, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
-                self.screen.blit(stripe_surface_scroll, self.progress_bar_rect.topleft)
-            else:
-                progress_width = int(self.progress_bar_width * (self.progress / 100))
-                pygame.draw.rect(self.screen, (0, 0, 255), (
-                self.progress_bar_rect.x, self.progress_bar_rect.y, progress_width, self.progress_bar_height),
-                                 border_radius=10)
-                progress_text = self.font.render(f"{int(self.progress)}%", True, (0, 0, 0))
-                text_x = self.progress_bar_rect.x + self.progress_bar_width // 2 - progress_text.get_width() // 2
-                text_y = self.progress_bar_rect.y + self.progress_bar_height // 2 - progress_text.get_height() // 2
-                self.screen.blit(progress_text, (text_x, text_y))
+        if self.indeterminate:
+            scroll = pygame.Surface((300, 20), pygame.SRCALPHA)
+            self.stripes_offset = (self.stripes_offset - 2) % 300
+            scroll.blit(self.stripes, (-self.stripes_offset, 0))
+            scroll.blit(self.stripes, (300 - self.stripes_offset, 0))
+            scroll.blit(self.mask, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
+            self.screen.blit(scroll, bar_rect.topleft)
+        else:
+            progress_width = int(300 * (self.progress / 100))
+            pygame.draw.rect(self.screen, (0, 0, 255), (bar_rect.x, bar_rect.y, progress_width, 20), border_radius=10)
+            text = font.render(f"{int(self.progress)}%", True, (0, 0, 0))
+            text_rect = text.get_rect(center=bar_rect.center)
+            self.screen.blit(text, text_rect)
 
-        if self.txt == 'Переход на карту' and not self.Unloading:
-            self.Unload()
-            switch(self, game_state.gameclasses.MainMenu, self.screen)
-
-        self.clock.tick(self.video_fps)
-
-    def set_progress(self, progress):
-        if not self.indeterminate and self.current_video_index == 1:
-            delta_progress = progress - self.prev_progress
-            if delta_progress > 0:
-                total_frames = int(self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
-                frames_to_skip = int(total_frames * (delta_progress / 100))
-                current_frame = int(self.cap.get(cv2.CAP_PROP_POS_FRAMES))
-                new_frame = min(current_frame + frames_to_skip, total_frames - 1)
-                self.cap.set(cv2.CAP_PROP_POS_FRAMES, new_frame)
-        self.progress = progress
-        self.prev_progress = progress
-
-    def finish(self):
+    def _finalize(self):
+        self.Unloading = True
         self.toggle_type()
         if self.save:
             self.txt = 'Загрузка сохранения'
-            db = DBManager(Path('Saves') / f"{Path(self.save).stem}.sqlite")
-            db.load_all()
-            db.close()
-            del db
+            a = DBManager(Path('Saves') / f"{Path(self.save).stem}.sqlite")
+            a.load_all()
+            del a
+        if self.render in rules:
+            rules.remove(self.render)
         self.txt = 'Переход на карту'
+        switch(self, game_state.gameclasses.MainMenu, self.screen)
 
-    def Unload(self):
-        self.Unloading = True
-        if self.render in rules: rules.remove(self.render)
+    def finish(self):
+        self.finished = True
+
+    def set_progress(self, value):
+        self.progress = value
+
+    def toggle_type(self):
+        self.indeterminate = not self.indeterminate
+        self.cap.release()
+        video_path = '../Media/loading2.mp4' if not self.indeterminate else '../Media/loading.mp4'
+        self.cap = cv2.VideoCapture(video_path)
