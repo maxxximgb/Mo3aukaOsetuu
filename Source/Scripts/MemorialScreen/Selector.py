@@ -38,6 +38,7 @@ class Selector:
             self.button_font = pygame.font.Font("../Media/Pangolin-Regular.ttf", 36)
             self.button_rect = pygame.Rect(1600 - 200 - 20, 920 - 60 - 20, 200, 60)
             self.calculate_image_positions()
+        if all([mem.completed for mem in self.currentlvl.memorials]): self.currentlvl.completed = True
         self.addRules()
 
     def calculate_image_positions(self):

@@ -5,6 +5,7 @@ from MainMenu.MainMenu import MainMenu
 from MemorialScreen.MemorialScreen import MemorialScreen
 from MemorialScreen.Selector import Selector
 from PuzzleMiniGame.PuzzleMiniGame import PuzzleMiniGame
+from EndWindow.EndWindow import EndWindow
 
 
 class GameClasses:
@@ -16,3 +17,4 @@ class GameClasses:
         self.CityScreen = CityScreen()
         self.CarsMiniGame = CarsMiniGame()
         self.PuzzleMiniGame = PuzzleMiniGame()
+        self.EndWindow = EndWindow()

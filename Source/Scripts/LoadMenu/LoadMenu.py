@@ -6,7 +6,6 @@ import pygame
 from pathlib import Path
 from Shared.LM import Level, Memorial
 from Shared.SharedFunctions import switch
-
 from DBManager.DBManager import DBManager
 
 rules, events, levels, game_state = [None] * 4
