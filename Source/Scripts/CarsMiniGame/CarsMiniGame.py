@@ -7,6 +7,7 @@ from Shared.SharedFunctions import switch
 
 rules, game_state = [None] * 2
 
+
 class CarsMiniGame:
     def __init__(self):
         self.level = None
@@ -48,16 +49,20 @@ class CarsMiniGame:
         self.level = game_state.currentlvl
         game_state.car_trips += 1
 
-
     def create_cars(self):
-        positions = [self.screen.get_height() // 4 + 100, self.screen.get_height() // 2 + 100, (self.screen.get_height() * 3) // 4 + 100]
-        images = ['../Media/GreenCar.png', '../Media/RedCar.png', '../Media/YellowCar.png']
+        positions = [self.screen.get_height() // 4 + 100, self.screen.get_height() // 2 + 100,
+                     (self.screen.get_height() * 3) // 4 + 100]
+        cars = ['../Media/GreenCar.png', '../Media/RedCar.png', '../Media/YellowCar.png']
+        parked_cars = ['../Media/ParkedBlueCar.png', '../Media/ParkedPoliceCar.png',
+                       '../Media/ParkedRedCar.png', '../Media/ParkedTaxiCar.png', '../Media/ParkedWhiteCar.png']
         pos1, pos2 = random.sample(positions, 2)
-        img1, img2 = random.sample(images, 2)
+        img1, img2 = random.sample(cars, 2)
+        pimg1, pimg2, pimg3 = random.sample(parked_cars, 3)
         self.moving_cars.add(MovingCar(img1, self.screen.get_width() + 500, pos1, random.randint(10, 20)),
                              MovingCar(img2, self.screen.get_width() + 500, pos2, random.randint(10, 20)))
-        self.parked_cars.add(ParkedCar('../Media/BlueCar.png', self.screen.get_width() + random.randint(100, 300), 70),
-                             ParkedCar('../Media/SportCar.png', self.screen.get_width() + random.randint(900, 1200), 70))
+        self.parked_cars.add(ParkedCar(pimg1, self.screen.get_width() + random.randint(100, 300), 70),
+                             ParkedCar(pimg2, self.screen.get_width() + random.randint(500, 800), 70),
+                             ParkedCar(pimg3, self.screen.get_width() + random.randint(900, 1200), 70))
 
     def reset_game(self):
         self.score = 10
@@ -84,7 +89,10 @@ class CarsMiniGame:
         self.moving_cars.draw(self.screen)
         self.parked_cars.draw(self.screen)
 
-        if pygame.sprite.spritecollideany(self.Bus, self.moving_cars) or pygame.sprite.spritecollideany(self.Bus, self.parked_cars):
+        collide_moving = pygame.sprite.spritecollideany(self.Bus, self.moving_cars, pygame.sprite.collide_mask)
+        collide_parked = pygame.sprite.spritecollideany(self.Bus, self.parked_cars, pygame.sprite.collide_mask)
+
+        if collide_moving or collide_parked:
             if self.blink_timer == 0:
                 game_state.car_faults += 1
                 self.score -= 1
@@ -102,7 +110,11 @@ class CarsMiniGame:
 
         if self.show_hitboxes:
             for sprite in [self.Bus] + list(self.moving_cars) + list(self.parked_cars):
-                pygame.draw.rect(self.screen, (255, 0, 0), sprite.rect, 2)
+                if sprite.mask:
+                    mask_outline = sprite.mask.outline()
+                    if mask_outline:
+                        outline_points = [(x + sprite.rect.x, y + sprite.rect.y) for x, y in mask_outline]
+                        pygame.draw.lines(self.screen, (255, 0, 0), True, outline_points, 2)
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_F9] and self.debug_message_timer == 0:
@@ -120,7 +132,9 @@ class CarsMiniGame:
         remaining_time = max(0, 30 - int(elapsed_time))
         font = pygame.font.Font(None, 36)
         text = f"Счет: {self.score}, До приезда: {remaining_time} секунд" if remaining_time > 0 else f"Счет: {self.score}, Закончите обьезжать машины"
-        self.screen.blit(font.render(text, True, (0, 0, 0)), (self.screen.get_width() - 400, 10) if remaining_time > 0 else (self.screen.get_width() - 500, 10))
+        self.screen.blit(font.render(text, True, (0, 0, 0)),
+                         (self.screen.get_width() - 400, 10) if remaining_time > 0 else (
+                         self.screen.get_width() - 500, 10))
 
         if remaining_time <= 0:
             self.game_over = True
@@ -140,34 +154,40 @@ class CarsMiniGame:
     def Unload(self):
         if self.render in rules: rules.remove(self.render)
 
+
 class Bus(pygame.sprite.Sprite):
     def __init__(self, image):
         super().__init__()
-        self.image = pygame.image.load(image)
+        self.image = pygame.image.load(image).convert_alpha()
         self.rect = self.image.get_rect(center=(170, 300))
+        self.mask = pygame.mask.from_surface(self.image)
 
     def update(self):
         keys = pygame.key.get_pressed()
         self.rect.y += (keys[pygame.K_DOWN] - keys[pygame.K_UP]) * 13
         self.rect.y = max(140, min(self.rect.y, 720 - self.rect.height))
 
+
 class ParkedCar(pygame.sprite.Sprite):
     def __init__(self, image, x, y):
         super().__init__()
-        self.image = pygame.image.load(image)
+        self.image = pygame.image.load(image).convert_alpha()
         self.rect = self.image.get_rect(center=(x, y))
+        self.mask = pygame.mask.from_surface(self.image)
 
     def update(self):
         self.rect.x -= 12
         if self.rect.right < 0:
             self.kill()
 
+
 class MovingCar(pygame.sprite.Sprite):
     def __init__(self, image, x, y, speed):
         super().__init__()
-        self.image = pygame.image.load(image)
+        self.image = pygame.image.load(image).convert_alpha()
         self.rect = self.image.get_rect(center=(x, y))
         self.speed = speed
+        self.mask = pygame.mask.from_surface(self.image)
 
     def update(self):
         self.rect.x -= self.speed
