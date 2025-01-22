@@ -157,7 +157,7 @@ class CityScreen:
         self.screen.blit(button_surface, (text_x_pos, text_y_pos))
 
         map_button_surface = self.button_font.render("К карте", True, (255, 255, 255))
-        pygame.draw.rect(self.screen, (0, 128, 128), self.map_button_rect)  # Цвет кнопки "К карте"
+        pygame.draw.rect(self.screen, (0, 128, 128), self.map_button_rect)
         map_text_x_pos = self.map_button_rect.x + (self.map_button_rect.width - map_button_surface.get_width()) // 2
         map_text_y_pos = self.map_button_rect.y + (self.map_button_rect.height - map_button_surface.get_height()) // 2
         self.screen.blit(map_button_surface, (map_text_x_pos, map_text_y_pos))
