@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="62af72bd-3b00-41bb-9306-950d82b336e8" name="Changes" comment="Images are saving in original quality">
+    <list default="true" id="62af72bd-3b00-41bb-9306-950d82b336e8" name="Changes" comment="Final commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/Scripts/LoadMenu/LoadMenu.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/LoadMenu/LoadMenu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Media/BlueCar.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Media/SportCar.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Scripts/CarsMiniGame/CarsMiniGame.py" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Scripts/CarsMiniGame/CarsMiniGame.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,8 +94,8 @@
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\LevelCreatorQT" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts\Levels" />
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Media" />
+      <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts\Levels" />
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts\Shared" />
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts\SharedClasses" />
       <recent name="C:\Users\gabis\PycharmProjects\Mo3aukaOsetuu\Source\Scripts" />
@@ -139,30 +141,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1734585871682</updated>
-    </task>
-    <task id="LOCAL-00028" summary="puzzle load addeed">
-      <option name="closed" value="true" />
-      <created>1736748455786</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1736748455786</updated>
-    </task>
-    <task id="LOCAL-00029" summary="ui changes">
-      <option name="closed" value="true" />
-      <created>1736757360848</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1736757360848</updated>
-    </task>
-    <task id="LOCAL-00030" summary="Final commit (maybe)">
-      <option name="closed" value="true" />
-      <created>1736766255421</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1736766255421</updated>
     </task>
     <task id="LOCAL-00031" summary="Final commit (maybe)">
       <option name="closed" value="true" />
@@ -532,7 +510,31 @@
       <option name="project" value="LOCAL" />
       <updated>1737477986472</updated>
     </task>
-    <option name="localTasksCounter" value="77" />
+    <task id="LOCAL-00077" summary="Images are saving in original quality">
+      <option name="closed" value="true" />
+      <created>1737491552491</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1737491552491</updated>
+    </task>
+    <task id="LOCAL-00078" summary="Images are saving in original quality">
+      <option name="closed" value="true" />
+      <created>1737491563346</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1737491563346</updated>
+    </task>
+    <task id="LOCAL-00079" summary="Final commit">
+      <option name="closed" value="true" />
+      <created>1737520830176</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1737520830176</updated>
+    </task>
+    <option name="localTasksCounter" value="80" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -582,9 +584,9 @@
     <MESSAGE value="Current level marking" />
     <MESSAGE value="Progress saving added" />
     <MESSAGE value="fiwing working state" />
-    <MESSAGE value="Final commit" />
     <MESSAGE value="Images are saving in original quality" />
-    <option name="LAST_COMMIT_MESSAGE" value="Images are saving in original quality" />
+    <MESSAGE value="Final commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Final commit" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
