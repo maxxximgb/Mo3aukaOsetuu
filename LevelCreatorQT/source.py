@@ -415,6 +415,9 @@ class LevelEditorWidget(QWidget):
                 elif type == "buffer":
                     img[1].loadFromData(image)
                     img[3].loadFromData(image)
+
+                img[3] = img[3].scaled(600, 600, Qt.AspectRatioMode.KeepAspectRatio,
+                                       Qt.TransformationMode.SmoothTransformation)
                 img[1] = img[1].scaled(300, 150, Qt.AspectRatioMode.KeepAspectRatio,
                                        Qt.TransformationMode.SmoothTransformation)
                 img[0].setPixmap(img[1])
@@ -526,7 +529,7 @@ class MemorialSelectorWidget(QWidget):
         else:
             pixmap.load(image)
 
-        original_pixmap = pixmap.copy()
+        original_pixmap = pixmap.scaled(600, 600, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
         scaled_pixmap = pixmap.scaled(400, 300, Qt.AspectRatioMode.KeepAspectRatio,
                                       Qt.TransformationMode.SmoothTransformation)
 
@@ -692,7 +695,7 @@ class MemorialEditorWidget(QDialog):
                 elif type == "buffer":
                     img[1].loadFromData(image)
                     img[3].loadFromData(image)
-
+                img[3] = img[3].scaled(600, 600, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
                 img[1] = img[1].scaled(300, 150, Qt.AspectRatioMode.KeepAspectRatio,
                                        Qt.TransformationMode.SmoothTransformation)
                 img[0].setPixmap(img[1])
